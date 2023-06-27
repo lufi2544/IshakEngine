@@ -1,0 +1,3 @@
+[submodule "Source/BuildTool"]
+	path = Source/BuildTool
+	url = git@github.com:lufi2544/IshakBuildTool.git
