@@ -22,7 +22,9 @@ Release
 *.vbproj.user
 ipch
 *sdf
+*sln
 
+# Generic
 Intermediate/
 .vs/
 .git/
