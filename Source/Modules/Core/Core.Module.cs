@@ -14,7 +14,9 @@ public class CoreModuleBuilder : ModuleBuilder
 	{
 		PublicModuleDependencies = new List<string>()
 		{
-			"Renderer"			
+			"Renderer",
+			"Math",
+			"SDL"			
 		};
 	}
 	
