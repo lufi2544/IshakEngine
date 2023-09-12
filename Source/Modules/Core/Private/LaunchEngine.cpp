@@ -4,9 +4,10 @@
 #include "glm/geometric.hpp"
 #include "sol/sol.hpp"
 #include "SDL.h"
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
-//int main(void)
 {		
 	
 	glm::vec<3, float> f{ 3, 3, 3};
@@ -19,6 +20,15 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	sol::state lua;
 	lua.open_libraries(sol::lib::base);
+	
+	
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui::StyleColorsDark();
+	
+
+	int fff = 0;
 		
 
 	return 0;
