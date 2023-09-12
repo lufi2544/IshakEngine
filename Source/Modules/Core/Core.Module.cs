@@ -16,7 +16,9 @@ public class CoreModuleBuilder : ModuleBuilder
 		{
 			"Renderer",
 			"Math",
-			"SDL"			
+			"SDL",
+			"Lua",
+			"SolParser"					
 		};
 	}
 	
