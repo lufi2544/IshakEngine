@@ -12,11 +12,6 @@ public class RendererModuleBuilder : ModuleBuilder
 	void SetModuleDependencies()
 	{
 
-
-		PublicModuleDependencies.AddRange(new[]
-		{
-			"Core"
-		});
 		
 	}
 	
