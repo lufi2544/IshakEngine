@@ -1,5 +1,6 @@
 
 using IshakBuildTool.Project.Modules;
+using System.Collections.Generic;
 
 
 public class RendererModuleBuilder : ModuleBuilder
@@ -12,7 +13,6 @@ public class RendererModuleBuilder : ModuleBuilder
 	void SetModuleDependencies()
 	{
 
-		
 	}
 	
 };

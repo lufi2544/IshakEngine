@@ -3,9 +3,9 @@ using IshakBuildTool.Project.Modules;
 using System.Collections.Generic;
 
 
-public class CoreModuleBuilder : ModuleBuilder
+public class GameLoopModuleBuilder : ModuleBuilder
 {
-	public CoreModuleBuilder()
+	public GameLoopModuleBuilder()
 	{
 		SetModuleDependencies();		
 	}
@@ -13,14 +13,9 @@ public class CoreModuleBuilder : ModuleBuilder
 	void SetModuleDependencies()
 	{
 		PublicModuleDependencies = new List<string>()
-		{
-			"Renderer",
-			"Math",
-			"SDL",
-			"Lua",
-			"SolParser",
-			"IMGUI",
-			"GameLoop"					
+		{			
+			"SDL",						
+			"Platform"
 		};
 	}
 	
