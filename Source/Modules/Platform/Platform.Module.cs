@@ -14,7 +14,8 @@ public class PlatformModuleBuilder : ModuleBuilder
 	{
 		PublicModuleDependencies = new List<string>()
 		{			
-			"SDL"						
+			"SDL",
+			"SDLIMAGE"						
 		};
 	}
 	

@@ -33,9 +33,9 @@ namespace ishak{
 		ishak::WindowCreationContext winCreationContext = WindowCreationContext
 		{
 			"IshakEngine",
-			0, 0,
-			800, 600,
-			WindowFlags::WINDOW_CENTRALIZED
+			0, 0,// where
+			800, 600, // dimensions
+			WindowFlags::WINDOW_CENTRALIZED  |  WindowFlags::WINDOW_VSYNC
 		};
 
 		m_GameMainWindow = ishak::Window::CreateWindow(winCreationContext);				

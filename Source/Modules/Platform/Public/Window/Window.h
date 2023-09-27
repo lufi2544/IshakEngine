@@ -10,14 +10,18 @@ namespace ishak {
 	enum PLATFORM_API WindowFlags : std::uint8_t
 	{
 		WINDOW_CENTRALIZED = 1 << 7,
+		WINDOW_FULL_SCREEN = 1 << 6,
+		WINDOW_FULLSCREEN_MATCH_MONITOR = 1 << 5,
+		WINDOW_VSYNC = 1 << 4
+
 	};
 
 	struct PLATFORM_API WindowCreationContext
 	{
 		WindowCreationContext() = default;
 		const char* title;
-		int x, y;
-		int width, height;
+		int x, y; //where
+		int width, height; //dimensions
 		std::uint8_t flags;
 	};
 
