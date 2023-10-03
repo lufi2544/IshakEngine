@@ -14,13 +14,9 @@ public class CoreModuleBuilder : ModuleBuilder
 	{
 		PublicModuleDependencies = new List<string>()
 		{
-			"Renderer",
-			"Math",
 			"SDL",
-			"Lua",
-			"SolParser",
-			"IMGUI",
-			"GameLoop"					
+			"SDLIMAGE",
+			"GameLoop"
 		};
 	}
 	

@@ -98,7 +98,7 @@ namespace ishak {
 		SDL_Texture* tankTexture = SDL_CreateTextureFromSurface(m_ThisWindowRenderer, tankSurface);
 		SDL_FreeSurface(tankSurface);
 
-		SDL_Rect destRect{ 10, 10, 32, 32 };
+		SDL_Rect destRect{ m_PlayerX, m_PlayerY, 32, 32 };
 		SDL_RenderCopy(m_ThisWindowRenderer, tankTexture, NULL, &destRect);
 
 		SDL_DestroyTexture(tankTexture);

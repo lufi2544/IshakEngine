@@ -45,6 +45,10 @@ namespace ishak {
 		SDL_Window* m_SDLWindow{ nullptr };
 		SDL_Renderer* m_ThisWindowRenderer{ nullptr };
 		WindowCreationContext m_CreationContext;
+
+		// TODO TEMPORARY
+		int m_PlayerX{ 10 };
+		int m_PlayerY{ 10 };
 	};
 
 }// ishak
