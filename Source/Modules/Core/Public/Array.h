@@ -86,14 +86,14 @@ namespace ishak {
 		DataT& operator[](int32 idx)
 		{
 			// TODO ASSERT Custom Assert
-			CheckCapacity(idx);
+			CheckSize(idx);
 
 			return m_data[idx];
 		}
 
 		const DataT& operator[](int32 idx) const
 		{
-			CheckCapacity(idx);
+			CheckSize(idx);
 
 			return m_data[idx];
 		}
@@ -153,11 +153,27 @@ namespace ishak {
 			m_data[m_size++] = dataToAdd;
 		}
 
+		void AddUnique(const DataT& toAdd)
+		{
+			if(!Contains(toAdd))
+			{
+				Add(toAdd);
+			}
+		}
+
+		void AddUnique(DataT&& toAdd)
+		{
+			if(!Contains(toAdd))
+			{
+				Add(toAdd);
+			}
+		}
+
 		/** Removes by index a certain value in the container. */
 		void Remove(int32 idxToRemove)
 		{		
 
-			CheckCapacity(idxToRemove);
+			CheckSize(idxToRemove);
 
 			// Find the element and swap the element to remove with the last element in the container and then
 			// remove the last element in the container.
@@ -173,6 +189,19 @@ namespace ishak {
 			
 			--m_size;										
 		}
+
+		bool Contains(const DataT& toCompare)
+		{			
+			for(int32 idx = 0; idx < m_size; ++idx)
+			{
+				if(m_data[idx] == toCompare)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
 		
 		/** Array size. */
 		std::size_t Size() 
@@ -181,7 +210,7 @@ namespace ishak {
 		}
 
 		/** Returns true if we can access to the passed idx. */
-		bool CheckCapacity(std::uint32_t idx)
+		bool CheckSize(std::uint32_t idx)
 		{			
 			return idx < m_size;
 		}
@@ -213,24 +242,5 @@ namespace ishak {
 		uint32 m_capacity{ 0 };
 		DataT* m_data;
 	};
-
-
-
-	class Dog
-	{
-	public:
-		Dog() = default;
-		~Dog()
-		{
-			int a = 0;
-		}
-
-		int32 id;
-	};
-
-	void test ()
-	{
-
-	}
 
 }// ishak
