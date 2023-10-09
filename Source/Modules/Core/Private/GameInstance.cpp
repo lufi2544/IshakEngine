@@ -13,4 +13,14 @@ namespace ishak{
 		DoInit();
 	}
 
+	std::weak_ptr<World> GameInstance::GetWorld()
+	{
+		return m_world;
+	}
+
+	std::weak_ptr<World> GameInstance::GetWorld() const
+	{
+		return m_world;
+	}
+
 }//ishak

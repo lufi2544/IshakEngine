@@ -3,11 +3,7 @@
 // ISHAK
 #include "CoreConfig.h"
 #include "CoreMinimal.h"
-
-namespace ishak{
-
-	class World;
-}
+#include "World.h"
 
 namespace ishak{
 
@@ -19,6 +15,9 @@ namespace ishak{
 
 
 		void Init();
+
+		std::weak_ptr<World> GetWorld();
+		std::weak_ptr<World> GetWorld() const;
 		
 	protected:
 		virtual void DoInit(){ }

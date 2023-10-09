@@ -7,6 +7,7 @@
 #include "ModuleManager.h"
 #include "Factory.h"
 
+#include "GameInstance.h"
 #include "World.h"
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
@@ -24,6 +25,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	
 	
 	ishak::ModuleManager::Get().InitModules(factory);
+
+	auto f = factory.GetOrBuild<ishak::GameInstance>();
+
+	f->Init();
 
 	gameLoop.Init();
 	gameLoop.Execute();	
