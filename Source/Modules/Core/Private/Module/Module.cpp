@@ -1,6 +1,6 @@
 
-#include "Module.h"
-#include "ModuleManager.h"
+#include "Module/Module.h"
+#include "Module/ModuleManager.h"
 
 namespace ishak {
 

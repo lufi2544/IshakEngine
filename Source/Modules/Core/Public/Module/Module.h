@@ -3,7 +3,7 @@
 #include "CoreConfig.h"
 #include "CoreMinimal.h"
 
-#include "Factory.h"
+#include "Functionality/Factory.h"
 
 namespace ishak {
 

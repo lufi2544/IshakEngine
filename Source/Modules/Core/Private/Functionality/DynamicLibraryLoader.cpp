@@ -1,6 +1,6 @@
 
 // ISHAK
-#include "DynamicLibraryLoader.h"
+#include "Functionality/DynamicLibraryLoader.h"
 
 
 namespace ishak{

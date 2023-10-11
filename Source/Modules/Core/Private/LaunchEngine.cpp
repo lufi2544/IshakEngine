@@ -1,14 +1,13 @@
 #include "windows.h"
 #include <iostream>
 
-#include "Array.h"
 #include "GameLoop.h"
-#include "DynamicLibraryLoader.h"
-#include "ModuleManager.h"
-#include "Factory.h"
+#include "Functionality/DynamicLibraryLoader.h"
+#include "Module/ModuleManager.h"
+#include "Functionality/Factory.h"
+#include "World/GameInstance.h"
 
-#include "GameInstance.h"
-#include "World.h"
+#include "World/World.h"
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {			

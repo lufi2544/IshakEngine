@@ -1,13 +1,13 @@
 #include "TanksGameInstance.h"
+#include "GameEntities/Tank.h"
 
 namespace ishak {
 
 	void TanksGameInstance::DoInit()
-	{
-		// TODO Factory this
-		auto createdEntity = GetWorld().lock()->SpawnEntity(20, 20, 8);
-
-
+	{				
+		auto createdTank = GetWorld().lock()->SpawnEntity<Tank>(GetWorld());
+				
+		createdTank.lock()->Fire();
 	}
 	
 }// ishak

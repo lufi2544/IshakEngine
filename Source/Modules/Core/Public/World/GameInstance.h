@@ -3,7 +3,7 @@
 // ISHAK
 #include "CoreConfig.h"
 #include "CoreMinimal.h"
-#include "World.h"
+#include "World/World.h"
 
 namespace ishak{
 
@@ -16,15 +16,15 @@ namespace ishak{
 
 		void Init();
 
-		std::weak_ptr<World> GetWorld();
-		std::weak_ptr<World> GetWorld() const;
+		WeakPtr<World> GetWorld();
+		WeakPtr<World> GetWorld() const;
 		
 	protected:
 		virtual void DoInit(){ }
 		
 	private:
 		/** Main world instance. */
-		std::shared_ptr<World> m_world;
+		SharedPtr<World> m_world;
 	};
 
 }// ishak

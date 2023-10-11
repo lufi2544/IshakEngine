@@ -4,15 +4,18 @@
 *.slo
 *.lo
 *.o
+*.exp
 
 # Compiled Dynamic libraries
 *.so
 *.dylib
+*.dll
 
 # Compiled Static libraries
 *.lai
 *.la
 *.a
+*.lib
 
 # Visual Studio Files
 Debug

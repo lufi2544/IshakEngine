@@ -1,5 +1,5 @@
 #include "GameModule.h"
-#include "GameInstance.h"
+#include "World/GameInstance.h"
 #include "TanksGameInstance.h"
 
 namespace ishak {
@@ -8,9 +8,9 @@ namespace ishak {
 	{
 
 	}
-	void GameModule::DoInitModule(Factory& f)
+	void GameModule::DoInitModule(Factory& factory)
 	{
-		f.RegisterBuilder<GameInstance>([](Factory const&)
+		factory.RegisterBuilder<GameInstance>([](Factory const&)
 		{
 			return std::make_shared<TanksGameInstance>();
 		});

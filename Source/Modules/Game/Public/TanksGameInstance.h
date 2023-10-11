@@ -2,7 +2,7 @@
 
 // ISHAK
 #include "GameConfig.h"
-#include "GameInstance.h"
+#include "World/GameInstance.h"
 
 namespace ishak {
 

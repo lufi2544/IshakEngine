@@ -3,7 +3,7 @@
 // ishak
 #include "CoreConfig.h"
 #include "Module.h"
-#include "Array.h"
+#include "CoreMinimal.h"
 
 // STD
 #include <string>
