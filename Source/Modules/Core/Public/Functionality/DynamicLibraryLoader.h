@@ -27,9 +27,11 @@ namespace ishak{
 		~DllLoader();
 		
 		void LoadEngineDlls();
-
+	
 	private:
 		bool HasAnyCpp(const std::filesystem::directory_entry& dir);
+		void ExploreModulesToLoad(const std::string& modulesDir, TArray<std::string>* out_ModulesToLoad);
+		void LoadModulesDlls(const TArray<std::string>& modules);
 
 
 	private:

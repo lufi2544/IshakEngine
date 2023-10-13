@@ -14,8 +14,7 @@ namespace ishak{
 
 	void Tank::Fire()
 	{
-
-		int a = 0;
+		
 	}
 
 }// ishak

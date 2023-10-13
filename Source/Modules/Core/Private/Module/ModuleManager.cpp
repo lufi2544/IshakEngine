@@ -24,7 +24,7 @@ namespace ishak {
 		m_modules.Add(moduleToAdd);
 	}
 
-	void ModuleManager::InitModules(Factory& factory)
+	void ModuleManager::InitModules(Factory* factory)
 	{
 		for (auto&& module : m_modules)
 		{
@@ -33,7 +33,7 @@ namespace ishak {
 				continue;
 			}
 
-			module->InitModule(factory);
+			module->InitModule(*factory);
 		}
 	}
 

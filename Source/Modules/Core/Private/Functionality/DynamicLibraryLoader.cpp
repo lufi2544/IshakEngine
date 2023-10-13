@@ -26,12 +26,18 @@ namespace ishak{
 		
 		std::string modulesDir{ engineRootDir.string() + "\\" + "Source" + "\\" + "Modules" };
 		
-		// Save the Dll to load if any .cpp found and is not Third Party dir.		
 		TArray<std::string> modulesToLoad;
-		for(const fs::directory_entry& moduleDir : fs::directory_iterator(modulesDir))
+		ExploreModulesToLoad(modulesDir,  &modulesToLoad);
+		LoadModulesDlls(modulesToLoad);				
+	}
+
+	void DllLoader::ExploreModulesToLoad(const std::string& modulesDir, TArray<std::string>* out_ModulesToLoad)
+	{		
+		// Save the Dll to load if any .cpp found and is not Third Party dir.				
+		for (const fs::directory_entry& moduleDir : fs::directory_iterator(modulesDir))
 		{
 			// Do not explore the ThirdParty dir.
-			if(moduleDir.path().filename().string().find("ThirdParty") != std::string::npos)
+			if (moduleDir.path().filename().string().find("ThirdParty") != std::string::npos)
 			{
 				continue;
 			}
@@ -42,31 +48,33 @@ namespace ishak{
 				// We should not have any file except the .Moudule.cs inside the Module Root Dir.
 				// E.g
 				// - Core -> Private/Public/Core.Module.cs
-				if(!moduleEntry.is_directory())
+				if (!moduleEntry.is_directory())
 				{
 					continue;
 				}
 
 				// Try find .cpp
-				if(HasAnyCpp(moduleEntry))
-				{	
+				if (HasAnyCpp(moduleEntry))
+				{
 					// Taking the Current dir where we found the .cpp (Private module dir) and then accessing the parent dir which 
 					// is the module path itself.
-					 const std::string moduleName = moduleEntry.path().parent_path().filename().string();
-					 modulesToLoad.AddUnique(moduleName);
+					const std::string moduleName = moduleEntry.path().parent_path().filename().string();
+					out_ModulesToLoad->AddUnique(moduleName);
 				}
 			}
 		}
+	}
 
-		for(const auto& moduleName : modulesToLoad)
+	void DllLoader::LoadModulesDlls(const TArray<std::string>& modules)
+	{
+		for (const std::string& moduleName : modules)
 		{
 			HMODULE loadedModule = LoadLibrary(moduleName.c_str());
-			if(loadedModule)
+			if (loadedModule)
 			{
 				m_LoadedModules.Add(loadedModule);
 			}
 		}
-				
 	}
 
 	bool DllLoader::HasAnyCpp(const fs::directory_entry& dir)
@@ -95,8 +103,6 @@ namespace ishak{
 
 		return false;
 	}
-
-
 
 
 }// ishak

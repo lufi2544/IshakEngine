@@ -21,7 +21,7 @@ namespace ishak
 		static ModuleManager& Get();
 
 		void RegisterModule(Module* moduleToAdd);
-		void InitModules(Factory& factory);
+		void InitModules(Factory* factory);
 		
 		TArray<Module*> m_modules;
 
