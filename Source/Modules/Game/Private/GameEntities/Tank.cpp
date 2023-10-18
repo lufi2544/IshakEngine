@@ -2,7 +2,7 @@
 
 namespace ishak{
 
-	Tank::Tank(WeakPtr<World> world)
+	Tank::Tank(World* world)
 		: Entity(world)
 	{
 
@@ -10,6 +10,11 @@ namespace ishak{
 
 	void Tank::DoOnBeginPlay()
 	{
+	}
+
+	void Tank::DoUpdate(float deltaTime)
+	{
+		int a = 0;
 	}
 
 	void Tank::Fire()

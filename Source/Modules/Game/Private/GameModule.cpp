@@ -1,5 +1,5 @@
 #include "GameModule.h"
-#include "World/GameInstance.h"
+#include "GameFramework/GameInstance.h"
 #include "TanksGameInstance.h"
 
 namespace ishak {
@@ -13,7 +13,8 @@ namespace ishak {
 		factory.RegisterBuilder<GameInstance>([](Factory const&)
 		{
 			return std::make_shared<TanksGameInstance>();
-		});
+
+		}, EClassMultiplicity::Singleton);
 	}
 
 }// ishak

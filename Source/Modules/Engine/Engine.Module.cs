@@ -3,9 +3,9 @@ using IshakBuildTool.Project.Modules;
 using System.Collections.Generic;
 
 
-public class GameModuleBuilder : ModuleBuilder
+public class EngineModuleBuilder : ModuleBuilder
 {
-	public GameModuleBuilder()
+	public EngineModuleBuilder()
 	{
 		SetModuleDependencies();		
 	}
@@ -14,8 +14,10 @@ public class GameModuleBuilder : ModuleBuilder
 	{
         PublicModuleDependencies = new List<string>()
         {
+			"Platform", 
             "Core",
-			"Engine"
+			"SDL",
+			"SDLIMAGE"
         };
     }
 	

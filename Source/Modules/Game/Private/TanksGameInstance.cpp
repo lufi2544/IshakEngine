@@ -5,7 +5,7 @@ namespace ishak {
 
 	void TanksGameInstance::DoInit()
 	{				
-		auto createdTank = GetWorld().lock()->SpawnEntity<Tank>(GetWorld());
+		auto createdTank = GetWorld()->SpawnEntity<Tank>(GetWorld());
 				
 		createdTank.lock()->Fire();
 	}

@@ -1,13 +1,13 @@
 #pragma once
 
 // ISHAK
-#include "CoreConfig.h"
+#include "EngineConfig.h"
 #include "CoreMinimal.h"
-#include "World/World.h"
+#include "GameFramework/World.h"
 
 namespace ishak{
 
-	class CORE_API GameInstance
+	class ENGINE_API GameInstance
 	{
 	public:
 		GameInstance() = default;
@@ -15,16 +15,17 @@ namespace ishak{
 
 
 		void Init();
+		void SetWorld(World* world);
 
-		WeakPtr<World> GetWorld();
-		WeakPtr<World> GetWorld() const;
+		World* GetWorld();
+		World* GetWorld() const;
 		
 	protected:
 		virtual void DoInit(){ }
 		
 	private:
 		/** Main world instance. */
-		SharedPtr<World> m_world;
+		World* m_world{ nullptr };
 	};
 
 }// ishak

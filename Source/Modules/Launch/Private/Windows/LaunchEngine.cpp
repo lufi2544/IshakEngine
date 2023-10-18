@@ -1,8 +1,10 @@
 #include "windows.h"
 
-#include "Engine/IshakEngine.h"
+#include "EngineLoop.h"
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {			
-	return ishak::IshakEngine::Execute();	
+	ishak::EngineLoop engineLoop;
+	engineLoop.Init();
+	return engineLoop.TickEngine();
 }

@@ -1,9 +1,8 @@
 #pragma once
 
-#include <iostream>
-#include "memory"
 #include "SDL.h"
 #include "PlatformConfig.h"
+#include "CoreMinimal.h"
 
 namespace ishak {
 
@@ -29,7 +28,7 @@ namespace ishak {
 	{
 
 	public:
-		static std::shared_ptr<Window> CreateWindow(const WindowCreationContext& creationContext);		
+		static SharedPtr<Window> MakeWindow(const WindowCreationContext& creationContext);		
 
 		Window(SDL_Window* SDLWindowParam, SDL_Renderer* windowSDLRendererParam, const WindowCreationContext& creationContext);
 		~Window();

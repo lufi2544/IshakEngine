@@ -15,14 +15,16 @@ namespace ishak
 	{
 	public:
 		Entity() = default;
-		Entity(WeakPtr<World> world);	
+		Entity(World* world);	
 
 		void BeginPlay();
+		void Update(float deltaTime);
 
 	protected:
 		virtual void DoOnBeginPlay(){ }
+		virtual void DoUpdate(float deltaTime){ }
 
 	private:
-		WeakPtr<World> m_World;
+		World* m_World{ nullptr };
 	};	
 } // ishak

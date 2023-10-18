@@ -20,7 +20,7 @@ namespace ishak {
 		SDL_DestroyWindow(m_SDLWindow);
 	}
 
-	std::shared_ptr<Window> Window::CreateWindow(const WindowCreationContext& creationContext)
+	SharedPtr<Window> Window::MakeWindow(const WindowCreationContext& creationContext)
 	{
 
 		// Centralized Window
@@ -88,6 +88,7 @@ namespace ishak {
 		RenderColor(21, 21, 21, 255);
 		SDL_RenderClear(m_ThisWindowRenderer);
 		
+		/*
 		RenderColor(255, 255, 255, 255);
 		SDL_Rect player{ 10, 10, 200, 200 };
 		SDL_RenderFillRect(m_ThisWindowRenderer, &player);
@@ -105,6 +106,7 @@ namespace ishak {
 
 		// Present the Final buffer to the screen.
 		SDL_RenderPresent(m_ThisWindowRenderer);
+		*/
 	}
 
 	void Window::RenderColor(int R, int G, int B, int A)

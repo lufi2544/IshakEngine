@@ -1,18 +1,24 @@
 #pragma once
 
 // ISHAK
-#include "CoreConfig.h"
+#include "EngineConfig.h"
 #include "CoreMinimal.h"
-#include "Entity/Entity.h"
+#include "GameFramework/Entity.h"
 
+
+namespace ishak{
+
+	class GameInstance;
+}
 
 namespace ishak {
 
 
-	class CORE_API World 
+	class ENGINE_API World 
 	{
 	public:
-		World() = default;		
+		World() = default;	
+		World(GameInstance* GameInstanceParam);
 
 		// TODO Template meta programing to see if the class is derived from Entity, if not, then compile error.
 		template<typename T, typename ...Args>
@@ -27,8 +33,17 @@ namespace ishak {
 			return createdEntity;
 		}
 
+	public:
+		GameInstance* GetGameInstance();
+		void Init();
+		void Update(float deltaTime);
+
+	private:
 		/** Entire World Entities, for now handled here. */
-		TArray<std::shared_ptr<Entity>> m_WorldEntities;
+		TArray<SharedPtr<Entity>> m_WorldEntities;
+
+		/* Game Instance Ptr, this will always exist while the World exists. */
+		GameInstance* m_GameInstance{ nullptr };
 	};
 
 }// ishak

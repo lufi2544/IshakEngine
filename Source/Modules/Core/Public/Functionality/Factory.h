@@ -55,6 +55,11 @@ namespace ishak {
 				
 				return std::reinterpret_pointer_cast<T>(std::invoke(objectData.builder, *this));				
 			}
+			else 
+			{
+				// Builder not found.
+				
+			}
 
 			return { };
 		}

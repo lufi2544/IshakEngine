@@ -9,6 +9,7 @@
 #include "DataContainers/Array.h"
 #include "Memory/MemoryTypes.h"
 
+#include <iostream>
 #include <memory>
 #include <string>
 #include <map>

@@ -4,17 +4,7 @@
 
 
 namespace ishak{
-
-	DllLoader::~DllLoader()
-	{
-		for(const HMODULE& module : m_LoadedModules)
-		{
-			if(module)
-			{
-				FreeLibrary(module);
-			}
-		}
-	}
+	
 	// Loads the Dlls for the Engine Modules, if we find a .cpp in a Module folder, we assume it needs to load its .dll
 	// Modules inside the ThirdParty dir are skipped.	
 	void DllLoader::LoadEngineDlls()
@@ -29,6 +19,17 @@ namespace ishak{
 		TArray<std::string> modulesToLoad;
 		ExploreModulesToLoad(modulesDir,  &modulesToLoad);
 		LoadModulesDlls(modulesToLoad);				
+	}
+
+	void DllLoader::UnLoadEngineDlls()
+	{
+		for (const HMODULE& module : m_LoadedModules)
+		{
+			if (module)
+			{
+				FreeLibrary(module);
+			}
+		}
 	}
 
 	void DllLoader::ExploreModulesToLoad(const std::string& modulesDir, TArray<std::string>* out_ModulesToLoad)

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Entity/Entity.h"
+#include "GameFramework/Entity.h"
 #include "GameConfig.h"
 
 namespace ishak {
@@ -9,12 +9,13 @@ namespace ishak {
 	{
 	public:
 		Tank() = default;
-		Tank(WeakPtr<World> world);
+		Tank(World* world);
 
 		void Fire();
 
 	protected:
 		void DoOnBeginPlay() override;
+		void DoUpdate(float deltaTime) override;
 	};
 
 }// ishak

@@ -1,6 +1,6 @@
 #pragma once
-#include "GameLoopConfig.h"
-#include <memory>
+#include "LaunchConfig.h"
+#include "CoreMinimal.h"
 
 namespace ishak {
 
@@ -9,24 +9,24 @@ namespace ishak {
 
 namespace ishak {
 
-    class GAMELOOP_API GameLoop
+    class LAUNCH_API GameLoop
     {
     public:
         GameLoop();
         ~GameLoop();
 
         void Init();
-        void Execute();
+        void TickEngine();
                        
     private:
         void ProcessInput();     
         void Render();
-        void Update();
+        void Update(float deltaTime);
     
 
     private:
         // TODO Window Manager.
-        std::shared_ptr<Window> m_GameMainWindow;
+        SharedPtr<Window> m_GameMainWindow;
         bool bWantsToExit = false;
     };
 
