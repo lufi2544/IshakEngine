@@ -18,7 +18,7 @@ namespace ishak {
 	{
 	public:
 		World() = default;	
-		World(GameInstance* GameInstanceParam);
+		World(WeakPtr<GameInstance> GameInstanceParam);
 
 		// TODO Template meta programing to see if the class is derived from Entity, if not, then compile error.
 		template<typename T, typename ...Args>
@@ -34,16 +34,25 @@ namespace ishak {
 		}
 
 	public:
-		GameInstance* GetGameInstance();
+		WeakPtr<GameInstance> GetGameInstance();
 		void Init();
 		void Update(float deltaTime);
+
+		template<class FunctionT>
+		inline void DoInAllEntities(FunctionT function)
+		{
+			for(SharedPtr<Entity>& entity : m_WorldEntities)
+			{
+				function(entity);
+			}
+		}
 
 	private:
 		/** Entire World Entities, for now handled here. */
 		TArray<SharedPtr<Entity>> m_WorldEntities;
 
 		/* Game Instance Ptr, this will always exist while the World exists. */
-		GameInstance* m_GameInstance{ nullptr };
+		WeakPtr<GameInstance> m_GameInstance;
 	};
 
 }// ishak

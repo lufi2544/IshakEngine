@@ -3,13 +3,13 @@
 
 namespace ishak {
 
-	World::World(GameInstance* GameInstanceParam)
+	World::World(WeakPtr<GameInstance> GameInstanceParam)
 		: m_GameInstance(GameInstanceParam)
 	{
 
 	}
 
-	GameInstance* World::GetGameInstance()
+	WeakPtr<GameInstance> World::GetGameInstance()
 	{
 		return m_GameInstance;
 	}
@@ -23,7 +23,7 @@ namespace ishak {
 	{
 		for(auto&& entity : m_WorldEntities)
 		{
-			entity->Update(deltaTime);
+			entity->Tick(deltaTime);
 		}
 	}
 

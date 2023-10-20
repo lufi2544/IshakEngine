@@ -18,7 +18,8 @@ namespace ishak {
 	struct PLATFORM_API WindowCreationContext
 	{
 		WindowCreationContext() = default;
-		const char* title;
+
+		const char* title{ nullptr };
 		int x, y; //where
 		int width, height; //dimensions
 		std::uint8_t flags;
@@ -26,28 +27,30 @@ namespace ishak {
 
 	class PLATFORM_API Window 
 	{
-
+		static uint16 windowIdGenerator;
 	public:
 		static SharedPtr<Window> MakeWindow(const WindowCreationContext& creationContext);		
 
-		Window(SDL_Window* SDLWindowParam, SDL_Renderer* windowSDLRendererParam, const WindowCreationContext& creationContext);
+		Window(SDL_Window* SDLWindowParam, const WindowCreationContext& creationContext);
 		~Window();
+				
+		void SetOnDestroyedDelegate(std::function<void()>&& delegate);
+				
+		SDL_Window* GetSDLWindow() { return m_SDLWindow; }
+		uint16 GetId()const { return m_windowId; }
+		const WindowCreationContext& GetCreationContext() const { return m_CreationContext; }
+		inline const glm::vec<4, int>& GetColor() { return m_color; };
 
-		void Render();
-		void RenderColor(int R, int G, int B, int A);
-
+		std::function<void()> OnDestoyedDelegate;
 
 	private:
 		Window() = default;
 
 	private:
-		SDL_Window* m_SDLWindow{ nullptr };
-		SDL_Renderer* m_ThisWindowRenderer{ nullptr };
+		SDL_Window* m_SDLWindow{ nullptr };		
 		WindowCreationContext m_CreationContext;
-
-		// TODO TEMPORARY
-		int m_PlayerX{ 10 };
-		int m_PlayerY{ 10 };
+		uint16 m_windowId{ 0 };
+		glm::vec<4, int> m_color;
 	};
 
 }// ishak

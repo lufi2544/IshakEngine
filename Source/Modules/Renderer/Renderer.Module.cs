@@ -14,7 +14,10 @@ public class RendererModuleBuilder : ModuleBuilder
 	{
         PublicModuleDependencies = new List<string>()
         {
-            "Core"
+            "Core",
+			"SDL",
+			"SDLIMAGE",
+			"Platform"
         };
     }
 	

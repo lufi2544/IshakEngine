@@ -3,11 +3,12 @@
 #include "EngineConfig.h"
 #include "GameFramework/World.h"
 #include "Functionality/Factory.h"
+#include "Renderer.h"
 
 namespace ishak {
 
 	class Window;
-	class GameInstance;
+	class GameInstance;	
 }
 
 namespace ishak {
@@ -25,30 +26,33 @@ namespace ishak {
 		void ProcessInput();
 		void Tick(float deltaTime);
 		void Render();
+		void ShutDown();
 
 	private:
 		void HandleModules(Factory* factory);
-		void Run();
-		void ShutDown();
+
 
 	public:
 		bool bWantsToExit{ false };
 
 		// TODO Window Manager.
 		SharedPtr<Window> m_GameMainWindow;		
-
+		
+		UniquePtr<ishak::Renderer> m_renderer;
 
 		/** Wrapped up all the game framework stuff here for now. */
 		struct GameFramework
 		{
+
 			// World is gonna be unique as not server travel or net will be added for now.
 			// When added Editor, different world for the editor view windows will be added
 			UniquePtr<World> world;
 
 			// TODO Factory, change this to unique ptr from the factory.
 			SharedPtr<GameInstance> gameInstance;
-		} m_gameFramework;
+		}m_gameFramework;
 
+	
 	};
 		
 	extern CORE_API IshakEngine* GEngine;

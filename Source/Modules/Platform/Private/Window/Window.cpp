@@ -5,18 +5,27 @@
 
 namespace ishak {
 
-	Window::Window(SDL_Window* SDLWindowParam, SDL_Renderer* windowsSDLRendererParam, const WindowCreationContext& creationContext) 
-		: m_SDLWindow{ SDLWindowParam }
-		, m_ThisWindowRenderer{ windowsSDLRendererParam }
+	uint16 Window::windowIdGenerator = 0;
+
+	Window::Window(SDL_Window* SDLWindowParam, const WindowCreationContext& creationContext) 
+		: m_SDLWindow{ SDLWindowParam }		
 		, m_CreationContext{ creationContext }
+		, m_windowId{ windowIdGenerator++ }
 	{
 
 	}
 
 	Window::~Window() 
 	{
+		// Broadcast the Destroyed Delegate.
+		if(OnDestoyedDelegate)
+		{
+			std::invoke(OnDestoyedDelegate);
+		}else
+		{
+			// TODO Exception
+		}
 		// Destroy the SDL context for this window.
-		SDL_DestroyRenderer(m_ThisWindowRenderer);
 		SDL_DestroyWindow(m_SDLWindow);
 	}
 
@@ -72,47 +81,13 @@ namespace ishak {
 			extraRendererFlags |= SDL_RENDERER_ACCELERATED;
 			extraRendererFlags |= SDL_RENDERER_PRESENTVSYNC;
 		}
-		SDL_Renderer* SDLWindowRenderer = SDL_CreateRenderer(SDLWindow, -1, extraRendererFlags);
 
-		if (!SDLWindowRenderer) 
-		{
-			// TODO ERROR
-			return nullptr;
-		}
-
-		return std::make_shared<ishak::Window>(SDLWindow, SDLWindowRenderer, creationContext);		
+		return std::make_shared<ishak::Window>(SDLWindow, creationContext);		
 	}
 
-	void Window::Render() 
-	{		
-		RenderColor(21, 21, 21, 255);
-		SDL_RenderClear(m_ThisWindowRenderer);
-		
-		/*
-		RenderColor(255, 255, 255, 255);
-		SDL_Rect player{ 10, 10, 200, 200 };
-		SDL_RenderFillRect(m_ThisWindowRenderer, &player);
-		
-		
-
-		SDL_Surface* tankSurface = IMG_Load("../../Content/Tank_Right.png");
-		SDL_Texture* tankTexture = SDL_CreateTextureFromSurface(m_ThisWindowRenderer, tankSurface);
-		SDL_FreeSurface(tankSurface);
-
-		SDL_Rect destRect{ m_PlayerX, m_PlayerY, 32, 32 };
-		SDL_RenderCopy(m_ThisWindowRenderer, tankTexture, NULL, &destRect);
-
-		SDL_DestroyTexture(tankTexture);
-
-		// Present the Final buffer to the screen.
-		SDL_RenderPresent(m_ThisWindowRenderer);
-		*/
-	}
-
-	void Window::RenderColor(int R, int G, int B, int A)
+	void Window::SetOnDestroyedDelegate(std::function<void()>&& delegate)
 	{
-		SDL_SetRenderDrawColor(m_ThisWindowRenderer, R, G, B, A);
-
+		OnDestoyedDelegate = std::move(delegate);
 	}
 
 }// ishak

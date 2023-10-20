@@ -16,8 +16,11 @@ namespace ishak {
         ~EngineLoop();
 
         void Init();
-        int TickEngine();
-                                   
+        int TickEngine();        
+
+
+    private:
+        void FinishProgram();
     };
 
 };

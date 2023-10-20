@@ -7,7 +7,6 @@ namespace ishak{
 	{
 		// Init general stuff: world, main managers...
 		
-
 		DoInit();
 	}
 

@@ -86,14 +86,14 @@ namespace ishak {
 		DataT& operator[](int32 idx)
 		{
 			// TODO ASSERT Custom Assert
-			CheckSize(idx);
+			CheckSizeAt(idx);
 
 			return m_data[idx];
 		}
 
 		const DataT& operator[](int32 idx) const
 		{
-			CheckSize(idx);
+			CheckSizeAt(idx);
 
 			return m_data[idx];
 		}
@@ -173,7 +173,7 @@ namespace ishak {
 		void Remove(int32 idxToRemove)
 		{		
 
-			CheckSize(idxToRemove);
+			CheckSizeAt(idxToRemove);
 
 			// Find the element and swap the element to remove with the last element in the container and then
 			// remove the last element in the container.
@@ -210,7 +210,7 @@ namespace ishak {
 		}
 
 		/** Returns true if we can access to the passed idx. */
-		bool CheckSize(std::uint32_t idx)
+		bool CheckSizeAt(std::uint32_t idx)
 		{			
 			return idx < m_size;
 		}

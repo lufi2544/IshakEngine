@@ -6,5 +6,5 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 {			
 	ishak::EngineLoop engineLoop;
 	engineLoop.Init();
-	return engineLoop.TickEngine();
+	return engineLoop.TickEngine();	
 }

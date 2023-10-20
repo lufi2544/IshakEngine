@@ -7,6 +7,8 @@
 #include "Window/Window.h"
 #include "GameFramework/World.h"
 #include "GameFramework/GameInstance.h"
+#include "SDL/SDL_image.h"
+#include "Renderer.h"
 
 namespace ishak {	
 		
@@ -19,11 +21,14 @@ namespace ishak {
 		Factory factory;
 		HandleModules(&factory);	
 
+		m_renderer = std::make_unique<Renderer>();
+
 		// Create GameInstance
 		m_gameFramework.gameInstance = factory.GetOrBuild<GameInstance>();
 
+
 		// Create World
-		m_gameFramework.world = std::make_unique<World>(m_gameFramework.gameInstance.get());
+		m_gameFramework.world = std::make_unique<World>(m_gameFramework.gameInstance);
 		m_gameFramework.gameInstance->SetWorld(m_gameFramework.world.get());
 
 		m_gameFramework.gameInstance->Init();
@@ -45,7 +50,9 @@ namespace ishak {
 		};
 
 		m_GameMainWindow = ishak::Window::MakeWindow(winCreationContext);
-		
+
+		// TODO WeakPtr
+		m_renderer->AddRenderingTarget(m_GameMainWindow.get());		
 	}
 
 	void IshakEngine::HandleModules(Factory* factory)
@@ -87,21 +94,43 @@ namespace ishak {
 
 	void IshakEngine::Render()
 	{		
-		if (m_GameMainWindow)
-		{
-			m_GameMainWindow->Render();
-		}
-	}
+		// For now just rendering the main image.		
 
-	void IshakEngine::Run()
-	{
+		// Render all entities.
+
+		TArray<RendererCommand> renderingCommands;
+
+		// Window Render first
+		RendererCommand command;
+		command.color = m_GameMainWindow->GetColor();
+		renderingCommands.Add(command);
+
+		// Then render the entities
+		m_gameFramework.world->DoInAllEntities([&renderingCommands](SharedPtr<Entity>& entity) 
+		{
+			if(entity->GetTexture().empty())
+			{
+				return;
+			}							
+
+			RendererCommand command;
+			command.texturePath = entity->GetTexture();
+			command.position = entity->GetPosition();
+
+			renderingCommands.Add(command);				
+		});
+
+		for(auto&& command : renderingCommands)
+		{
+			m_renderer->SubmitRendererCommand(command);
+		}
 		
+		m_renderer->EndFrame();		
 	}
 
 	// Last chance to delete stuff.
 	void IshakEngine::ShutDown()
-	{
-		// Unload the Modules from memory.
-		ishak::ModuleManager::Get().UnloadModules();
+	{			
+
 	}
 }// ishak

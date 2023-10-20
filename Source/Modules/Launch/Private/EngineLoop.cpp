@@ -3,6 +3,8 @@
 #include "EngineLoop.h"
 #include "Engine/IshakEngine.h"
 
+#include "Module/ModuleManager.h"
+
 
 namespace ishak{
 
@@ -15,11 +17,7 @@ namespace ishak{
 
 	EngineLoop::~EngineLoop() 
 	{
-		/*
-		SDL_Quit();
-		*/
-		delete GEngine;
-		GEngine = nullptr;
+
 	}
 
 	void EngineLoop::Init() 
@@ -39,6 +37,24 @@ namespace ishak{
 			GEngine->Render();
 		}
 
+		FinishProgram();
+
 		return 0;
+	}
+
+	void EngineLoop::FinishProgram()
+	{
+		//// Shut Down Engine ////
+		GEngine->ShutDown();
+
+		if (GEngine)
+		{
+			delete GEngine;
+			GEngine = nullptr;
+		}
+
+
+		//// Unload the Modules from memory ////
+		ishak::ModuleManager::Get().UnloadModules();
 	}
 } // ishak;

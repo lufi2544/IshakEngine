@@ -14,10 +14,11 @@ public class EngineModuleBuilder : ModuleBuilder
 	{
         PublicModuleDependencies = new List<string>()
         {
-			"Platform", 
+			"Platform", 			
             "Core",
 			"SDL",
-			"SDLIMAGE"
+			"SDLIMAGE",
+			"Renderer"
         };
     }
 	

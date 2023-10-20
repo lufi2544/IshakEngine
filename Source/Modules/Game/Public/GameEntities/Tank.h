@@ -15,7 +15,7 @@ namespace ishak {
 
 	protected:
 		void DoOnBeginPlay() override;
-		void DoUpdate(float deltaTime) override;
+		void DoTick(float deltaTime) override;
 	};
 
 }// ishak

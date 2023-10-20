@@ -10,11 +10,12 @@ namespace ishak{
 
 	void Tank::DoOnBeginPlay()
 	{
+		m_renderContext.texture = "../../Content/Tank_Right.png";
 	}
 
-	void Tank::DoUpdate(float deltaTime)
+	void Tank::DoTick(float deltaTime)
 	{
-		int a = 0;
+		
 	}
 
 	void Tank::Fire()

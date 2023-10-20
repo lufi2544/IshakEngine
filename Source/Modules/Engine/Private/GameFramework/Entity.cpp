@@ -1,19 +1,41 @@
 #include "GameFramework/Entity.h"
 
+
+
 namespace ishak {
 
 	Entity::Entity(World* world)
 		: m_World(world)
 	{
-
+		
 	}
 	void Entity::BeginPlay()
 	{
 		DoOnBeginPlay();
 	}
 
-	void Entity::Update(float deltaTime)
+	void Entity::Tick(float deltaTime)
 	{		
-		DoUpdate(deltaTime);
+		DoTick(deltaTime);
+	}
+
+	void Entity::Render()
+	{
+		
+	}
+
+	Vector2 Entity::GetPosition() const
+	{
+		return m_position;
+	}
+
+	void Entity::SetPosition(const Vector2& newPosition)
+	{
+		m_position = newPosition;
+	}
+
+	std::string Entity::GetTexture() const
+	{
+		return m_renderContext.texture;
 	}
 }// ishak

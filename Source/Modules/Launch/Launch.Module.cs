@@ -15,7 +15,8 @@ public class LaunchModuleBuilder : ModuleBuilder
         PublicModuleDependencies = new List<string>()
         {
             "Core", 
-			"Engine"
+			"Engine",
+			"Renderer"
         };
     }
 	
