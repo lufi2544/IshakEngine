@@ -93,14 +93,11 @@ namespace ishak {
 	}
 
 	void IshakEngine::Render()
-	{		
-		// For now just rendering the main image.		
-
+	{						
 		// Render all entities.
-
 		TArray<RendererCommand> renderingCommands;
 
-		// Window Render first
+		// Window color Render first
 		RendererCommand command;
 		command.color = m_GameMainWindow->GetColor();
 		renderingCommands.Add(command);

@@ -37,10 +37,8 @@ namespace ishak
 			std::string texture;
 		} m_renderContext;
 
-	private:
-		World* m_World{ nullptr };
-		
-
 		Vector2 m_position{ 0, 0 };
+	private:
+		World* m_World{ nullptr };		
 	};	
 } // ishak

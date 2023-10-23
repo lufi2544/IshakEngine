@@ -15,6 +15,7 @@
 #include <functional>
 #include <map>
 #include <unordered_map>
+#include <chrono>
 
 // Math
 #include "IshakMath/IshakMath.h"

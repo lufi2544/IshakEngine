@@ -13,7 +13,7 @@ public class LaunchModuleBuilder : ModuleBuilder
 	void SetModuleDependencies()
 	{
         PublicModuleDependencies = new List<string>()
-        {
+        {			
             "Core", 
 			"Engine",
 			"Renderer"

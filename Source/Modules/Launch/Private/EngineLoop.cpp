@@ -5,6 +5,8 @@
 
 #include "Module/ModuleManager.h"
 
+#include "CoreMinimal.h"
+
 
 namespace ishak{
 
@@ -29,13 +31,35 @@ namespace ishak{
 
 	int EngineLoop::TickEngine()
 	{
+		using namespace std::chrono;
+
+		high_resolution_clock::time_point previusTime{ high_resolution_clock::now() };
+		float accumulatedTime{ 0.0f };
+
 		while (!GEngine->bWantsToExit) 
 		{
-			// TODO Add Real Delta Time
-			GEngine->ProcessInput();
-			GEngine->Tick(0.016f);
+			high_resolution_clock::time_point currentTime{ high_resolution_clock::now() };
+
+			// Since Engine Start
+			duration<float> timeSpan{ duration_cast<duration<float>>(currentTime - previusTime) };
+
+			const float framesDeltaTime{ timeSpan.count() };
+
+			previusTime = currentTime;
+			accumulatedTime += framesDeltaTime;
+
+
+			while(accumulatedTime >= FIXED_DELTA)
+			{
+				GEngine->ProcessInput();
+				GEngine->Tick(FIXED_DELTA);
+
+				accumulatedTime -= FIXED_DELTA;
+			}
+			
 			GEngine->Render();
 		}
+
 
 		FinishProgram();
 
@@ -55,6 +79,6 @@ namespace ishak{
 
 
 		//// Unload the Modules from memory ////
-		ishak::ModuleManager::Get().UnloadModules();
+		ModuleManager::Get().UnloadModules();
 	}
 } // ishak;

@@ -19,7 +19,7 @@ namespace ishak {
 	* I might interface this? I have to figure it out.
 	*/
 	class ENGINE_API IshakEngine
-	{
+	{		
 	public:
 		IshakEngine();
 		void Init();	

@@ -61,6 +61,8 @@ namespace ishak {
 		if(bRenderColor)
 		{
 			SDL_SetRenderDrawColor(renderer, command.color.r, command.color.g, command.color.b, command.color.b);
+			// Change this clear to somewhere else.
+			SDL_RenderClear(m_rendererWindowPair.second);
 		}else
 		{
 			SDL_Texture* cachedTexture{ m_rendererCache.GetTexture(command.texturePath, *this) };
