@@ -3,9 +3,9 @@ using IshakBuildTool.Project.Modules;
 using System.Collections.Generic;
 
 
-public class EngineModuleBuilder : ModuleBuilder
+public class DTESTModuleBuilder : ModuleBuilder
 {
-	public EngineModuleBuilder()
+	public DTESTModuleBuilder()
 	{
 		SetModuleDependencies();		
 	}
@@ -13,13 +13,8 @@ public class EngineModuleBuilder : ModuleBuilder
 	void SetModuleDependencies()
 	{
         PublicModuleDependencies = new List<string>()
-        {
-			"Platform", 			
-            "Core",
-			"SDL",
-			"SDLIMAGE",
-			"Renderer", 
-			"DTEST"
+        {   
+			"Core"
         };
     }
 	

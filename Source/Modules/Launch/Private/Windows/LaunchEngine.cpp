@@ -1,4 +1,5 @@
 #include "windows.h"
+#include "Functionality/Factory.h"
 
 #include "EngineLoop.h"
 
@@ -6,5 +7,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 {			
 	ishak::EngineLoop engineLoop;
 	engineLoop.Init();
+
+
 	return engineLoop.TickEngine();	
 }
