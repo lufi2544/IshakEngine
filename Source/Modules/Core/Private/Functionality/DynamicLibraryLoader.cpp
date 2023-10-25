@@ -8,11 +8,24 @@ namespace ishak{
 	// Loads the Dlls for the Engine Modules, if we find a .cpp in a Module folder, we assume it needs to load its .dll
 	// Modules inside the ThirdParty dir are skipped.	
 	void DllLoader::LoadEngineDlls()
-	{		
-		
+	{			
 		// We assume the visual studio project file is ALWAYS gonna be at // Intemediate/ProjectFiles/IshakEngine.vcxproj
+
+		// Figure out if we are running the .exe or the VS project file.
 		fs::path currentDir{ fs::current_path() };
-		fs::path engineRootDir{ currentDir.parent_path().parent_path() };
+		std::string currentDirString{ currentDir.string() };
+		fs::path engineRootDir;
+
+		// Running from .exe
+		if(currentDirString.find("Binaries") != std::string::npos)
+		{
+			engineRootDir = currentDir.parent_path();			
+		}
+		else 
+		{
+			// Loading from .vcxprj( VS project file ) located in the IntermediateFolder
+			engineRootDir = currentDir.parent_path().parent_path();
+		}		
 		
 		std::string modulesDir{ engineRootDir.string() + "\\" + "Source" + "\\" + "Modules" };
 		

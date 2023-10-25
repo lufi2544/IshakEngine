@@ -5,6 +5,16 @@ namespace ishak {
 	
 	ModuleManager* ModuleManager::m_singleton = nullptr;
 
+	ModuleManager::~ModuleManager()
+	{
+		if(m_singleton)
+		{
+			delete m_singleton;
+		}
+
+		m_singleton = nullptr;
+	}
+
 	ModuleManager& ModuleManager::Get()
 	{
 		if (m_singleton == nullptr)

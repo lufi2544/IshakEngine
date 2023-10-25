@@ -1,7 +1,6 @@
 #include "CoolTest.h"
 
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "doctest.h"
+#include "IshakTest.h"
 
 namespace ishak {
 
@@ -11,9 +10,3 @@ namespace ishak {
 	}
 }
 
-TEST_CASE("Just Chilling")
-{
-	ishak::CoolTest cooltest;
-
-	CHECK(cooltest.Data == 4);
-}

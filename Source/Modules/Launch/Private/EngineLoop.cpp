@@ -25,7 +25,8 @@ namespace ishak{
 	void EngineLoop::Init() 
 	{
 		// For now just create default Engine, I will include the Editor here.
-		GEngine = new IshakEngine();		
+		GEngine = new IshakEngine();	
+
 		GEngine->Init();
 	}
 

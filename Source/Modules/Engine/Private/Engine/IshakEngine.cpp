@@ -56,8 +56,7 @@ namespace ishak {
 	}
 
 	void IshakEngine::HandleModules(Factory* factory)
-	{
-							
+	{					
 		// Load the Modules into memory and the init them.
 		ishak::ModuleManager::Get().LoadModules();
 		ishak::ModuleManager::Get().InitModules(factory);		

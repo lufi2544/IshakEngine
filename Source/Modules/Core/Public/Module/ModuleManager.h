@@ -19,6 +19,8 @@ namespace ishak
 		ModuleManager(ModuleManager&&) = delete;
 		ModuleManager(ModuleManager&) = delete;
 
+		~ModuleManager();
+
 		static ModuleManager& Get();
 
 		/** Registers a Module. Used by the Module class to register itsef. */
@@ -32,6 +34,9 @@ namespace ishak
 
 		void InitModules(Factory* factory);
 		
+	   /* Container for the engine modules.For now they are statically allocated
+		* when starting the application and a pointer is passed from the instance itself -> (this)
+		* so no need for deletion.*/
 		TArray<Module*> m_modules;
 
 	private:
