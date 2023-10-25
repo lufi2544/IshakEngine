@@ -26,6 +26,7 @@ Release
 ipch
 *sdf
 *sln
+*.exp
 
 # Generic
 Intermediate/
