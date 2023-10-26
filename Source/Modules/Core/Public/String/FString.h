@@ -28,7 +28,6 @@ namespace ishak {
 		{
 			return strcmp(lhs.m_buffer, rhs.m_buffer) == 0;
 		}
-
 		void operator += (const String& other) noexcept;
 
 		~String();

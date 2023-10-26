@@ -11,8 +11,10 @@ namespace ishak {
 		: m_SDLWindow{ SDLWindowParam }		
 		, m_CreationContext{ creationContext }
 		, m_windowId{ windowIdGenerator++ }
+		, m_color{ 0, 0, 0, 0 }
 	{
-
+		
+		
 	}
 
 	Window::~Window() 

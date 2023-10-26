@@ -167,7 +167,7 @@ namespace ishak {
 
 	String String::operator + (const char* other) noexcept
 	{
-		// As the const char* counts with the nullchar, then we have to allocate that too.
+		// the strlen(const char*) does not count with the null character.
 		size_t otherSize{ strlen(other) };
 		size_t finalSize{ otherSize + m_size};
 
@@ -193,6 +193,7 @@ namespace ishak {
 		}
 
 
+		// Going all the way to the null character to finish the word, that is why we add +1.
 		for (size_t otherIdx = 0; otherIdx < otherSize + 1; otherIdx++, addingIdx++)
 		{
 			char letter{ other[otherIdx] };
@@ -205,7 +206,7 @@ namespace ishak {
 
 	String String::operator + (const char* other) const noexcept
 	{
-		// As the const char* counts with the nullchar, then we have to allocate that too.
+		// the strlen(const char*) does not count with the null character.
 		size_t otherSize{ strlen(other) };
 		size_t finalSize{ otherSize + m_size };
 
@@ -231,7 +232,8 @@ namespace ishak {
 		}
 
 
-		for (size_t otherIdx = 0; otherIdx < otherSize; otherIdx++, addingIdx++)
+		// Going all the way to the null character to finish the word, that is why we add +1.
+		for (size_t otherIdx = 0; otherIdx < otherSize + 1; otherIdx++, addingIdx++)
 		{
 			char letter{ other[otherIdx] };
 			finalBuffer[addingIdx] = letter;

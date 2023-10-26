@@ -39,7 +39,7 @@ namespace ishak {
 		SDL_Window* GetSDLWindow() { return m_SDLWindow; }
 		uint16 GetId()const { return m_windowId; }
 		const WindowCreationContext& GetCreationContext() const { return m_CreationContext; }
-		inline const glm::vec<4, int>& GetColor() { return m_color; };
+		inline const Vector4& GetColor() { return m_color; };
 
 		std::function<void()> OnDestoyedDelegate;
 
@@ -50,7 +50,7 @@ namespace ishak {
 		SDL_Window* m_SDLWindow{ nullptr };		
 		WindowCreationContext m_CreationContext;
 		uint16 m_windowId{ 0 };
-		glm::vec<4, int> m_color;
+		Vector4 m_color;
 	};
 
 }// ishak

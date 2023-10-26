@@ -98,7 +98,7 @@ namespace ishak {
 
 		// Window color Render first
 		RendererCommand command;
-		command.color = m_GameMainWindow->GetColor();
+		command.color = m_GameMainWindow->GetColor();		
 		renderingCommands.Add(command);
 
 		// Then render the entities

@@ -9,7 +9,7 @@ namespace ishak{
 	struct RENDERER_API RendererCommand
 	{
 		String texturePath;
-		Vector color;
+		Vector4 color;
 		Vector2 position;
 	};
 

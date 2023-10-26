@@ -46,8 +46,8 @@ namespace ishak {
 	void Renderer::Render()
 	{
 		// Render Windows		
-		const Vector& windowColor{ m_rendererWindowPair.first->GetColor() };
-		SDL_SetRenderDrawColor(m_rendererWindowPair.second, windowColor.r, windowColor.g, windowColor.b, windowColor.b);		
+		const Vector4& windowColor{ m_rendererWindowPair.first->GetColor() };
+		SDL_SetRenderDrawColor(m_rendererWindowPair.second, windowColor.r, windowColor.g, windowColor.b, windowColor.a);		
 	}
 
 	void Renderer::SubmitRendererCommand(const RendererCommand& command)
@@ -60,9 +60,9 @@ namespace ishak {
 		auto& renderer{ m_rendererWindowPair.second };
 		if(bRenderColor)
 		{
-			SDL_SetRenderDrawColor(renderer, command.color.r, command.color.g, command.color.b, command.color.b);
+			SDL_RenderClear(m_rendererWindowPair.second); 
+			SDL_SetRenderDrawColor(renderer, command.color.r, command.color.g, command.color.b, 0);
 			// Change this clear to somewhere else.
-			SDL_RenderClear(m_rendererWindowPair.second);
 		}else
 		{
 			SDL_Texture* cachedTexture{ m_rendererCache.GetTexture(command.texturePath, *this) };
@@ -112,6 +112,8 @@ namespace ishak {
 
 				// not found, then create it in the cache
 				textureCache.insert(std::make_pair(texturePath, texture));
+
+				return texture;
 			}
 		}
 
