@@ -7,16 +7,19 @@
 #include "Window/Window.h"
 #include "GameFramework/World.h"
 #include "GameFramework/GameInstance.h"
-#include "SDL/SDL_image.h"
 
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer2.h"
 
 #include "Renderer.h"
+#include "Log/Logger.h"
 
 namespace ishak {	
 		
+
+	Logger* GLogger = nullptr;
+
 	IshakEngine::IshakEngine()
 	{		
 	}
@@ -55,7 +58,7 @@ namespace ishak {
 		};
 
 		m_GameMainWindow = ishak::Window::MakeWindow(winCreationContext);		
-		m_renderer->AddRenderingTarget(m_GameMainWindow.get());	
+		m_renderer->AddRenderingTarget(m_GameMainWindow.get());			
 	}
 
 	void IshakEngine::HandleModules(Factory* factory)
@@ -121,7 +124,7 @@ namespace ishak {
 			renderingCommands.Add(command);				
 		});
 
-		m_renderer->Render(renderingCommands);		
+		m_renderer->Render(renderingCommands);					
 		m_renderer->EndFrame();
 	}
 

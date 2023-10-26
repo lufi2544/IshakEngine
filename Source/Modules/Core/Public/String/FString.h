@@ -24,6 +24,16 @@ namespace ishak {
 
 		bool operator == (const String& other) noexcept;
 
+		char* begin() 
+		{
+			return &m_buffer[0];
+		}
+
+		char* end() 
+		{
+			return &m_buffer[m_size - 1];
+		}		
+
 		friend bool operator == (const String& lhs, const String& rhs)
 		{
 			return strcmp(lhs.m_buffer, rhs.m_buffer) == 0;

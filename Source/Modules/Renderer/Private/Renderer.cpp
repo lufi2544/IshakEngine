@@ -6,8 +6,13 @@
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer2.h"
 
+#include "Log/Logger.h"
+
 
 namespace ishak {
+
+
+	Logger* GLogger = nullptr;
 
 	void Renderer::AddRenderingTarget(Window* window)
 	{
@@ -48,11 +53,58 @@ namespace ishak {
 		PostSetRenderingTarget(window);
 	}
 
+
+	void Renderer::PreRender()
+	{		
+	  //=========================================================================
+	  // IMGUI
+	  //=========================================================================
+		ImGui_ImplSDLRenderer2_NewFrame();
+		ImGui_ImplSDL2_NewFrame();
+		ImGui::NewFrame();		
+		//ImGui::ShowDemoWindow();
+	  //=========================================================================
+	}
+
+	void Renderer::Render(const TArray<RendererCommand>& commands)
+	{
+		static int a = 100;
+		static int b = 0;
+
+		if(b < a)
+		{
+			ISHAK_LOG("Rendering")
+			++b;
+		}
+
+		PreRender();
+
+		for (auto&& command : commands)
+		{
+			SubmitRendererCommand(command);
+		}
+
+		GLogger->Draw();
+
+		PostRender();
+		
+	}
+
+	void Renderer::PostRender()
+	{
+	 //=========================================================================
+	 // IMGUI
+	 //=========================================================================
+		ImGui::Render();
+		ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
+	 //=========================================================================
+	}
+
 	void Renderer::PostSetRenderingTarget(Window* window)
 	{
-	//=========================================================================
-	// IMGUI
-	//=========================================================================	  
+		//=========================================================================
+		// IMGUI
+		//=========================================================================	  
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
@@ -64,41 +116,11 @@ namespace ishak {
 		ImGui::StyleColorsDark();
 		ImGui_ImplSDL2_InitForSDLRenderer(window->GetSDLWindow(), renderer);
 		ImGui_ImplSDLRenderer2_Init(renderer);
-	//=========================================================================
-	}
+		//=========================================================================
 
-	void Renderer::Render(const TArray<RendererCommand>& commands)
-	{
-		PreRender();
+		GLogger = new Logger();
+		ISHAK_LOG("Init Renderer");
 
-		for(auto&& command : commands)
-		{
-			SubmitRendererCommand(command);
-		}
-
-		PostRender();
-	}
-
-	void Renderer::PreRender()
-	{		
-	  //=========================================================================
-	  // IMGUI
-	  //=========================================================================
-		ImGui_ImplSDLRenderer2_NewFrame();
-		ImGui_ImplSDL2_NewFrame();
-		ImGui::NewFrame();
-		ImGui::ShowDemoWindow();
-	  //=========================================================================
-	}
-
-	void Renderer::PostRender()
-	{
-	 //=========================================================================
-	 // IMGUI
-	 //=========================================================================
-		ImGui::Render();
-		ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
-	 //=========================================================================
 	}
 
 	void Renderer::SubmitRendererCommand(const RendererCommand& command)
@@ -126,7 +148,7 @@ namespace ishak {
 	}
 
 	void Renderer::EndFrame()
-	{
+	{	
 		SDL_RenderPresent(m_rendererWindowPair.second);
 	}
 
@@ -180,6 +202,9 @@ namespace ishak {
 		ImGui_ImplSDL2_Shutdown();
 		ImGui::DestroyContext();
 	//=========================================================================
+
+		delete GLogger;
+		GLogger = nullptr;
 	}
 
 }// ishak
