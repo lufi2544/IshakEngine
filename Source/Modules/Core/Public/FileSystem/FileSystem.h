@@ -18,16 +18,19 @@ namespace ishak {
 		FileSystem(const FileSystem&) = delete;
 		~FileSystem();
 
-		String GetEngineDir();
+		const String& GetEngineDir();
+		const String& GetAssetsDir();
+		const String& GetModulesDir();
 		
 	private:
 		FileSystem() = default;
 
-		void SetEngineDir();
+		void InitCoreDirs();
 
 	private:
 		String m_engineDir;
 		String m_engineModulesDir;
+		String m_assetsDir;
 		static FileSystem* m_singleton;
 	};
 

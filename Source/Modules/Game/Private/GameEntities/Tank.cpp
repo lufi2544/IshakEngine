@@ -1,4 +1,5 @@
 #include "GameEntities/Tank.h"
+#include "FileSystem/FileSystem.h"
 
 namespace ishak{
 
@@ -10,7 +11,9 @@ namespace ishak{
 
 	void Tank::DoOnBeginPlay()
 	{
-		m_renderContext.texture = "../../Content/Tank_Right.png";
+		String tankTextureName{ "Tank_Right.png"};
+
+		m_renderContext.texture = (FileSystem::Get().GetAssetsDir() + tankTextureName);
 	}
 
 	void Tank::DoTick(float deltaTime)

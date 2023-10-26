@@ -35,6 +35,13 @@ TEST_CASE("Move string memory.")
 	CHECK((destination == ishak::String("hello")) == true);
 }
 
+TEST_CASE("Empty string memory.")
+{
+	ishak::String str;
+
+	CHECK(str.IsEmpty());
+}
+
 TEST_CASE("Adding up 2 strings, true")
 {
 	ishak::String word1{"hello"};

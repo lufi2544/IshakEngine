@@ -34,7 +34,7 @@ namespace ishak {
 		m_position = newPosition;
 	}
 
-	std::string Entity::GetTexture() const
+	String Entity::GetTexture() const
 	{
 		return m_renderContext.texture;
 	}

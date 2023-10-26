@@ -37,9 +37,9 @@ namespace ishak {
 			~RendererCache();
 
 			// TODO AssetManager for the textures
-			inline SDL_Texture* GetTexture(const std::string& texturePath, Renderer& renderer);
+			inline SDL_Texture* GetTexture(const String& texturePath, Renderer& renderer);
 
-			std::unordered_map<std::string, SDL_Texture*> textureCache;
+			std::unordered_map<String, SDL_Texture*> textureCache;
 		}m_rendererCache;
 
 		std::pair<Window*, RendererT> m_rendererWindowPair;

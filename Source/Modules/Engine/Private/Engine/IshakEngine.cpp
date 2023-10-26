@@ -104,7 +104,7 @@ namespace ishak {
 		// Then render the entities
 		m_gameFramework.world->DoInAllEntities([&renderingCommands](SharedPtr<Entity>& entity) 
 		{
-			if(entity->GetTexture().empty())
+			if(entity->GetTexture().IsEmpty())
 			{
 				return;
 			}							

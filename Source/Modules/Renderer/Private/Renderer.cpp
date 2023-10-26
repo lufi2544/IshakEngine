@@ -52,7 +52,7 @@ namespace ishak {
 
 	void Renderer::SubmitRendererCommand(const RendererCommand& command)
 	{
-		const bool bRenderColor{ command.texturePath.empty()};
+		const bool bRenderColor{ command.texturePath.IsEmpty()};
 		if(!m_rendererWindowPair.first)
 		{
 			return;
@@ -87,7 +87,7 @@ namespace ishak {
 		}
 	}
 
-	SDL_Texture* Renderer::RendererCache::GetTexture(const std::string& texturePath, Renderer& renderer)
+	SDL_Texture* Renderer::RendererCache::GetTexture(const String& texturePath, Renderer& renderer)
 	{
 		if (!renderer.m_rendererWindowPair.first)
 		{
@@ -105,12 +105,14 @@ namespace ishak {
 		{
 
 			SDL_Surface* surface = IMG_Load(texturePath.c_str());
-			SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer.m_rendererWindowPair.second, surface);
-			SDL_FreeSurface(surface);
+			if(surface)
+			{
+				SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer.m_rendererWindowPair.second, surface);
+				SDL_FreeSurface(surface);
 
-
-			// not found, then create it in the cache
-			textureCache.insert(std::make_pair(texturePath, texture));
+				// not found, then create it in the cache
+				textureCache.insert(std::make_pair(texturePath, texture));
+			}
 		}
 
 		return nullptr;

@@ -22,7 +22,7 @@ namespace ishak
 		void Tick(float deltaTime);
 		void Render();
 
-		std::string GetTexture() const;
+		String GetTexture() const;
 		Vector2 GetPosition() const;
 		void SetPosition(const Vector2& newPosition );
 
@@ -34,7 +34,7 @@ namespace ishak
 	protected:
 		struct RenderContext
 		{
-			std::string texture;
+			String texture;
 		} m_renderContext;
 
 		Vector2 m_position{ 0, 0 };

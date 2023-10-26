@@ -5,16 +5,15 @@ namespace ishak {
 
 	String::String()
 	{
-
+		m_size = 1;
+		m_buffer = new char[m_size];
+		m_buffer[0] = nullChar;
 	}
 
 	String::~String()
 	{
-		if(m_buffer)
-		{
-			delete [] m_buffer;
-			m_buffer = nullptr;
-		}
+		delete [] m_buffer;		
+		m_buffer = nullptr;
 	}
 
 	const char* String::c_str()
@@ -22,10 +21,20 @@ namespace ishak {
 		return m_buffer;
 	}
 
+	const char* String::c_str() const
+	{
+		return m_buffer;
+	}
+
 
 	bool String::IsEmpty() const
 	{
-		return m_buffer == nullptr;
+		if(m_buffer)
+		{
+			return m_buffer[0] == nullChar;
+		}
+
+		return true;
 	}
 
 	String::String(const char* word)
@@ -52,25 +61,38 @@ namespace ishak {
 
 	String::String(const String& other) noexcept
 	{
-		m_buffer = other.m_buffer;
 		m_size = other.m_size;
+		m_buffer = new char[m_size];
+		memcpy(m_buffer, other.m_buffer, m_size);
 	}
 
 	String& String::operator=(const String& other) noexcept
 	{
-		m_buffer = other.m_buffer;
-		m_size = other.m_size;
+		if(this != &other)
+		{
+			delete[] m_buffer;
+
+			m_size = other.m_size;
+			
+			m_buffer = new char[m_size];
+			memcpy(m_buffer, other.m_buffer, m_size);
+		}
 
 		return *this;
 	}
 
 	String& String::operator = (String&& other) noexcept
 	{
-		m_buffer = other.m_buffer;
-		m_size = other.m_size;
+		if(this != &other)
+		{
+			delete[] m_buffer;
 
-		other.m_buffer = nullptr;
-		other.m_size = 0;
+			m_buffer = other.m_buffer;
+			m_size = other.m_size;
+
+			other.m_buffer = nullptr;
+			other.m_size = 0;
+		}
 
 		return *this;
 	}
@@ -109,11 +131,83 @@ namespace ishak {
 		return String{ finalBuffer };
 	}
 
+	String String::operator+(const String& other) const noexcept
+	{
+		size_t finalSize{ other.m_size + m_size };
+		// As 2 strings, we have to subtract 1 null character.
+		char* finalBuffer = new char[finalSize - 1];
+
+		// This is to keep track of the final buffer as we copy the data from the 
+		// other 2 strings
+		size_t addingIdx = 0;
+		for (size_t thisIdx = 0; thisIdx < m_size; thisIdx++)
+		{
+			char letter{ m_buffer[thisIdx] };
+
+			// Exclude the null char. The other string's buffer will do it.
+			if (letter == nullChar)
+			{
+				addingIdx = thisIdx;
+				continue;
+			}
+
+			finalBuffer[thisIdx] = letter;
+		}
+
+
+		for (size_t otherIdx = 0; otherIdx < other.m_size; otherIdx++, addingIdx++)
+		{
+			char letter{ other.m_buffer[otherIdx] };
+			finalBuffer[addingIdx] = letter;
+		}
+
+
+		return String{ finalBuffer };
+	}
+
 	String String::operator + (const char* other) noexcept
 	{
 		// As the const char* counts with the nullchar, then we have to allocate that too.
 		size_t otherSize{ strlen(other) };
 		size_t finalSize{ otherSize + m_size};
+
+		// As the const char* does not count with the nullchar and this string does, then just 
+		// allocate the result size.
+		char* finalBuffer = new char[finalSize];
+
+		// This is to keep track of the final buffer as we copy the data from the 
+		// other 2 strings
+		size_t addingIdx = 0;
+		for (size_t thisIdx = 0; thisIdx < m_size; thisIdx++)
+		{
+			char letter{ m_buffer[thisIdx] };
+
+			// Exclude the null char. The other string's buffer will do it.
+			if (letter == nullChar)
+			{
+				addingIdx = thisIdx;
+				continue;
+			}
+
+			finalBuffer[thisIdx] = letter;
+		}
+
+
+		for (size_t otherIdx = 0; otherIdx < otherSize + 1; otherIdx++, addingIdx++)
+		{
+			char letter{ other[otherIdx] };
+			finalBuffer[addingIdx] = letter;
+		}
+
+
+		return String{ finalBuffer };
+	}
+
+	String String::operator + (const char* other) const noexcept
+	{
+		// As the const char* counts with the nullchar, then we have to allocate that too.
+		size_t otherSize{ strlen(other) };
+		size_t finalSize{ otherSize + m_size };
 
 		// As the const char* does not count with the nullchar and this string does, then just 
 		// allocate the result size.
@@ -219,5 +313,6 @@ namespace ishak {
 
 		return false;
 	}
+
 
 }// ishak

@@ -8,7 +8,7 @@ namespace ishak{
 
 	struct RENDERER_API RendererCommand
 	{
-		std::string texturePath;
+		String texturePath;
 		Vector color;
 		Vector2 position;
 	};

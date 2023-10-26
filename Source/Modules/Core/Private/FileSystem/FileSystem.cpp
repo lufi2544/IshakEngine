@@ -10,6 +10,7 @@ namespace ishak {
 		if(m_singleton == nullptr)
 		{
 			m_singleton = new FileSystem();
+			m_singleton->InitCoreDirs();
 		}
 
 		return *m_singleton;
@@ -20,38 +21,41 @@ namespace ishak {
 		delete m_singleton;
 		m_singleton = nullptr;
 	}
-	String FileSystem::GetEngineDir()
-	{
-		if(m_engineDir.IsEmpty())
-		{
-			
-		}
-
+	const String& FileSystem::GetEngineDir()
+	{	
 		return m_engineDir;
 	}
 
-	void FileSystem::SetEngineDir()
+	const String& FileSystem::GetAssetsDir()
+	{
+		return m_assetsDir;
+	}
+
+	const String& FileSystem::GetModulesDir()
+	{
+		return m_engineModulesDir;
+	}
+
+	void FileSystem::InitCoreDirs()
 	{
 		namespace fs = std::filesystem;
 
 		fs::path currentDir{ fs::current_path() };
-		std::string currentDirString{ currentDir.string() };
+		String currentDirString{ currentDir.string().c_str()};
 		fs::path engineRootDir;
 
 		// Running from .exe
-		if (currentDirString.find("Binaries") != std::string::npos)
+		if (currentDirString.Find("Binaries"))
 		{
 			m_engineDir = String(currentDir.parent_path().string().c_str());
 		}
 		else
 		{
-			// Loading from .vcxprj( VS project file ) located in the IntermediateFolder
+			// Running from .vcxprj( VS project file ) located in the IntermediateFolder
 			m_engineDir = String(currentDir.parent_path().parent_path().string().c_str());
 		}
 
-
-		std::string modulesDir{ engineRootDir.string() + "\\" + "Source" + "\\" + "Modules" };
-
-
+		m_engineModulesDir = String(std::string(std::string(m_engineDir.c_str()) + "\\" + "Source" + "\\" + "Modules" + "\\").c_str());
+		m_assetsDir = String(m_engineDir + "\\" + "Content" + "\\");
 	}
 }// ishak
