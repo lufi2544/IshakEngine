@@ -3,6 +3,7 @@
 #include "WinBase.h"
 
 #include "EngineLoop.h"
+#include "Log/Logger.h"
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {			

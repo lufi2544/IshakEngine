@@ -1,5 +1,6 @@
 #include "GameEntities/Tank.h"
 #include "FileSystem/FileSystem.h"
+#include "Log/Logger.h"
 
 namespace ishak{
 
@@ -22,7 +23,10 @@ namespace ishak{
 
 		auto velocity{ (Vector2{ 10, 0 }) * (speed * deltaTime)};
 		// Moving x amount every frame.
-		m_position += velocity;		
+		m_position += velocity;	
+
+		ishak::Log::Print("Hello", ishak::ELoggerVerbosity::Error);
+
 	}
 
 	void Tank::Fire()

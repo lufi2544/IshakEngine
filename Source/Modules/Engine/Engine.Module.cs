@@ -19,7 +19,8 @@ public class EngineModuleBuilder : ModuleBuilder
 			"SDL",
 			"SDLIMAGE",
 			"Renderer", 
-			"DTEST"
+			"DTEST",
+			"IMGUI"
         };
     }
 	

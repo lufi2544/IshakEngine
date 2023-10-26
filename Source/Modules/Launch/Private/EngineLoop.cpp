@@ -41,21 +41,26 @@ namespace ishak{
 		{
 			high_resolution_clock::time_point currentTime{ high_resolution_clock::now() };
 
-			// Since Engine Start
-			duration<float> timeSpan{ duration_cast<duration<float>>(currentTime - previusTime) };
-
-			const float framesDeltaTime{ timeSpan.count() };
-
+			// Since Last Engine Tick
+			const float tickDeltaTime{ duration_cast<duration<float>>(currentTime - previusTime).count() };
+			
 			previusTime = currentTime;
-			accumulatedTime += framesDeltaTime;
+			accumulatedTime += tickDeltaTime;
 
-
+			//Since 
 			while(accumulatedTime >= FIXED_DELTA)
 			{
 				GEngine->ProcessInput();
 				GEngine->Tick(FIXED_DELTA);
 
 				accumulatedTime -= FIXED_DELTA;
+			}
+
+			// If arrived here fast, then we sleep what is needed to fini
+			if(accumulatedTime < FIXED_DELTA)
+			{
+				float toSleep{ FIXED_DELTA - accumulatedTime };
+				Sleep(toSleep);
 			}
 			
 			GEngine->Render();

@@ -29,6 +29,11 @@ namespace ishak {
 		void SubmitRendererCommand(const RendererCommand& command);
 		void EndFrame();
 
+		RendererT GetSDLRenderer()
+		{
+			return m_rendererWindowPair.second;
+		}
+
 			
 	private:
 

@@ -8,6 +8,11 @@
 #include "GameFramework/World.h"
 #include "GameFramework/GameInstance.h"
 #include "SDL/SDL_image.h"
+
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_sdlrenderer2.h"
+
 #include "Renderer.h"
 
 namespace ishak {	
@@ -46,13 +51,28 @@ namespace ishak {
 			"IshakEngine",
 			0, 0,// where
 			800, 600, // dimensions
-			WindowFlags::WINDOW_CENTRALIZED  |  WindowFlags::WINDOW_VSYNC
+			WindowFlags::WINDOW_CENTRALIZED  |  WindowFlags::WINDOW_VSYNC | WindowFlags::WINDOW_FULLSCREEN_MATCH_MONITOR
 		};
 
-		m_GameMainWindow = ishak::Window::MakeWindow(winCreationContext);
+		m_GameMainWindow = ishak::Window::MakeWindow(winCreationContext);		
+		m_renderer->AddRenderingTarget(m_GameMainWindow.get());	
 
-		// TODO WeakPtr
-		m_renderer->AddRenderingTarget(m_GameMainWindow.get());		
+
+	  //=========================================================================
+	  // IMGUI
+	  //=========================================================================	  
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO();
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls		
+
+
+		ImGui::StyleColorsDark();
+		ImGui_ImplSDL2_InitForSDLRenderer(m_GameMainWindow->GetSDLWindow(), m_renderer->GetSDLRenderer());
+		ImGui_ImplSDLRenderer2_Init(m_renderer->GetSDLRenderer());	
+	  //=========================================================================
+
 	}
 
 	void IshakEngine::HandleModules(Factory* factory)
@@ -67,6 +87,7 @@ namespace ishak {
 		SDL_Event sdlEvent;
 		while (SDL_PollEvent(&sdlEvent))
 		{
+			ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
 			switch (sdlEvent.type)
 			{
 			case SDL_QUIT:
@@ -92,7 +113,18 @@ namespace ishak {
 	}
 
 	void IshakEngine::Render()
-	{						
+	{					
+
+	  //=========================================================================
+	  // IMGUI
+	  //=========================================================================
+		ImGui_ImplSDLRenderer2_NewFrame();
+		ImGui_ImplSDL2_NewFrame();
+		ImGui::NewFrame();
+		ImGui::ShowDemoWindow();
+	  //=========================================================================
+
+
 		// Render all entities.
 		TArray<RendererCommand> renderingCommands;
 
@@ -119,14 +151,28 @@ namespace ishak {
 		for(auto&& command : renderingCommands)
 		{
 			m_renderer->SubmitRendererCommand(command);
-		}
+		}		
 		
-		m_renderer->EndFrame();		
+
+	  //=========================================================================
+	  // IMGUI
+	  //=========================================================================
+		ImGui::Render();
+		ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
+	  //=========================================================================
+		
+		m_renderer->EndFrame();
 	}
 
 	// Last chance to delete stuff.
 	void IshakEngine::ShutDown()
 	{			
-
+	  //=========================================================================
+      // IMGUI
+	  //=========================================================================
+		ImGui_ImplSDLRenderer2_Shutdown();
+		ImGui_ImplSDL2_Shutdown();
+		ImGui::DestroyContext();
+	  //=========================================================================
 	}
 }// ishak
