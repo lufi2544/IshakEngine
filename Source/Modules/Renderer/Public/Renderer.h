@@ -24,9 +24,8 @@ namespace ishak {
 	public:
 		Renderer() = default;
 		void AddRenderingTarget(Window* window);
-		
-		void Render();
-		void SubmitRendererCommand(const RendererCommand& command);
+				
+		void Render(const TArray<RendererCommand>& commands);		
 		void EndFrame();
 
 		RendererT GetSDLRenderer()
@@ -34,6 +33,13 @@ namespace ishak {
 			return m_rendererWindowPair.second;
 		}
 
+		void ShutDown();
+
+	private:
+		void PostSetRenderingTarget(Window* window);
+		void SubmitRendererCommand(const RendererCommand& command);
+		void PreRender();
+		void PostRender();
 			
 	private:
 

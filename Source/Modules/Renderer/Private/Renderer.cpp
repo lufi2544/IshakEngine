@@ -2,6 +2,10 @@
 #include "Renderer.h"
 #include "Window/Window.h"
 
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_sdlrenderer2.h"
+
 
 namespace ishak {
 
@@ -41,13 +45,60 @@ namespace ishak {
 
 
 		m_rendererWindowPair = std::make_pair(window, createdRenderer);
+		PostSetRenderingTarget(window);
 	}
 
-	void Renderer::Render()
+	void Renderer::PostSetRenderingTarget(Window* window)
 	{
-		// Render Windows		
-		const Vector4& windowColor{ m_rendererWindowPair.first->GetColor() };
-		SDL_SetRenderDrawColor(m_rendererWindowPair.second, windowColor.r, windowColor.g, windowColor.b, windowColor.a);		
+	//=========================================================================
+	// IMGUI
+	//=========================================================================	  
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO();
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls		
+
+		SDL_Renderer* renderer{ m_rendererWindowPair.second };
+
+		ImGui::StyleColorsDark();
+		ImGui_ImplSDL2_InitForSDLRenderer(window->GetSDLWindow(), renderer);
+		ImGui_ImplSDLRenderer2_Init(renderer);
+	//=========================================================================
+	}
+
+	void Renderer::Render(const TArray<RendererCommand>& commands)
+	{
+		PreRender();
+
+		for(auto&& command : commands)
+		{
+			SubmitRendererCommand(command);
+		}
+
+		PostRender();
+	}
+
+	void Renderer::PreRender()
+	{		
+	  //=========================================================================
+	  // IMGUI
+	  //=========================================================================
+		ImGui_ImplSDLRenderer2_NewFrame();
+		ImGui_ImplSDL2_NewFrame();
+		ImGui::NewFrame();
+		ImGui::ShowDemoWindow();
+	  //=========================================================================
+	}
+
+	void Renderer::PostRender()
+	{
+	 //=========================================================================
+	 // IMGUI
+	 //=========================================================================
+		ImGui::Render();
+		ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
+	 //=========================================================================
 	}
 
 	void Renderer::SubmitRendererCommand(const RendererCommand& command)
@@ -118,6 +169,17 @@ namespace ishak {
 		}
 
 		return nullptr;
+	}
+
+	void Renderer::ShutDown()
+	{
+	//=========================================================================
+	// IMGUI
+	//=========================================================================
+		ImGui_ImplSDLRenderer2_Shutdown();
+		ImGui_ImplSDL2_Shutdown();
+		ImGui::DestroyContext();
+	//=========================================================================
 	}
 
 }// ishak

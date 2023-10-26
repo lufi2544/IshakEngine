@@ -56,23 +56,6 @@ namespace ishak {
 
 		m_GameMainWindow = ishak::Window::MakeWindow(winCreationContext);		
 		m_renderer->AddRenderingTarget(m_GameMainWindow.get());	
-
-
-	  //=========================================================================
-	  // IMGUI
-	  //=========================================================================	  
-		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
-		ImGuiIO& io = ImGui::GetIO();
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls		
-
-
-		ImGui::StyleColorsDark();
-		ImGui_ImplSDL2_InitForSDLRenderer(m_GameMainWindow->GetSDLWindow(), m_renderer->GetSDLRenderer());
-		ImGui_ImplSDLRenderer2_Init(m_renderer->GetSDLRenderer());	
-	  //=========================================================================
-
 	}
 
 	void IshakEngine::HandleModules(Factory* factory)
@@ -87,6 +70,7 @@ namespace ishak {
 		SDL_Event sdlEvent;
 		while (SDL_PollEvent(&sdlEvent))
 		{
+			//TODO I think this should be on a different place.
 			ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
 			switch (sdlEvent.type)
 			{
@@ -114,17 +98,6 @@ namespace ishak {
 
 	void IshakEngine::Render()
 	{					
-
-	  //=========================================================================
-	  // IMGUI
-	  //=========================================================================
-		ImGui_ImplSDLRenderer2_NewFrame();
-		ImGui_ImplSDL2_NewFrame();
-		ImGui::NewFrame();
-		ImGui::ShowDemoWindow();
-	  //=========================================================================
-
-
 		// Render all entities.
 		TArray<RendererCommand> renderingCommands;
 
@@ -148,31 +121,13 @@ namespace ishak {
 			renderingCommands.Add(command);				
 		});
 
-		for(auto&& command : renderingCommands)
-		{
-			m_renderer->SubmitRendererCommand(command);
-		}		
-		
-
-	  //=========================================================================
-	  // IMGUI
-	  //=========================================================================
-		ImGui::Render();
-		ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
-	  //=========================================================================
-		
+		m_renderer->Render(renderingCommands);		
 		m_renderer->EndFrame();
 	}
 
 	// Last chance to delete stuff.
 	void IshakEngine::ShutDown()
 	{			
-	  //=========================================================================
-      // IMGUI
-	  //=========================================================================
-		ImGui_ImplSDLRenderer2_Shutdown();
-		ImGui_ImplSDL2_Shutdown();
-		ImGui::DestroyContext();
-	  //=========================================================================
+		m_renderer->ShutDown();
 	}
 }// ishak
