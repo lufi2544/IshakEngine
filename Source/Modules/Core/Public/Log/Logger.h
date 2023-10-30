@@ -3,9 +3,6 @@
 #include "CoreMinimal.h"
 #include "CoreConfig.h"
 
-
-
-
 namespace ishak
 {
 	enum class CORE_API ELoggerVerbosity
@@ -23,7 +20,7 @@ namespace ishak
 	{
 		struct LogData
 		{
-			ELoggerVerbosity verb;
+			ELoggerVerbosity verb{ ELoggerVerbosity::Temp };
 			String msg;			
 		};
 

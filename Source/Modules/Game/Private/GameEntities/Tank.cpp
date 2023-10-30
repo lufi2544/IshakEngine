@@ -16,7 +16,7 @@ namespace ishak{
 
 		m_renderContext.texturePath = (FileSystem::Get().GetAssetsDir() + tankTextureName);
 
-		ISHAK_LOG("Tank Created", Temp)
+		ISHAK_LOG("Tank Created", Error)
 	}
 
 	void Tank::DoTick(float deltaTime)
@@ -25,8 +25,7 @@ namespace ishak{
 
 		auto velocity{ (Vector2{ 10, 0 }) * (speed * deltaTime)};
 		// Moving x amount every frame.
-		m_position += velocity;	
-	
+		m_position += velocity;	     	
 	}
 
 	void Tank::Fire()
