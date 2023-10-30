@@ -11,9 +11,6 @@
 
 namespace ishak {
 
-
-	Logger* GLogger = nullptr;
-
 	void Renderer::AddRenderingTarget(Window* window)
 	{
 		
@@ -56,6 +53,8 @@ namespace ishak {
 
 	void Renderer::PreRender()
 	{		
+		SDL_RenderClear(m_rendererWindowPair.second);
+
 	  //=========================================================================
 	  // IMGUI
 	  //=========================================================================
@@ -67,16 +66,7 @@ namespace ishak {
 	}
 
 	void Renderer::Render(const TArray<RendererCommand>& commands)
-	{
-		static int a = 100;
-		static int b = 0;
-
-		if(b < a)
-		{
-			ISHAK_LOG("Rendering")
-			++b;
-		}
-
+	{	
 		PreRender();
 
 		for (auto&& command : commands)
@@ -84,7 +74,7 @@ namespace ishak {
 			SubmitRendererCommand(command);
 		}
 
-		GLogger->Draw();
+		GLog->Draw();
 
 		PostRender();
 		
@@ -118,9 +108,7 @@ namespace ishak {
 		ImGui_ImplSDLRenderer2_Init(renderer);
 		//=========================================================================
 
-		GLogger = new Logger();
-		ISHAK_LOG("Init Renderer");
-
+			
 	}
 
 	void Renderer::SubmitRendererCommand(const RendererCommand& command)
@@ -132,10 +120,9 @@ namespace ishak {
 		}
 		auto& renderer{ m_rendererWindowPair.second };
 		if(bRenderColor)
-		{
-			SDL_RenderClear(m_rendererWindowPair.second); 
-			SDL_SetRenderDrawColor(renderer, command.color.r, command.color.g, command.color.b, 0);
-			// Change this clear to somewhere else.
+		{			
+			SDL_SetRenderDrawColor(renderer, command.color.r, command.color.g, command.color.b, 0);			
+
 		}else
 		{
 			SDL_Texture* cachedTexture{ m_rendererCache.GetTexture(command.texturePath, *this) };
@@ -203,8 +190,6 @@ namespace ishak {
 		ImGui::DestroyContext();
 	//=========================================================================
 
-		delete GLogger;
-		GLogger = nullptr;
 	}
 
 }// ishak

@@ -16,9 +16,7 @@
 #include "Log/Logger.h"
 
 namespace ishak {	
-		
-
-	Logger* GLogger = nullptr;
+	
 
 	IshakEngine::IshakEngine()
 	{		
@@ -26,6 +24,9 @@ namespace ishak {
 
 	void IshakEngine::Init()
 	{		
+
+		ISHAK_LOG("Engine Init.", Temp)
+		ISHAK_LOG("Loading Modules Dlls....", Temp)
 		Factory factory;
 		HandleModules(&factory);	
 
@@ -36,6 +37,7 @@ namespace ishak {
 
 
 		// Create World
+		ISHAK_LOG("Creating World Context", Temp)
 		m_gameFramework.world = std::make_unique<World>(m_gameFramework.gameInstance);
 		m_gameFramework.gameInstance->SetWorld(m_gameFramework.world.get());
 

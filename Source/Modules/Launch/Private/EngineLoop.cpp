@@ -10,7 +10,7 @@
 
 namespace ishak{
 
-	IshakEngine* GEngine = nullptr;
+	CORE_API IshakEngine* GEngine = nullptr;
 
 	EngineLoop::EngineLoop() 
 	{

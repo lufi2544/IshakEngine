@@ -14,7 +14,9 @@ namespace ishak{
 	{
 		String tankTextureName{ "Tank_Right.png"};
 
-		m_renderContext.texture = (FileSystem::Get().GetAssetsDir() + tankTextureName);
+		m_renderContext.texturePath = (FileSystem::Get().GetAssetsDir() + tankTextureName);
+
+		ISHAK_LOG("Tank Created", Temp)
 	}
 
 	void Tank::DoTick(float deltaTime)

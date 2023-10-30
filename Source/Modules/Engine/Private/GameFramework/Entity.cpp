@@ -36,6 +36,6 @@ namespace ishak {
 
 	String Entity::GetTexture() const
 	{
-		return m_renderContext.texture;
+		return m_renderContext.texturePath;
 	}
 }// ishak

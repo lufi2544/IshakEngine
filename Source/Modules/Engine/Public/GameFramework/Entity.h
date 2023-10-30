@@ -34,7 +34,7 @@ namespace ishak
 	protected:
 		struct RenderContext
 		{
-			String texture;
+			String texturePath;
 		} m_renderContext;
 
 		Vector2 m_position{ 0, 0 };

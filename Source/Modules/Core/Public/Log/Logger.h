@@ -10,27 +10,38 @@ namespace ishak
 {
 	enum class CORE_API ELoggerVerbosity
 	{
-		None, 
-		Warining,
+		Temp, 
+		Warning,
 		Error
 	};
 
 
-	
-	class CORE_API Logger
+	/** Global Logger class for the Engine.
+	 *  TODO: Store logs and output to a file.
+	 */
+	struct CORE_API Logger
 	{
+		struct LogData
+		{
+			ELoggerVerbosity verb;
+			String msg;			
+		};
+
 	public:
 		Logger() = default;
 
-		void Log(const String& message , ELoggerVerbosity verb = ELoggerVerbosity::None);
+		void Log(const String& message , ELoggerVerbosity verb = ELoggerVerbosity::Temp);
 		void Draw();
 
 	private:
-		TArray<String> m_allLogs;
-	};
+		TArray<LogData> m_allLogs;
+	};	
+
+	CORE_API Logger* GetGlobalLogger();
 	
-	extern CORE_API Logger* GLogger;
 
+#define GLog GetGlobalLogger()
 
-#define ISHAK_LOG(msg) GLogger->Log({msg});
+#define ISHAK_LOG(msg, Verb) GLog->Log(msg, ELoggerVerbosity::Verb);
+
 }

@@ -4,13 +4,14 @@
 #include "imgui.h"
 
 namespace ishak {
+	
 
 	void Logger::Log(const String& message, ELoggerVerbosity verb)
 	{
 		String finalLog;
 
 		// TODO Add struct for logs with color and stuff.
-		if(verb == ELoggerVerbosity::Warining)
+		if(verb == ELoggerVerbosity::Warning)
 		{
 
 		}else if(verb == ELoggerVerbosity::Error)
@@ -22,7 +23,7 @@ namespace ishak {
 
 		}
 
-		m_allLogs.Add(message);
+		m_allLogs.Add({ verb, message });
 	}
 
 	void Logger::Draw()
@@ -59,8 +60,34 @@ namespace ishak {
 			while (clipper.Step())
 			{
 				for (int line_no = clipper.DisplayStart; line_no < clipper.DisplayEnd; line_no++)
-				{				
-					ImGui::TextUnformatted(m_allLogs[line_no].begin(), m_allLogs[line_no].end());
+				{		
+
+					ImVec4 imColor;
+					bool bColor{ false };
+					LogData& logData{ m_allLogs[line_no] };
+					if(logData.verb == ELoggerVerbosity::Warning)
+					{
+
+						imColor = ImVec4(255.0f, 255.0f, 0.0f, 1.0f);
+						bColor = true;
+
+					}else if(logData.verb == ELoggerVerbosity::Error)
+					{
+						imColor = ImVec4(255.0f, 0.0f, 0.0f, 1.0f);
+						bColor = true;
+					}
+
+					if(bColor)
+					{
+						ImGui::PushStyleColor(ImGuiCol_Text, imColor);
+					}
+
+					ImGui::TextUnformatted(m_allLogs[line_no].msg.begin(), m_allLogs[line_no].msg.end());
+
+					if (bColor)
+					{
+						ImGui::PopStyleColor();
+					}
 				}
 			}
 			clipper.End();
@@ -75,5 +102,14 @@ namespace ishak {
 		ImGui::EndChild();
 		ImGui::End();		
 	}
+
+
+	CORE_API Logger* GetGlobalLogger()
+	{
+		static Logger sLogger;
+
+		return &sLogger;
+	}
+
 
 }// ishak
