@@ -20,7 +20,8 @@ public class EngineModuleBuilder : ModuleBuilder
 			"SDLIMAGE",
 			"Renderer", 
 			"DTEST",
-			"IMGUI"
+			"IMGUI",
+			"ECS"
         };
     }
 	
