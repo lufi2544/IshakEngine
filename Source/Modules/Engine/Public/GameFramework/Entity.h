@@ -4,6 +4,8 @@
 #include "CoreConfig.h"
 #include "Functionality/Factory.h"
 
+#include "EntityId.h"
+
 namespace ishak {
 	class World;
 }
@@ -24,6 +26,7 @@ namespace ishak
 
 		String GetTexture() const;
 		Vector2 GetPosition() const;
+		inline Ecs::EntityId GetEntityId() { return entityId; }
 		void SetPosition(const Vector2& newPosition );
 
 	protected:
@@ -40,5 +43,7 @@ namespace ishak
 		Vector2 m_position{ 0, 0 };
 	private:
 		World* m_World{ nullptr };		
+
+		Ecs::EntityId entityId{ Ecs::kNullId };
 	};	
 } // ishak
