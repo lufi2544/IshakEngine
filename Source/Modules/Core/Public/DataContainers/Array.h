@@ -18,13 +18,28 @@ namespace ishak {
 	class CORE_API TArray 
 	{	
 
-		static std::size_t constexpr DEFAULT_CAPACITY = 2;
+		static size_t constexpr DEFAULT_CAPACITY = 2;
+		static size_t constexpr MIN_SIZE_DELTA_TO_NEWALLOC_WHEN_RESIZED = 5;
 	public:
 
 		TArray() 
 		{
 			m_capacity = DEFAULT_CAPACITY;
 			AllocateCapacity();
+		}
+
+		TArray(std::initializer_list<DataT>&& initList)
+		{
+			m_capacity = initList.size();
+			m_size = initList.size();
+			AllocateCapacity();
+			
+			size_t idx = 0;
+			for(auto& element : initList)
+			{
+				m_data[idx] = std::move(element);
+				++idx;
+			}
 		}
 
 		~TArray() 
@@ -101,27 +116,21 @@ namespace ishak {
 #pragma endregion --Operators--
 
 
+		uint32 Capacity() const
+		{
+			return m_capacity;
+		}
+
 		/** Adds a new value to the Array(r-value, move operator). */
 		void Add(DataT&& dataToAdd)
 		{			
 			// Check if we have to reallocate memory
 			const bool bNeedToReallocateMemory{ m_size == m_capacity };
 			if (bNeedToReallocateMemory) 
-			{
-				// Change the dinamic ptr to the last Data in the Array.
+			{				
 				m_capacity *= 2;
 
-				DataT* newDataPtr{ new DataT[m_capacity] };
-
-				// copy all the data from the current dinamic ptr to the new one.
-				for (int idx = 0; idx < m_size; ++idx ) 
-				{
-					newDataPtr[idx] = m_data[idx];
-				}
-
-				delete[] m_data;
-
-				m_data = newDataPtr;
+				AllocateCapacityAndMoveData();
 			}
 
 			m_data[m_size++] = std::move(dataToAdd);
@@ -133,21 +142,10 @@ namespace ishak {
 			// Check if we have to reallocate memory
 			const bool bNeedToReallocateMemory{ m_size == m_capacity };
 			if (bNeedToReallocateMemory)
-			{
-				// Change the dinamic ptr to the last Data in the Array.
+			{				
 				m_capacity *= 2;
 
-				DataT* newDataPtr{ new DataT[m_capacity] };
-
-				// copy all the data from the current dinamic ptr to the new one.
-				for (int idx = 0; idx < m_size; ++idx)
-				{
-					newDataPtr[idx] = m_data[idx];
-				}
-
-				delete[] m_data;
-
-				m_data = newDataPtr;
+				AllocateCapacityAndMoveData();
 			}
 
 			m_data[m_size++] = dataToAdd;
@@ -190,6 +188,59 @@ namespace ishak {
 			--m_size;										
 		}
 
+		/** Resizes the vector to a certain newSize, cases:
+		* 
+		* Size greater than the old size:
+		*	- new memory will be allocated for the new size and the vector moved to a new memory location.
+		* 
+		* Size is smaller than the new size .
+		*	- last elements in the vector( delta size elements ) will be ignored in some cases, and in others, new memory block will be allocated.
+		* 
+		* Size greater than size but smaller to capacity.
+		* 
+		*	- size will be greater only, no memory allocation needed here.
+		* 		
+		*/
+		void Resize(int32 newSize)
+		{
+			if(newSize < m_size)
+			{
+
+				// Remove the elements from the delta size positions.
+				int deltaSizes = m_size - newSize;
+
+				// In this case size need to be set before deep copying the data.
+				m_size = newSize;
+
+				// In some cases we should leave space free for more memory needed to be allocated.
+				if(deltaSizes > MIN_SIZE_DELTA_TO_NEWALLOC_WHEN_RESIZED)
+				{
+					// New Alloc the Array
+					m_capacity = newSize;
+					AllocateCapacityAndMoveData();					
+				}
+				
+								
+			}else if(newSize > m_size)
+			{
+				if(newSize > m_capacity)
+				{
+					m_capacity = newSize;
+					AllocateCapacityAndMoveData();
+				}
+
+				// Set the size after deep copy
+				m_size = newSize;
+			}			
+		}
+
+		/** Resevers the memory for the newCapacity. Size is not changes. */
+		void Reserve(int32 newCapacity)
+		{
+			m_capacity = newCapacity;
+			AllocateCapacityAndMoveData();
+		}
+
 		bool Contains(const DataT& toCompare)
 		{			
 			for(int32 idx = 0; idx < m_size; ++idx)
@@ -216,6 +267,22 @@ namespace ishak {
 		}
 
 	private:
+
+		void AllocateCapacityAndMoveData()
+		{
+			DataT* newDataPtr{ new DataT[m_capacity] };
+
+			// copy all the data from the current dinamic ptr to the new one.
+			for (int idx = 0; idx < m_size; ++idx)
+			{
+				newDataPtr[idx] = m_data[idx];
+			}
+
+			delete[] m_data;
+
+			m_data = newDataPtr;
+		}
+
 		/** Allocates the m_capacity in memory. Used for initializing the container. */
 		void AllocateCapacity()
 		{		

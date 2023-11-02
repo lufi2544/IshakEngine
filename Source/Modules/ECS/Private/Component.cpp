@@ -1,19 +1,8 @@
 #include "Component.h"
 
-namespace ishak::Ecs {
+namespace ishak { namespace Ecs{
 
 
-	template<typename T>
-	Component<T>::Component()
-	{
 
-	}
+}}// ishak::Ecs
 
-	template<typename T>
-	uint16 Component<T>::GetId()
-	{
-		return kIdGenerator++;
-	}
-
-
-}// ishak::Ecs

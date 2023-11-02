@@ -2,6 +2,10 @@
 #include "GameFramework/GameInstance.h"
 #include "TanksGameInstance.h"
 
+// ECS
+#include "ComponentManipulator.h"
+#include "ComponentContainer.h"
+
 namespace ishak {
 
 	GameModule::GameModule()
@@ -15,6 +19,19 @@ namespace ishak {
 			return std::make_shared<TanksGameInstance>();
 
 		}, EClassMultiplicity::Singleton);
+
+
+
+		Ecs::ComponentManipulator manipulator;
+
+
+		
 	}
+
+
+	
+	
+	
+	
 
 }// ishak
