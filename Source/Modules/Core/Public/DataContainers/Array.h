@@ -125,8 +125,8 @@ namespace ishak {
 		void Add(DataT&& dataToAdd)
 		{			
 			// Check if we have to reallocate memory
-			const bool bNeedToReallocateMemory{ m_size == m_capacity };
-			if (bNeedToReallocateMemory) 
+			const bool bNeedsToReallocateMemory{ m_size == m_capacity };
+			if (bNeedsToReallocateMemory) 
 			{				
 				m_capacity *= 2;
 
@@ -140,8 +140,8 @@ namespace ishak {
 		void Add(const DataT& dataToAdd)
 		{
 			// Check if we have to reallocate memory
-			const bool bNeedToReallocateMemory{ m_size == m_capacity };
-			if (bNeedToReallocateMemory)
+			const bool bNeedsToReallocateMemory{ m_size == m_capacity };
+			if (bNeedsToReallocateMemory)
 			{				
 				m_capacity *= 2;
 
@@ -275,7 +275,7 @@ namespace ishak {
 			// copy all the data from the current dinamic ptr to the new one.
 			for (int idx = 0; idx < m_size; ++idx)
 			{
-				newDataPtr[idx] = m_data[idx];
+				newDataPtr[idx] = std::move(m_data[idx]);
 			}
 
 			delete[] m_data;
