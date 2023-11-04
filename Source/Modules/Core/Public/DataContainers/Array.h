@@ -101,16 +101,48 @@ namespace ishak {
 		DataT& operator[](int32 idx)
 		{
 			// TODO ASSERT Custom Assert
-			CheckSizeAt(idx);
+			// Maybe Capacity is Ok, if not, then access violation.
+			assert(CheckSizeAt(idx) == true);
 
 			return m_data[idx];
 		}
 
 		const DataT& operator[](int32 idx) const
 		{
-			CheckSizeAt(idx);
+			assert(CheckSizeAt(idx) == true);
 
 			return m_data[idx];
+		}
+
+		TArray<DataT>& operator = (const TArray<DataT>& other)
+		{
+			if(m_data)
+			{
+				delete[] m_data;
+			}
+
+			m_capacity = other.m_capacity;
+			m_size = other.m_size;
+			AllocateCapacity();
+			for (int32 idx = 0; idx < m_size; ++idx)
+			{
+				m_data[idx] = other.m_data[idx];
+			}
+
+			return *this;
+		}
+
+		friend bool operator == (TArray<DataT> const& lhs, TArray<DataT> const& rhs)
+		{			
+			for(auto& element : lhs)
+			{
+				if(!rhs.Contains(element))
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 #pragma endregion --Operators--
@@ -119,11 +151,6 @@ namespace ishak {
 		bool IsEmpty() const
 		{
 			return Size() == 0;
-		}
-
-		uint32 Capacity() const
-		{
-			return m_capacity;
 		}
 
 		// TODO Tests
@@ -159,6 +186,27 @@ namespace ishak {
 			}
 
 			AllocateCapacity();
+		}
+
+		/** Adds X amount of defaulted objects in the container. */
+		void AddDefaulted(uint32 count)
+		{
+			const uint32 oldSize{ m_size };
+			const uint32 newSize{ oldSize + count };
+			if(m_capacity < newSize)
+			{
+				// MEMORY Maybe adding more space to the allocation? 
+				m_capacity = newSize; 
+				AllocateCapacityAndMoveData();
+			}
+
+			const size_t firstIdx{ oldSize > 0 ? oldSize : 0 };
+			for(size_t idx = firstIdx; idx < newSize; ++idx)
+			{
+				DataT defaultData{ };
+				m_data[idx] = defaultData;
+				++m_size;
+			}
 		}
 
 		/** Adds a new value to the Array(r-value, move operator). */
@@ -295,9 +343,14 @@ namespace ishak {
 		}
 		
 		/** Array size. */
-		std::size_t Size() const
+		uint32 Size() const
 		{
 			return m_size;
+		}
+
+		uint32 Capacity() const
+		{
+			return m_capacity;
 		}
 
 		/** Returns true if we can access to the passed idx. */

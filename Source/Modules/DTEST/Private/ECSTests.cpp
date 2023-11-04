@@ -141,6 +141,34 @@ namespace ishak {
 				CHECK(freeSpaces.Contains(entity1ComponentIdx) == true);
 			}
 
+
+			TEST_CASE("Adding some components, removing them, freed space. Adding it Again, spaces taken, OK")
+			{
+				SharedPtr<IComponentContainer> container = std::make_shared<Ecs::ComponentContainer<HealthComponent>>(2);
+
+				// Register the component container
+				ComponentManipulator compManipulator;
+				compManipulator.RegisterComponentContainer(container);
+
+				HealthComponent healthComp{ 1, 2, };
+				for (int ientity = 0; ientity <= 10; ++ientity)
+				{
+					// Adding a simple component
+					compManipulator.AddComponent(ientity, healthComp);
+				}
+				for (int ientity = 0; ientity < 5; ++ientity)
+				{
+					// Removing some components
+					compManipulator.RemoveComponent<HealthComponent>(ientity);
+				}
+																	
+				compManipulator.FlushComponenContainerAllocation<HealthComponent>();
+
+				const TArray<uint16> freeSpacesAfterFlush{ compManipulator.Debug_GetFreeSpacesIndexes<HealthComponent>() };
+				CHECK(freeSpacesAfterFlush.Size() == 100);
+				CHECK(freeSpacesAfterFlush.Capacity() == 100);
+			}
+
 		}
 
 }} //ishak::Ecs

@@ -21,19 +21,15 @@ namespace ishak { namespace Ecs {
 		class ECS_API ComponentContainer : public IComponentContainer
 		{
 			static constexpr uint8 INITIAL_COMPONENT_COUNT = 2;
-			static constexpr int16 NULL_CONTAINER_IDX = 0xffff;
+			static constexpr uint16 NULL_CONTAINER_IDX = 0xffff;
 			
 		public:			
 			ComponentContainer(uint8 initialComponenentsNum = INITIAL_COMPONENT_COUNT)
 			{
 				m_components.Reserve(initialComponenentsNum);
-
-				// Fill Free Spaces Indexes Array
-				for(size_t idx = 0; idx < initialComponenentsNum; ++idx)
-				{
-					m_freeSpacesIndexes.Add(idx);
-				}
-
+				m_components.AddDefaulted(initialComponenentsNum);
+				
+				AllocateFreeSpacesIndexes(0, m_components.Capacity() - 1);
 			}
 
 			std::type_index GetComponentId() override
@@ -68,6 +64,19 @@ namespace ishak { namespace Ecs {
 			void FlushComponentsAllocation();
 
 		private:
+
+			void AllocateFreeSpacesIndexes(uint32 firstIdx, uint32 lastIdx)
+			{
+				m_freeSpacesIndexes.Reserve(m_components.Capacity());
+				// Fill Free Spaces Indexes Array
+				for (uint32 idx = firstIdx; idx <= lastIdx; ++idx)
+				{
+					m_freeSpacesIndexes.Add(idx);
+				}
+			}
+
+
+
 			uint16 TryGetFreeIdxForComponent()
 			{
 				if(m_freeSpacesIndexes.IsEmpty())
@@ -104,9 +113,26 @@ namespace ishak { namespace Ecs {
 			const uint16 freeIdx{ TryGetFreeIdxForComponent() };
 			if(freeIdx == NULL_CONTAINER_IDX)
 			{
-				// Not free space, memory reallocation for the components array.				
+				// Not free space, memory reallocation for the components array.	
+
+				const uint32 lastComponentsCollectionCapacity{ m_components.Capacity() };
+
+				// New allocation for the array done.
 				m_components.Add(component);
-				m_entityComponentIdxMap[entity] = m_components.Size() - 1;
+				const uint32 currentComponentsCollectionCapacity{ m_components.Capacity() };
+
+				// Fill the new free components in the collection after reallocating memory.
+				m_components.AddDefaulted(m_components.Capacity() - m_components.Size());
+
+				// As we have already added one component, we have to start flagging as free one idx further.
+				const uint32 firstIdxToFlagAsFree{ lastComponentsCollectionCapacity };
+				const uint32 lastIdxToFlagAsFree{ currentComponentsCollectionCapacity - 1 };
+				AllocateFreeSpacesIndexes(firstIdxToFlagAsFree, lastIdxToFlagAsFree);
+
+				const uint16 entityComponentIdx{ TryGetFreeIdxForComponent() };
+				assert(entityComponentIdx != NULL_CONTAINER_IDX);
+
+				m_entityComponentIdxMap[entity] = entityComponentIdx;
 			}
 			else 
 			{
@@ -158,11 +184,11 @@ namespace ishak { namespace Ecs {
 				return;
 			}
 			
-			const uint16 flushedArraySize{ m_components.Size() - m_freeSpacesIndexes.Size() };
+			const auto flushedArraySize{ m_components.Size() - m_freeSpacesIndexes.Size() };
 			TArray<ComponentT> newComponentContainer;
 			newComponentContainer.Reserve(flushedArraySize);
 
-			for(uint16 idx; idx < m_components.Size(); ++idx)
+			for(uint16 idx = 0; idx < m_components.Size(); ++idx)
 			{
 				if(m_freeSpacesIndexes.Contains(idx))
 				{

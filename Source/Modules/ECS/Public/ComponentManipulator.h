@@ -26,50 +26,6 @@ namespace ishak { namespace Ecs {
 			void RegisterComponentContainer(const SharedPtr<IComponentContainer>& container);			
 
 			template<class ComponentT>
-			auto Debug_GetFreeSpacesIndexes()-> decltype(auto)
-			{
-				auto foundContainer{ m_componentContainers.find(std::type_index(typeid(ComponentT))) };
-				if (foundContainer == std::end(m_componentContainers))
-				{
-					// TODO Exception
-					assert(false);
-
-				}
-
-				ComponentContainer<ComponentT>* castedContainer =
-					dynamic_cast<ComponentContainer<ComponentT>*>(foundContainer->second.get());
-
-				if (!castedContainer)
-				{
-					assert(false);
-				}
-
-				return castedContainer->GetFreeSpaces();
-			}
-
-			template<class ComponentT>
-			auto Debug_GetComponentIdxForEntity(EntityId entity, bool& bFound) -> decltype(auto)
-			{
-				auto foundContainer{ m_componentContainers.find(std::type_index(typeid(ComponentT))) };
-				if (foundContainer == std::end(m_componentContainers))
-				{
-					// TODO Exception
-					assert(false);
-
-				}
-
-				ComponentContainer<ComponentT>* castedContainer =
-					dynamic_cast<ComponentContainer<ComponentT>*>(foundContainer->second.get());
-
-				if (!castedContainer)
-				{
-					assert(false);
-				}
-
-				return castedContainer->GetComponentIdxForEntity(entity, bFound);
-			}
-
-			template<class ComponentT>
 			void AddComponent(EntityId entity, const ComponentT& component)
 			{				
 				auto foundContainer{ m_componentContainers.find(std::type_index(typeid(component))) };
@@ -89,7 +45,7 @@ namespace ishak { namespace Ecs {
 				castedContainer->AddComponentForEntity(entity, component);
 
 				//TODO Figure out the id for every componentT.
-				m_entitiesSignature[entity].set(1);
+				//m_entitiesSignature[entity].set(1);
 			}
 
 			template<class ComponentT>
@@ -160,6 +116,74 @@ namespace ishak { namespace Ecs {
 			}
 
 			void UpdateSystems(float deltaTime);
+
+			template<class ComponentT>
+			void FlushComponenContainerAllocation()
+			{
+				auto foundContainer{ m_componentContainers.find(std::type_index(typeid(ComponentT))) };
+				if (foundContainer == std::end(m_componentContainers))
+				{
+					// TODO Exception
+					assert(false);
+					return;
+				}
+
+				ComponentContainer<ComponentT>* castedContainer =
+					dynamic_cast<ComponentContainer<ComponentT>*>(foundContainer->second.get());
+
+				if (!castedContainer)
+				{
+					assert(false);
+					return;
+				}
+
+				castedContainer->FlushComponentsAllocation();
+			}
+
+
+			template<class ComponentT>
+			auto Debug_GetFreeSpacesIndexes() -> decltype(auto)
+			{
+				auto foundContainer{ m_componentContainers.find(std::type_index(typeid(ComponentT))) };
+				if (foundContainer == std::end(m_componentContainers))
+				{
+					// TODO Exception
+					assert(false);
+
+				}
+
+				ComponentContainer<ComponentT>* castedContainer =
+					dynamic_cast<ComponentContainer<ComponentT>*>(foundContainer->second.get());
+
+				if (!castedContainer)
+				{
+					assert(false);
+				}
+
+				return castedContainer->GetFreeSpaces();
+			}
+
+			template<class ComponentT>
+			auto Debug_GetComponentIdxForEntity(EntityId entity, bool& bFound) -> decltype(auto)
+			{
+				auto foundContainer{ m_componentContainers.find(std::type_index(typeid(ComponentT))) };
+				if (foundContainer == std::end(m_componentContainers))
+				{
+					// TODO Exception
+					assert(false);
+
+				}
+
+				ComponentContainer<ComponentT>* castedContainer =
+					dynamic_cast<ComponentContainer<ComponentT>*>(foundContainer->second.get());
+
+				if (!castedContainer)
+				{
+					assert(false);
+				}
+
+				return castedContainer->GetComponentIdxForEntity(entity, bFound);
+			}
 			
 			
 
