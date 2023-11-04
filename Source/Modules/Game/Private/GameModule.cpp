@@ -3,8 +3,7 @@
 #include "TanksGameInstance.h"
 
 // ECS
-#include "ComponentManipulator.h"
-#include "ComponentContainer.h"
+
 
 namespace ishak {
 
@@ -22,7 +21,7 @@ namespace ishak {
 
 
 
-		Ecs::ComponentManipulator manipulator;
+
 
 
 		

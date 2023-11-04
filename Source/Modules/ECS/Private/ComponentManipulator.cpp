@@ -2,7 +2,7 @@
 
 namespace ishak::Ecs
 {
-	void ComponentManipulator::RegisterSystem(const ISystem& system)
+	void ComponentManipulator::RegisterSystem(const SharedPtr<ISystem>& system)
 	{
 		// TODO check for already registerd.
 
@@ -11,15 +11,29 @@ namespace ishak::Ecs
 
 	void ComponentManipulator::RegisterComponentContainer(const SharedPtr<IComponentContainer>& container)
 	{
-		m_componentContainers.insert(std::make_pair(container->GetId(), container));
+		const ContainerIdT containerId{ container->GetComponentId() };
+		auto foundContainerIt{ m_componentContainers.find(containerId) };
+		if(foundContainerIt != std::end(m_componentContainers))
+		{
+			//Found Container
+			return;
+		}
+		else 
+		{
+			//New Container
+			m_componentContainers[containerId] = container;
+		}
 	}
 
-	void ComponentManipulator::UpdateSystems()
+	void ComponentManipulator::UpdateSystems(float deltaTime)
 	{
 		//Iterate all entities
 		//Check if met requirements for certain system
 		// T: Retreive the components for this entities.
 		// Update system.
+
+		
+
 	}
 }// ishak::Ecs
 

@@ -116,9 +116,49 @@ namespace ishak {
 #pragma endregion --Operators--
 
 
+		bool IsEmpty() const
+		{
+			return Size() == 0;
+		}
+
 		uint32 Capacity() const
 		{
 			return m_capacity;
+		}
+
+		// TODO Tests
+		DataT& Last()
+		{
+			return m_data[m_size - 1];
+		} 
+
+		DataT& Front()
+		{			
+			assert(IsEmpty() == false);
+
+			return m_data[0];
+		}
+
+		// TODO Tests
+		void PopBack()
+		{
+			Remove(Size() - 1);
+		}
+
+		// TODO remve by value
+
+		/** Deep clear. I think there is no point on leaving this with memory allocated. */
+		void Clear()
+		{			
+			m_size = 0;
+			m_capacity = DEFAULT_CAPACITY;
+
+			if(m_data)
+			{
+				delete[] m_data;
+			}
+
+			AllocateCapacity();
 		}
 
 		/** Adds a new value to the Array(r-value, move operator). */
@@ -241,7 +281,7 @@ namespace ishak {
 			AllocateCapacityAndMoveData();
 		}
 
-		bool Contains(const DataT& toCompare)
+		bool Contains(const DataT& toCompare) const
 		{			
 			for(int32 idx = 0; idx < m_size; ++idx)
 			{
@@ -255,7 +295,7 @@ namespace ishak {
 		}
 		
 		/** Array size. */
-		std::size_t Size() 
+		std::size_t Size() const
 		{
 			return m_size;
 		}

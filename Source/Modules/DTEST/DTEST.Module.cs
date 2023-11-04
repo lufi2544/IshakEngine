@@ -14,7 +14,8 @@ public class DTESTModuleBuilder : ModuleBuilder
 	{
         PublicModuleDependencies = new List<string>()
         {   
-			"Core"
+			"Core",
+			"ECS"
         };
     }
 	

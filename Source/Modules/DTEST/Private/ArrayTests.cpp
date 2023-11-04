@@ -1,6 +1,6 @@
 #include "IshakTest.h"
 
-TEST_CASE("Array Resizes, need reallocation, new size is OK and Capacity is OK")
+TEST_CASE("Array Resizes, need reallocation for more elements, new size is OK and Capacity is OK")
 {
 	ishak::TArray<int> array{ 1, 1, 1 };
 
@@ -21,7 +21,7 @@ TEST_CASE("Array Reserves, new size is OK and Capacity is OK")
 	CHECK(array.Capacity() == 10);
 }
 
-TEST_CASE("Array Resizes, new allocation needed, OK")
+TEST_CASE("Array Resizes, new allocation needed for less elemets, OK")
 {
 	ishak::TArray<int> array{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 }; // 20 elements
 	auto actualSize{ array.Size() };

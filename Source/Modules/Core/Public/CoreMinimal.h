@@ -19,6 +19,7 @@
 #include <chrono>
 #include <limits>
 #include <bitset>
+#include <typeindex>
 
 // Math
 #include "IshakMath/IshakMath.h"
