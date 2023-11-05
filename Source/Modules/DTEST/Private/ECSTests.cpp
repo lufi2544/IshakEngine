@@ -30,7 +30,7 @@ namespace ishak {
 
 				// Register the component container
 				ComponentManipulator compManipulator;
-				compManipulator.RegisterComponentContainer(container);
+				compManipulator.RegisterComponentContainer(std::move(container));
 
 				// Adding a simple component
 				HealthComponent healthComp{ 1, 2, };
@@ -50,7 +50,7 @@ namespace ishak {
 
 				// Register the component container
 				ComponentManipulator compManipulator;
-				compManipulator.RegisterComponentContainer(container);
+				compManipulator.RegisterComponentContainer(std::move(container));
 
 				// Adding a simple component
 				HealthComponent healthComp{ 1, 2, };
@@ -69,7 +69,7 @@ namespace ishak {
 
 				// Register the component container
 				ComponentManipulator compManipulator;
-				compManipulator.RegisterComponentContainer(container);
+				compManipulator.RegisterComponentContainer(std::move(container));
 
 				HealthComponent healthComp{ 1, 2, };
 				for(int ientity = 0; ientity < 22; ++ientity)
@@ -106,7 +106,7 @@ namespace ishak {
 
 				// Register the component container
 				ComponentManipulator compManipulator;
-				compManipulator.RegisterComponentContainer(container);
+				compManipulator.RegisterComponentContainer(std::move(container));
 
 				HealthComponent healthComp{ 1, 2, };
 				for (int ientity = 0; ientity < 22; ++ientity)
@@ -148,7 +148,7 @@ namespace ishak {
 
 				// Register the component container
 				ComponentManipulator compManipulator;
-				compManipulator.RegisterComponentContainer(container);
+				compManipulator.RegisterComponentContainer(std::move(container));
 
 				const uint16 compToAdd{ 200 };
 				const uint16 compToRemove{ 100 };
@@ -179,7 +179,7 @@ namespace ishak {
 
 				// Register the component container
 				ComponentManipulator compManipulator;
-				compManipulator.RegisterComponentContainer(container);
+				compManipulator.RegisterComponentContainer(std::move(container));
 
 				const uint16 compToAdd{ 200 };
 				const uint16 compToRemove{ 100 };
@@ -221,7 +221,7 @@ namespace ishak {
 
 				// Register the component container
 				ComponentManipulator compManipulator;
-				compManipulator.RegisterComponentContainer(container);
+				compManipulator.RegisterComponentContainer(std::move(container));
 
 				const uint16 compToAdd{ 200 };
 				const uint16 compToRemove{ 50 };
@@ -255,6 +255,46 @@ namespace ishak {
 				CHECK(comp.max == custom.max);
 			}
 
+		}
+
+		TEST_CASE("System Signature Test")
+		{
+			struct HealthComponent
+			{
+				int now;
+				int max;
+			};
+
+			EntityId entityToTest{ 0 };
+			SharedPtr<IComponentContainer> container = std::make_shared<Ecs::ComponentContainer<TransformComponent>>();
+			SharedPtr<IComponentContainer> container2 = std::make_shared<Ecs::ComponentContainer<HealthComponent>>();
+
+			// Register the component container
+			ComponentManipulator compManipulator;
+			compManipulator.RegisterEntity(entityToTest);
+			compManipulator.RegisterComponentContainer(std::move(container));
+			compManipulator.RegisterComponentContainer(std::move(container2));
+
+			SharedPtr<HealthSystem> system{ std::make_shared<HealthSystem>() };
+			compManipulator.RegisterSystem(std::move(system));
+
+
+			TransformComponent transform{ 1, 2, 3 };
+			HealthComponent health{ 1, 2 };
+			compManipulator.AddComponent(entityToTest, transform);
+			compManipulator.AddComponent(entityToTest, health);
+
+			compManipulator.UpdateSystems(0.016f);
+
+			HealthComponent h{ compManipulator.GetComponent<HealthComponent>(entityToTest) };
+			TransformComponent t{ compManipulator.GetComponent<TransformComponent>(entityToTest) };
+
+			CHECK(h.max == health.max);
+			CHECK(h.max == health.max);
+
+			CHECK(t.x == t.x);
+			CHECK(t.y == t.y);
+			CHECK(t.z == t.z);
 		}
 
 }} //ishak::Ecs

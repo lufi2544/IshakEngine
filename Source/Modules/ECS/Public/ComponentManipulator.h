@@ -15,6 +15,7 @@
 
 namespace ishak { namespace Ecs {
 
+
 		/** Holds info about the entities to execute the systems on, along with the respective components container. */
 		class ECS_API ComponentManipulator
 		{
@@ -22,206 +23,172 @@ namespace ishak { namespace Ecs {
 		public:
 			ComponentManipulator() = default;
 
-			void RegisterSystem(const SharedPtr<ISystem>& system);
-			void RegisterComponentContainer(const SharedPtr<IComponentContainer>& container);			
+			// TODO Maybe chaning this to another place EcsContext?
+			void RegisterEntity(EntityId entity);
+			void RegisterSystem(SharedPtr<System>&& system);
+			void RegisterComponentContainer(SharedPtr<IComponentContainer>&& container);
 
 			template<class ComponentT>
-			void AddComponent(EntityId entity, const ComponentT& component)
-			{				
-				auto foundContainer{ m_componentContainers.find(std::type_index(typeid(component))) };
-				if(foundContainer == std::end(m_componentContainers))
-				{
-					// TODO Exception
-					return;
-				}
-
-				ComponentContainer<ComponentT>* castedContainer = 
-					dynamic_cast<ComponentContainer<ComponentT>*>(foundContainer->second.get());
-
-				if(!castedContainer)
-				{
-					return;
-				}					
-				castedContainer->AddComponentForEntity(entity, component);
-
-				//TODO Figure out the id for every componentT.
-				//m_entitiesSignature[entity].set(1);
-			}
+			uint8 GetComponentContainerSignatureId();
 
 			template<class ComponentT>
-			void RemoveComponent(EntityId entity)
-			{
-				auto foundContainer{ m_componentContainers.find(std::type_index(typeid(ComponentT))) };
-				if (foundContainer == std::end(m_componentContainers))
-				{
-					// TODO Exception
-					assert(false);
-
-				}
-
-				ComponentContainer<ComponentT>* castedContainer =
-					dynamic_cast<ComponentContainer<ComponentT>*>(foundContainer->second.get());
-
-				if (!castedContainer)
-				{
-					assert(false);
-				}
-
-				castedContainer->RemoveComponentForEntity(entity);
-			}
+			void AddComponent(EntityId entity, const ComponentT& component);
 
 			template<class ComponentT>
-			ComponentT& GetComponent(EntityId entity)
-			{
-				auto foundContainer{ m_componentContainers.find(std::type_index(typeid(ComponentT))) };
-				if (foundContainer == std::end(m_componentContainers))
-				{
-					// TODO Exception
-					assert(false);
-					
-				}
-
-				ComponentContainer<ComponentT>* castedContainer = 
-					dynamic_cast<ComponentContainer<ComponentT>*>(foundContainer->second.get());
-
-				if (!castedContainer)
-				{
-					assert(false);
-				}
-
-				return castedContainer->GetComponent(entity);
-			}
+			void RemoveComponent(EntityId entity);
 
 			template<class ComponentT>
-			bool HasComponent(EntityId entity)
-			{
-				auto foundContainer{ m_componentContainers.find(std::type_index(typeid(ComponentT))) };
-				if (foundContainer == std::end(m_componentContainers))
-				{
-					// TODO Exception
-					assert(false);
-					return false;
-				}
+			ComponentT& GetComponent(EntityId entity);
 
-				ComponentContainer<ComponentT>* castedContainer = 
-					dynamic_cast<ComponentContainer<ComponentT>*>(foundContainer->second.get());
-
-				if (!castedContainer)
-				{
-					assert(false);
-					return false;
-				}
-
-				return castedContainer->HasComponent(entity);
-			}
+			template<class ComponentT>
+			bool HasComponent(EntityId entity);
 
 			void UpdateSystems(float deltaTime);
 
 			template<class ComponentT>
-			void FlushComponenContainerAllocation()
-			{
-				auto foundContainer{ m_componentContainers.find(std::type_index(typeid(ComponentT))) };
-				if (foundContainer == std::end(m_componentContainers))
-				{
-					// TODO Exception
-					assert(false);
-					return;
-				}
-
-				ComponentContainer<ComponentT>* castedContainer =
-					dynamic_cast<ComponentContainer<ComponentT>*>(foundContainer->second.get());
-
-				if (!castedContainer)
-				{
-					assert(false);
-					return;
-				}
-
-				castedContainer->FlushComponentsAllocation();
-			}
+			void FlushComponenContainerAllocation();
 
 
 			template<class ComponentT>
-			auto Debug_GetFreeSpacesIndexes() -> decltype(auto)
-			{
-				auto foundContainer{ m_componentContainers.find(std::type_index(typeid(ComponentT))) };
-				if (foundContainer == std::end(m_componentContainers))
-				{
-					// TODO Exception
-					assert(false);
-
-				}
-
-				ComponentContainer<ComponentT>* castedContainer =
-					dynamic_cast<ComponentContainer<ComponentT>*>(foundContainer->second.get());
-
-				if (!castedContainer)
-				{
-					assert(false);
-				}
-
-				return castedContainer->GetFreeSpaces();
-			}
+			auto Debug_GetFreeSpacesIndexes() -> decltype(auto);
 
 			template<class ComponentT>
-			auto Debug_GetComponentIdxForEntity(EntityId entity, bool& bFound) -> decltype(auto)
-			{
-				auto foundContainer{ m_componentContainers.find(std::type_index(typeid(ComponentT))) };
-				if (foundContainer == std::end(m_componentContainers))
-				{
-					// TODO Exception
-					assert(false);
-
-				}
-
-				ComponentContainer<ComponentT>* castedContainer =
-					dynamic_cast<ComponentContainer<ComponentT>*>(foundContainer->second.get());
-
-				if (!castedContainer)
-				{
-					assert(false);
-				}
-
-				return castedContainer->GetComponentIdxForEntity(entity, bFound);
-			}
+			auto Debug_GetComponentIdxForEntity(EntityId entity, bool& bFound) -> decltype(auto);
 
 			template<class ComponentT>
-			auto Debug_GetComponentsCollection() -> decltype(auto)
-			{
-				auto foundContainer{ m_componentContainers.find(std::type_index(typeid(ComponentT))) };
-				if (foundContainer == std::end(m_componentContainers))
-				{
-					// TODO Exception
-					assert(false);
-
-				}
-
-				ComponentContainer<ComponentT>* castedContainer =
-					dynamic_cast<ComponentContainer<ComponentT>*>(foundContainer->second.get());
-
-				if (!castedContainer)
-				{
-					assert(false);
-				}
-
-				return castedContainer->GetComponentsCollection();
-			}
+			auto Debug_GetComponentsCollection() -> decltype(auto);
 			
 			
+		private:
+			template<class ComponentT>
+			ComponentContainer<ComponentT>* GetCastedComponent();
 
+			template<class ComponentT>
+			ComponentContainerInfo GetComponentContainerInfo()
+			{
+				auto foundContainer{ m_componentContainers.find(std::type_index(typeid(ComponentT))) };
+				if (foundContainer == std::end(m_componentContainers))
+				{
+					// TODO Exception
+					assert(false);
+					return { };
+				}
+
+				return foundContainer->second;
+			}
+
+		private:
 			/** World entities. */
-			TArray<EntityId> m_entities;
-			
+			TArray<EntityId> m_entities; 			
+
 			/** Containers of Components, contiguous in memory. */
-			std::unordered_map<ContainerIdT, SharedPtr<IComponentContainer>> m_componentContainers;
+			std::unordered_map<ContainerIdT,  ComponentContainerInfo> m_componentContainers;
 
 			/** Engine registered systems. */
-			TArray<SharedPtr<ISystem>> m_systems;
+			TArray<SharedPtr<System>> m_systems;
 
 			/** Entities signature. This is used for checking if the entiteis have certain signature for upating the systems. */
-			std::unordered_map<EntityId, Signature> m_entitiesSignature;
+			std::unordered_map<EntityId, Signature> m_entitiesSignature;					
 		};
 
 
-	}
+		template<class ComponentT>
+		inline uint8 ComponentManipulator::GetComponentContainerSignatureId()
+		{
+			const ComponentContainerInfo info{ GetComponentContainerInfo<ComponentT>() };
+			return info.componentSignature;
+		}
+
+		template<class ComponentT>
+		inline ComponentContainer<ComponentT>* ComponentManipulator::GetCastedComponent()
+		{
+			auto foundContainer{ m_componentContainers.find(std::type_index(typeid(ComponentT))) };
+			if (foundContainer == std::end(m_componentContainers))
+			{
+				// TODO Exception
+				assert(false);
+				return nullptr;
+			}
+
+			ComponentContainer<ComponentT>* castedContainer =
+				dynamic_cast<ComponentContainer<ComponentT>*>(foundContainer->second.container.get());
+
+			if (!castedContainer)
+			{
+				assert(false);
+				return nullptr;
+			}
+
+			return castedContainer;
+		}		
+
+		template<class ComponentT>
+		inline void ComponentManipulator::AddComponent(EntityId entity, const ComponentT& component)
+		{
+			auto castedContainer{ GetCastedComponent<ComponentT>() };
+
+			castedContainer->AddComponentForEntity(entity, component);
+			
+			ComponentContainerInfo info{ GetComponentContainerInfo<ComponentT>() };
+			m_entitiesSignature[entity].set(info.componentSignature);
+		}
+
+		template<class ComponentT>
+		inline void ComponentManipulator::RemoveComponent(EntityId entity)
+		{
+			auto castedContainer{ GetCastedComponent<ComponentT>() };
+
+			castedContainer->RemoveComponentForEntity(entity);
+		}
+
+		template<class ComponentT>
+		inline ComponentT& ComponentManipulator::GetComponent(EntityId entity)
+		{
+			auto castedContainer{ GetCastedComponent<ComponentT>() };
+
+			return castedContainer->GetComponent(entity);
+		}
+
+		template<class ComponentT>
+		inline bool ComponentManipulator::HasComponent(EntityId entity)
+		{
+			auto castedContainer{ GetCastedComponent<ComponentT>() };
+
+			return castedContainer->HasComponent(entity);
+		}
+
+		template<class ComponentT>
+		inline void ComponentManipulator::FlushComponenContainerAllocation()
+		{
+			auto castedContainer{ GetCastedComponent<ComponentT>() };
+
+			castedContainer->FlushComponentsAllocation();
+		}
+
+		template<class ComponentT>
+		inline auto ComponentManipulator::Debug_GetFreeSpacesIndexes() -> decltype(auto)
+		{
+			auto castedContainer{ GetCastedComponent<ComponentT>() };
+
+			return castedContainer->GetFreeSpaces();
+		}
+
+		template<class ComponentT>
+		inline auto ComponentManipulator::Debug_GetComponentIdxForEntity(EntityId entity, bool& bFound) -> decltype(auto)
+		{
+			auto castedContainer{ GetCastedComponent<ComponentT>() };
+
+			return castedContainer->GetComponentIdxForEntity(entity, bFound);
+		}
+
+		template<class ComponentT>
+		inline auto ComponentManipulator::Debug_GetComponentsCollection() -> decltype(auto)
+		{
+			auto castedContainer{ GetCastedComponent<ComponentT>() };
+
+			return castedContainer->GetComponentsCollection();
+		}
+
+
+}
 }// ishak::Ecs

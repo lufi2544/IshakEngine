@@ -7,14 +7,24 @@
 
 namespace ishak { namespace Ecs {
 
-		
 
+
+	
 		class ECS_API IComponentContainer
 		{
 		public:
 			virtual ~IComponentContainer() = default;			
 
 			virtual std::type_index GetComponentId() = 0;
+		};
+
+
+		struct ComponentContainerInfo
+		{
+			ComponentContainerInfo() = default;
+
+			SharedPtr<IComponentContainer> container;
+			uint8 componentSignature;
 		};
 
 		/** Global Component Container that manages the entire compoenents for a certain type. All the collection of components is mapped to a certain entity
