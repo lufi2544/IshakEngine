@@ -184,6 +184,28 @@ namespace ishak { namespace Ecs {
 
 				return castedContainer->GetComponentIdxForEntity(entity, bFound);
 			}
+
+			template<class ComponentT>
+			auto Debug_GetComponentsCollection() -> decltype(auto)
+			{
+				auto foundContainer{ m_componentContainers.find(std::type_index(typeid(ComponentT))) };
+				if (foundContainer == std::end(m_componentContainers))
+				{
+					// TODO Exception
+					assert(false);
+
+				}
+
+				ComponentContainer<ComponentT>* castedContainer =
+					dynamic_cast<ComponentContainer<ComponentT>*>(foundContainer->second.get());
+
+				if (!castedContainer)
+				{
+					assert(false);
+				}
+
+				return castedContainer->GetComponentsCollection();
+			}
 			
 			
 

@@ -142,7 +142,7 @@ namespace ishak {
 			}
 
 
-			TEST_CASE("Adding some components, removing them, freed space. Adding it Again, spaces taken, OK")
+			TEST_CASE("Adding some components, removing them.Flush Collection Allocation. OK")
 			{
 				SharedPtr<IComponentContainer> container = std::make_shared<Ecs::ComponentContainer<HealthComponent>>(2);
 
@@ -150,13 +150,17 @@ namespace ishak {
 				ComponentManipulator compManipulator;
 				compManipulator.RegisterComponentContainer(container);
 
-				HealthComponent healthComp{ 1, 2, };
-				for (int ientity = 0; ientity <= 10; ++ientity)
+				const uint16 compToAdd{ 200 };
+				const uint16 compToRemove{ 100 };
+
+				const HealthComponent healthComp{ 1, 2, };
+				for (int ientity = 0; ientity < compToAdd; ++ientity)
 				{
 					// Adding a simple component
 					compManipulator.AddComponent(ientity, healthComp);
 				}
-				for (int ientity = 0; ientity < 5; ++ientity)
+
+				for (int ientity = 0; ientity < compToRemove; ++ientity)
 				{
 					// Removing some components
 					compManipulator.RemoveComponent<HealthComponent>(ientity);
@@ -165,8 +169,90 @@ namespace ishak {
 				compManipulator.FlushComponenContainerAllocation<HealthComponent>();
 
 				const TArray<uint16> freeSpacesAfterFlush{ compManipulator.Debug_GetFreeSpacesIndexes<HealthComponent>() };
-				CHECK(freeSpacesAfterFlush.Size() == 100);
-				CHECK(freeSpacesAfterFlush.Capacity() == 100);
+				CHECK(freeSpacesAfterFlush.Size() == 0);				
+				CHECK(compManipulator.Debug_GetComponentsCollection<HealthComponent>()->Capacity() == compToAdd - compToRemove);
+			}
+
+			TEST_CASE("Components Collection Flush some times. OK")
+			{
+				SharedPtr<IComponentContainer> container = std::make_shared<Ecs::ComponentContainer<HealthComponent>>(2);
+
+				// Register the component container
+				ComponentManipulator compManipulator;
+				compManipulator.RegisterComponentContainer(container);
+
+				const uint16 compToAdd{ 200 };
+				const uint16 compToRemove{ 100 };
+
+				const HealthComponent healthComp{ 1, 2, };
+				for (int ientity = 0; ientity < compToAdd; ++ientity)
+				{
+					// Adding a simple component
+					compManipulator.AddComponent(ientity, healthComp);
+				}
+
+				for (int ientity = 0; ientity < compToRemove; ++ientity)
+				{
+					// Removing some components
+					compManipulator.RemoveComponent<HealthComponent>(ientity);
+				}
+
+				compManipulator.FlushComponenContainerAllocation<HealthComponent>();
+				
+
+				for (int ientity = 0; ientity < compToAdd; ++ientity)
+				{
+					// Adding a simple component
+					compManipulator.AddComponent(ientity, healthComp);
+				}
+
+				compManipulator.FlushComponenContainerAllocation<HealthComponent>();
+				
+				const TArray<uint16> freeSpacesAfterFlush{ compManipulator.Debug_GetFreeSpacesIndexes<HealthComponent>() };			
+				auto cap{ compManipulator.Debug_GetComponentsCollection<HealthComponent>()->Capacity() };
+
+				CHECK(cap == (compToAdd - compToRemove) + (compToAdd));
+
+			}
+
+			TEST_CASE("Get info after Flush. OK")
+			{
+				SharedPtr<IComponentContainer> container = std::make_shared<Ecs::ComponentContainer<HealthComponent>>(2);
+
+				// Register the component container
+				ComponentManipulator compManipulator;
+				compManipulator.RegisterComponentContainer(container);
+
+				const uint16 compToAdd{ 200 };
+				const uint16 compToRemove{ 50 };
+				EntityId entityToTest{ 88 };
+
+				const HealthComponent custom{ 88, 88 };
+
+				const HealthComponent healthComp{ 1, 2, };
+				for (int ientity = 0; ientity < compToAdd; ++ientity)
+				{
+					if(ientity == entityToTest)
+					{
+						compManipulator.AddComponent(ientity, custom);
+						continue;
+					}
+					// Adding a simple component
+					compManipulator.AddComponent(ientity, healthComp);
+				}
+
+				for (int ientity = 0; ientity < compToRemove; ++ientity)
+				{
+					// Removing some components
+					compManipulator.RemoveComponent<HealthComponent>(ientity);
+				}
+
+				compManipulator.FlushComponenContainerAllocation<HealthComponent>();
+  
+				auto comp{ compManipulator.GetComponent<HealthComponent>(entityToTest) };
+
+				CHECK(comp.current == custom.current);
+				CHECK(comp.max == custom.max);
 			}
 
 		}
