@@ -3,6 +3,7 @@
 #include "ComponentContainer.h"
 #include "ComponentManipulator.h"
 #include "Component.h"
+#include "EcsContext.h"
 
 namespace ishak {
 	namespace Ecs {
@@ -25,6 +26,13 @@ namespace ishak {
 
 			TEST_CASE("Registering a ContainerType, OK")
 			{
+				UniquePtr<EntityManager> manager = std::make_unique<EntityManager>();
+				UniquePtr<ComponentManipulator> manip = std::make_unique<ComponentManipulator>();
+				EcsContext context{ std::move(manager), std::move(manip) };
+
+
+				
+
 				EntityId entity{ 22 };						
 				SharedPtr<IComponentContainer> container = std::make_shared<Ecs::ComponentContainer<HealthComponent>>();
 
@@ -34,7 +42,9 @@ namespace ishak {
 
 				// Adding a simple component
 				HealthComponent healthComp{ 1, 2, };
-				compManipulator.AddComponent(entity, healthComp);
+				compManipulator.AddComponentDeferred(entity, healthComp);
+
+				compManipulator.UpdateComponentsStates();
 
 				// Checking if the component has been stored
 				const bool bHasComp = compManipulator.HasComponent<HealthComponent>(entity);
@@ -54,8 +64,11 @@ namespace ishak {
 
 				// Adding a simple component
 				HealthComponent healthComp{ 1, 2, };
-				compManipulator.AddComponent(entity, healthComp);
-				compManipulator.RemoveComponent<HealthComponent>(entity);
+				compManipulator.AddComponentDeferred(entity, healthComp);
+
+				compManipulator.RemoveComponentDeferred<HealthComponent>(entity);
+
+				compManipulator.UpdateComponentsStates();
 
 				// Checking if the component has been stored
 				const bool bHasComp = compManipulator.HasComponent<HealthComponent>(entity);				
@@ -75,8 +88,10 @@ namespace ishak {
 				for(int ientity = 0; ientity < 22; ++ientity)
 				{
 					// Adding a simple component
-					compManipulator.AddComponent(ientity, healthComp);					
+					compManipulator.AddComponentDeferred(ientity, healthComp);					
 				}
+
+				compManipulator.UpdateComponentsStates();
 
 				EntityId entityToDelete1{ 4 };
 				EntityId entityToDelete2{ 13 };
@@ -88,8 +103,10 @@ namespace ishak {
 				bool bFound2;
 				const uint16 entity2ComponentIdx{ compManipulator.Debug_GetComponentIdxForEntity<HealthComponent>(entityToDelete2, bFound2) };
 
-				compManipulator.RemoveComponent<HealthComponent>(entityToDelete1);
-				compManipulator.RemoveComponent<HealthComponent>(entityToDelete2);
+				compManipulator.RemoveComponentDeferred<HealthComponent>(entityToDelete1);
+				compManipulator.RemoveComponentDeferred<HealthComponent>(entityToDelete2);
+
+				compManipulator.UpdateComponentsStates();
 
 				const TArray<uint16> freeSpaces{ compManipulator.Debug_GetFreeSpacesIndexes<HealthComponent>() };
 
@@ -112,8 +129,10 @@ namespace ishak {
 				for (int ientity = 0; ientity < 22; ++ientity)
 				{
 					// Adding a simple component
-					compManipulator.AddComponent(ientity, healthComp);
+					compManipulator.AddComponentDeferred(ientity, healthComp);
 				}
+
+				compManipulator.UpdateComponentsStates();
 
 				EntityId entityToTest1{ 4 };
 				EntityId entityToTest2{ 13 };
@@ -127,13 +146,17 @@ namespace ishak {
 				const uint16 entity1ComponentIdx{ compManipulator.Debug_GetComponentIdxForEntity<HealthComponent>(entityToTest1, bFound) };
 
 
-				compManipulator.RemoveComponent<HealthComponent>(entityToTest1);
-				compManipulator.RemoveComponent<HealthComponent>(entityToTest2);
-				compManipulator.RemoveComponent<HealthComponent>(entityToTest3);
+				compManipulator.RemoveComponentDeferred<HealthComponent>(entityToTest1);
+				compManipulator.RemoveComponentDeferred<HealthComponent>(entityToTest2);
+				compManipulator.RemoveComponentDeferred<HealthComponent>(entityToTest3);
+
+				compManipulator.UpdateComponentsStates();
 
 
-				compManipulator.AddComponent(entityToTest1, healthComp);
-				compManipulator.AddComponent(entityToTest2, healthComp);
+				compManipulator.AddComponentDeferred(entityToTest1, healthComp);
+				compManipulator.AddComponentDeferred(entityToTest2, healthComp);
+
+				compManipulator.UpdateComponentsStates();
 
 				const TArray<uint16> freeSpaces{ compManipulator.Debug_GetFreeSpacesIndexes<HealthComponent>() };
 
@@ -157,14 +180,18 @@ namespace ishak {
 				for (int ientity = 0; ientity < compToAdd; ++ientity)
 				{
 					// Adding a simple component
-					compManipulator.AddComponent(ientity, healthComp);
+					compManipulator.AddComponentDeferred(ientity, healthComp);
 				}
+
+				compManipulator.UpdateComponentsStates();
 
 				for (int ientity = 0; ientity < compToRemove; ++ientity)
 				{
 					// Removing some components
-					compManipulator.RemoveComponent<HealthComponent>(ientity);
+					compManipulator.RemoveComponentDeferred<HealthComponent>(ientity);
 				}
+
+				compManipulator.UpdateComponentsStates();
 																	
 				compManipulator.FlushComponenContainerAllocation<HealthComponent>();
 
@@ -188,14 +215,18 @@ namespace ishak {
 				for (int ientity = 0; ientity < compToAdd; ++ientity)
 				{
 					// Adding a simple component
-					compManipulator.AddComponent(ientity, healthComp);
+					compManipulator.AddComponentDeferred(ientity, healthComp);
 				}
+
+				compManipulator.UpdateComponentsStates();
 
 				for (int ientity = 0; ientity < compToRemove; ++ientity)
 				{
 					// Removing some components
-					compManipulator.RemoveComponent<HealthComponent>(ientity);
+					compManipulator.RemoveComponentDeferred<HealthComponent>(ientity);
 				}
+
+				compManipulator.UpdateComponentsStates();
 
 				compManipulator.FlushComponenContainerAllocation<HealthComponent>();
 				
@@ -203,8 +234,10 @@ namespace ishak {
 				for (int ientity = 0; ientity < compToAdd; ++ientity)
 				{
 					// Adding a simple component
-					compManipulator.AddComponent(ientity, healthComp);
+					compManipulator.AddComponentDeferred(ientity, healthComp);
 				}
+
+				compManipulator.UpdateComponentsStates();
 
 				compManipulator.FlushComponenContainerAllocation<HealthComponent>();
 				
@@ -234,18 +267,22 @@ namespace ishak {
 				{
 					if(ientity == entityToTest)
 					{
-						compManipulator.AddComponent(ientity, custom);
+						compManipulator.AddComponentDeferred(ientity, custom);
 						continue;
 					}
 					// Adding a simple component
-					compManipulator.AddComponent(ientity, healthComp);
+					compManipulator.AddComponentDeferred(ientity, healthComp);
 				}
+
+				compManipulator.UpdateComponentsStates();
 
 				for (int ientity = 0; ientity < compToRemove; ++ientity)
 				{
 					// Removing some components
-					compManipulator.RemoveComponent<HealthComponent>(ientity);
+					compManipulator.RemoveComponentDeferred<HealthComponent>(ientity);
 				}
+
+				compManipulator.UpdateComponentsStates();
 
 				compManipulator.FlushComponenContainerAllocation<HealthComponent>();
   
@@ -257,8 +294,39 @@ namespace ishak {
 
 		}
 
-		TEST_CASE("System Signature Test")
+		struct CustomEntity
 		{
+			int a, b;
+		};
+
+
+		class GameEntityCreator : public Ecs::IEntityCreator
+		{
+		public:
+			GameEntityCreator() = default;
+
+			Ecs::EntityId GetEntityId(void* object) override
+			{
+				if (!object)
+				{
+					return Ecs::kNullId;
+				}
+
+				return ++m_entityAssignerIdx;
+			}
+
+
+			uint32 m_entityAssignerIdx{ 0 };
+		};
+
+		TEST_CASE("Create Context, Everything is, OK")
+		{
+			
+			UniquePtr<GameEntityCreator> entityCreator = std::make_unique<GameEntityCreator>();
+			UniquePtr<EntityManager> manager = std::make_unique<EntityManager>(std::move(entityCreator));
+			UniquePtr<ComponentManipulator> manip = std::make_unique<ComponentManipulator>();
+			EcsContext context{ std::move(manager), std::move(manip) };
+
 			struct HealthComponent
 			{
 				int now;
@@ -266,35 +334,124 @@ namespace ishak {
 			};
 
 			EntityId entityToTest{ 0 };
-			SharedPtr<IComponentContainer> container = std::make_shared<Ecs::ComponentContainer<TransformComponent>>();
-			SharedPtr<IComponentContainer> container2 = std::make_shared<Ecs::ComponentContainer<HealthComponent>>();
+			int entitiesToCreate{ 10 };
 
-			// Register the component container
-			ComponentManipulator compManipulator;
-			compManipulator.RegisterEntity(entityToTest);
-			compManipulator.RegisterComponentContainer(std::move(container));
-			compManipulator.RegisterComponentContainer(std::move(container2));
+			TArray<CustomEntity*> entities;
+			for (int i = 0; i< entitiesToCreate; ++i) 
+			{
+				entities.Add(new CustomEntity());
+				context.RegisterEntity(entities[i]);
+			}
 
-			SharedPtr<HealthSystem> system{ std::make_shared<HealthSystem>() };
-			compManipulator.RegisterSystem(std::move(system));
+			auto& worldEntities{ context.GetEntityManager()->GetEntitiesCollection() };
 
+			bool bContidion{ worldEntities.Size() == entities.Size() };
 
-			TransformComponent transform{ 1, 2, 3 };
-			HealthComponent health{ 1, 2 };
-			compManipulator.AddComponent(entityToTest, transform);
-			compManipulator.AddComponent(entityToTest, health);
+		
+			for(auto& entity : entities)
+			{
+				delete entity;
+			}
 
-			compManipulator.UpdateSystems(0.016f);
+			CHECK(bContidion == true);						
+			
+		}
 
-			HealthComponent h{ compManipulator.GetComponent<HealthComponent>(entityToTest) };
-			TransformComponent t{ compManipulator.GetComponent<TransformComponent>(entityToTest) };
+		struct TransformComponent
+		{
+			bool b{ false };
+		};
 
-			CHECK(h.max == health.max);
-			CHECK(h.max == health.max);
+		struct TransformComponent1
+		{
+			bool b{ false };
+		};
 
-			CHECK(t.x == t.x);
-			CHECK(t.y == t.y);
-			CHECK(t.z == t.z);
+		class HealthSystem : public System
+		{
+		public:
+			HealthSystem() = default;
+
+			void Update(float dt, EntityId entity) override
+			{
+				auto& t0{ m_compManipulator->GetComponent<TransformComponent>(entity) };
+				auto& t1{ m_compManipulator->GetComponent<TransformComponent1>(entity) };
+
+				t0.b = true;
+				t1.b = true;
+			}
+
+		protected:
+			void SetRequirements() override 
+			{
+				RequireComponent<TransformComponent>();
+				RequireComponent<TransformComponent1>();
+			}
+		};
+
+		TEST_CASE("Added Components to entitis through context, System Ticks, OK")
+		{
+			UniquePtr<GameEntityCreator> entityCreator = std::make_unique<GameEntityCreator>();
+			UniquePtr<EntityManager> manager = std::make_unique<EntityManager>(std::move(entityCreator));
+			UniquePtr<ComponentManipulator> manip = std::make_unique<ComponentManipulator>();
+			EcsContext context{ std::move(manager), std::move(manip) };
+
+			struct HealthComponent
+			{
+				int now;
+				int max;
+			};
+
+			EntityId entityToTest{ 0 };
+			int entitiesToCreate{ 10 };
+
+			TArray<CustomEntity*> entities;
+			for (int i = 0; i < entitiesToCreate; ++i)
+			{
+				entities.Add(new CustomEntity());
+				context.RegisterEntity(entities[i]);
+			}
+			
+			SharedPtr<IComponentContainer> container1 = std::make_shared<Ecs::ComponentContainer<TransformComponent>>();
+			SharedPtr<IComponentContainer> container2 = std::make_shared<Ecs::ComponentContainer<TransformComponent1>>();
+
+			ComponentManipulator* manipulator{ context.GetComponentManipulator() };
+			manipulator->RegisterComponentContainer(std::move(container1));
+			manipulator->RegisterComponentContainer(std::move(container2));
+
+			
+			UniquePtr<HealthSystem> sys{ std::make_unique<HealthSystem>() };
+			context.RegisterSystem(std::move(sys));
+
+			for(auto& entity : entities)
+			{
+					context.GetComponentManipulator()->AddComponentDeferred<TransformComponent>(
+						context.GetEntityManager()->GetEntityId(entity),
+						TransformComponent{ });
+
+					context.GetComponentManipulator()->AddComponentDeferred<TransformComponent1>(
+						context.GetEntityManager()->GetEntityId(entity),
+						TransformComponent1{ });
+			}
+			
+			context.UpdateContext(0.016);
+			
+			bool bSystemDidNotChangeSomeComponent{ false };
+			for(auto& entity : entities)
+			{
+				const EntityId entityId{ context.GetEntityManager()->GetEntityId(entity) };
+				auto T0Comp{ context.GetComponentManipulator()->GetComponent<TransformComponent>(entityId) };
+				auto T1Comp{ context.GetComponentManipulator()->GetComponent<TransformComponent1>(entityId) };
+
+				if(!T0Comp.b || !T1Comp.b)
+				{
+					bSystemDidNotChangeSomeComponent = true;
+					break;
+				}
+
+			}
+			
+			CHECK(bSystemDidNotChangeSomeComponent == false);
 		}
 
 }} //ishak::Ecs

@@ -5,7 +5,7 @@
 
 namespace ishak { namespace Ecs {
 
-		typedef uint16 EntityId;
+		typedef uint32 EntityId;
 
 		constexpr EntityId kNullId = std::numeric_limits<EntityId>::max();
 

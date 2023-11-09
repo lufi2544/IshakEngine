@@ -17,33 +17,74 @@ namespace ishak { namespace Ecs {
 
 
 		/** Holds info about the entities to execute the systems on, along with the respective components container. */
+		/**
+		* Concers for the cache: 
+		* -> Copying the components when adding components commands to the queue buffer.
+		* -> Iterating through the systems and then had to get the entity idx, maybe batch the entities and components for less cache misses.
+		*/
 		class ECS_API ComponentManipulator
 		{
 			typedef std::type_index ContainerIdT;
+			typedef std::function<void(void)> ComponentQueueCommandT;
+			typedef std::unordered_map<EntityId, Signature> SignaturesMapT;
 		public:
 			ComponentManipulator() = default;
 
-			// TODO Maybe chaning this to another place EcsContext?
-			void RegisterEntity(EntityId entity);
-			void RegisterSystem(SharedPtr<System>&& system);
+			SignaturesMapT& GetSignaturesMap()
+			{
+				return m_entitiesSignaturesMap;
+			}
+
+			template<typename... ComponentC>
+			void BatchEntitiesComponents(std::unordered_map<EntityId, std::tuple<ComponentC...>>* comps, const Signature& forSignature)
+			{								
+				for(auto signature : m_entitiesSignaturesMap)
+				{
+					// if entity has the signature
+					if(!(signature.second & forSignature).any())
+					{
+						continue;
+					}
+
+					std::tuple<ComponentC...> componentTuple;
+
+					EntityId entityId = signature.first;
+					// Use fold expression to apply a function to each component type
+					// Here we create an object of every template Arg and apply the lambda to it
+					([&](auto comp) {
+		
+							// Get the component and add it to the tuple
+							auto& component = GetComponent<decltype(comp)>(entityId);
+							std::get<decltype(comp)>(componentTuple) = component;
+						
+
+						}(ComponentC{ }), ...);
+
+					comps->insert(std::make_pair(entityId, componentTuple));
+				}
+
+					
+				//assert(ids->Size() == comps->Size());				
+			}
+
+			// TODO Maybe chaning this to another place EcsContext?						
 			void RegisterComponentContainer(SharedPtr<IComponentContainer>&& container);
+			void UpdateComponentsStates();
 
 			template<class ComponentT>
 			uint8 GetComponentContainerSignatureId();
 
 			template<class ComponentT>
-			void AddComponent(EntityId entity, const ComponentT& component);
+			void AddComponentDeferred(EntityId entity, const ComponentT& component);
 
 			template<class ComponentT>
-			void RemoveComponent(EntityId entity);
+			void RemoveComponentDeferred(EntityId entity);
 
 			template<class ComponentT>
 			ComponentT& GetComponent(EntityId entity);
 
 			template<class ComponentT>
-			bool HasComponent(EntityId entity);
-
-			void UpdateSystems(float deltaTime);
+			bool HasComponent(EntityId entity);			
 
 			template<class ComponentT>
 			void FlushComponenContainerAllocation();
@@ -77,18 +118,15 @@ namespace ishak { namespace Ecs {
 				return foundContainer->second;
 			}
 
-		private:
-			/** World entities. */
-			TArray<EntityId> m_entities; 			
-
+		private:			
 			/** Containers of Components, contiguous in memory. */
 			std::unordered_map<ContainerIdT,  ComponentContainerInfo> m_componentContainers;
-
-			/** Engine registered systems. */
-			TArray<SharedPtr<System>> m_systems;
-
+						
 			/** Entities signature. This is used for checking if the entiteis have certain signature for upating the systems. */
-			std::unordered_map<EntityId, Signature> m_entitiesSignature;					
+			SignaturesMapT m_entitiesSignaturesMap;
+
+			/** Queue of commands that will change the state of a component Add/Remove at the end of the frame. */
+			TArray<ComponentQueueCommandT> m_commandQueue;
 		};
 
 
@@ -123,22 +161,33 @@ namespace ishak { namespace Ecs {
 		}		
 
 		template<class ComponentT>
-		inline void ComponentManipulator::AddComponent(EntityId entity, const ComponentT& component)
+		inline void ComponentManipulator::AddComponentDeferred(EntityId entity, const ComponentT& component)
 		{
-			auto castedContainer{ GetCastedComponent<ComponentT>() };
+			// TODO Safe Memory here
+			ComponentQueueCommandT command = [this, entity, component]()
+			{
+				auto castedContainer{ GetCastedComponent<ComponentT>() };
 
-			castedContainer->AddComponentForEntity(entity, component);
+				castedContainer->AddComponentForEntity(entity, component);
 			
-			ComponentContainerInfo info{ GetComponentContainerInfo<ComponentT>() };
-			m_entitiesSignature[entity].set(info.componentSignature);
+				ComponentContainerInfo info{ GetComponentContainerInfo<ComponentT>() };
+				m_entitiesSignaturesMap[entity].set(info.componentSignature);
+			};
+
+			m_commandQueue.Add(command);
 		}
 
 		template<class ComponentT>
-		inline void ComponentManipulator::RemoveComponent(EntityId entity)
+		inline void ComponentManipulator::RemoveComponentDeferred(EntityId entity)
 		{
-			auto castedContainer{ GetCastedComponent<ComponentT>() };
+			ComponentQueueCommandT command = [this, entity]()
+			{
+				auto castedContainer{ GetCastedComponent<ComponentT>() };
 
-			castedContainer->RemoveComponentForEntity(entity);
+				castedContainer->RemoveComponentForEntity(entity);
+			};
+
+			m_commandQueue.Add(command);
 		}
 
 		template<class ComponentT>

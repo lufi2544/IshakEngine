@@ -4,10 +4,12 @@
 #include "ECSConfig.h"
 #include "EntityId.h"
 
+// STD
+#include <tuple>
 
+#include <array>
 
 namespace ishak { namespace Ecs {
-
 
 		class ComponentManipulator;
 
@@ -29,14 +31,22 @@ namespace ishak { namespace Ecs {
 			void SetComponentManipulator(ComponentManipulator* compManipulator);
 			virtual void Update(float dt, EntityId entity) { };
 
-			Signature& GetSignature();
+			Signature& GetSignature();			
 
 		protected:
 
 			virtual void SetRequirements() { };
 
 			template <typename ComponentT>
-			void RequireComponent();
+			void RequireComponent()
+			{
+				if (!m_compManipulator)
+				{
+					assert(false);
+					return;
+				}
+				m_signature.set(m_compManipulator->GetComponentContainerSignatureId<ComponentT>());
+			}
 
 
 		protected:
@@ -46,23 +56,5 @@ namespace ishak { namespace Ecs {
 
 			ComponentManipulator* m_compManipulator{ nullptr };
 		};
-
-
-		struct TransformComponent
-		{
-			int x, y, z;
-		};
-
-		class ECS_API HealthSystem : public System
-		{
-		public:
-			HealthSystem();
-			
-			void Update(float dt, EntityId entity) override;
-
-		protected:
-			void SetRequirements() override;
-		};
-
 	}
 }// ishak::Ecs
