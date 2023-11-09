@@ -71,9 +71,16 @@ namespace ishak {
 				compManipulator.UpdateComponentsStates();
 
 				// Checking if the component has been stored
-				const bool bHasComp = compManipulator.HasComponent<HealthComponent>(entity);				
+				const bool bHasComp = compManipulator.HasComponent<HealthComponent>(entity);		
+				const uint8 componentSignature{ compManipulator.GetComponentContainerSignatureId<HealthComponent>() };
+
+				bool bFoundEntity{ false };
+				const bool bHasSignature{ (compManipulator.GetEntitySignature(entity, bFoundEntity).test(componentSignature)) };
+
 
 				CHECK(bHasComp == false);
+				CHECK(bFoundEntity == true);
+				CHECK(bHasSignature == false);
 			}
 
 			TEST_CASE("Adding a component and then removing it, Adding another one, it is in the free space, OK")
@@ -394,13 +401,9 @@ namespace ishak {
 			UniquePtr<GameEntityCreator> entityCreator = std::make_unique<GameEntityCreator>();
 			UniquePtr<EntityManager> manager = std::make_unique<EntityManager>(std::move(entityCreator));
 			UniquePtr<ComponentManipulator> manip = std::make_unique<ComponentManipulator>();
+
 			EcsContext context{ std::move(manager), std::move(manip) };
 
-			struct HealthComponent
-			{
-				int now;
-				int max;
-			};
 
 			EntityId entityToTest{ 0 };
 			int entitiesToCreate{ 10 };
@@ -453,5 +456,6 @@ namespace ishak {
 			
 			CHECK(bSystemDidNotChangeSomeComponent == false);
 		}
+
 
 }} //ishak::Ecs

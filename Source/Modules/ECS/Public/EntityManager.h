@@ -26,8 +26,7 @@ namespace ishak { namespace Ecs {
 		
 	private:		
 		TArray<EntityId> m_entities;
-		UniquePtr<IEntityCreator> m_entityCreator;
-		ComponentManipulator m_compManipulator;
+		UniquePtr<IEntityCreator> m_entityCreator;		
 
 		std::unordered_map<void*, EntityId> m_entityMap;
 	};

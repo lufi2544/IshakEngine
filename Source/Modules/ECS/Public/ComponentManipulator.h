@@ -35,6 +35,8 @@ namespace ishak { namespace Ecs {
 				return m_entitiesSignaturesMap;
 			}
 
+			Signature GetEntitySignature(EntityId entity, bool& bFound);
+
 			template<typename... ComponentC>
 			void BatchEntitiesComponents(std::unordered_map<EntityId, std::tuple<ComponentC...>>* comps, const Signature& forSignature)
 			{								
@@ -116,7 +118,7 @@ namespace ishak { namespace Ecs {
 				}
 
 				return foundContainer->second;
-			}
+			}			
 
 		private:			
 			/** Containers of Components, contiguous in memory. */
@@ -179,10 +181,15 @@ namespace ishak { namespace Ecs {
 
 		template<class ComponentT>
 		inline void ComponentManipulator::RemoveComponentDeferred(EntityId entity)
-		{
+		{			
 			ComponentQueueCommandT command = [this, entity]()
 			{
 				auto castedContainer{ GetCastedComponent<ComponentT>() };
+				const uint8 containerSignature = GetComponentContainerSignatureId<ComponentT>();
+
+				// TODO Tests
+				// Unset the signature 
+				m_entitiesSignaturesMap[entity].set(containerSignature, false);
 
 				castedContainer->RemoveComponentForEntity(entity);
 			};
