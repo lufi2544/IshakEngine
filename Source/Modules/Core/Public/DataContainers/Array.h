@@ -368,7 +368,9 @@ namespace ishak {
 			// copy all the data from the current dinamic ptr to the new one.
 			for (int idx = 0; idx < m_size; ++idx)
 			{
-				newDataPtr[idx] = std::move(m_data[idx]);
+				auto old{ newDataPtr[idx] };
+				auto neww{ m_data[idx] };				 
+				newDataPtr[idx] = m_data[idx];
 			}
 
 			delete[] m_data;

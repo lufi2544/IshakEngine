@@ -61,14 +61,24 @@ namespace ishak {
 	// Implementation for now for the std::map
 namespace std
 {
+	// FNV-1a hash constants
+	constexpr size_t FNV_PRIME = 1099511628211u;
+	constexpr size_t FNV_OFFSET_BASIS = 14695981039346656037u;
+
 	template<>
 	struct hash<ishak::String>
 	{
 		size_t operator()(const ishak::String& str) const
 		{
-			size_t h1 = std::hash<const char*>()(str.c_str());
-			return h1 << 1;
-		}
+			size_t hash = FNV_OFFSET_BASIS;
+			const char* data = str.c_str();
 
+			while (*data != '\0') {
+				hash ^= static_cast<size_t>(*data++);
+				hash *= FNV_PRIME;
+			}
+
+			return hash;
+		}
 	};
 }

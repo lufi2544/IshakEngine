@@ -8,11 +8,21 @@
 
 namespace ishak{ namespace Ecs{
 
+
+	enum ECSContextID : uint8
+	{
+		ENGINE,
+		RENDERER,
+		CUSTOM, // Game
+		/*....*/
+		NUM
+	};
+
 	class ECS_API EcsContext
 	{
 	public:
 		EcsContext() = default;
-		EcsContext(UniquePtr<EntityManager>&& manager, UniquePtr<ComponentManipulator>&& compManipulator);
+		EcsContext(SharedPtr<EntityManager> manager, UniquePtr<ComponentManipulator>&& compManipulator);
 
 		ComponentManipulator* GetComponentManipulator();
 		EntityManager* GetEntityManager();
@@ -24,7 +34,7 @@ namespace ishak{ namespace Ecs{
 		void UpdateContext(float dt);
 
 	private:				
-		UniquePtr<EntityManager> m_entityManager;
+		SharedPtr<EntityManager> m_entityManager;
 		UniquePtr<ComponentManipulator> m_componentManipulator;
 		TArray<SharedPtr<System>> m_systems;
 	};

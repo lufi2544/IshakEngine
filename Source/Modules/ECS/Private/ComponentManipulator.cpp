@@ -18,6 +18,17 @@ namespace ishak::Ecs
 		bFound = true;
 		return m_entitiesSignaturesMap[entity];
 	}
+	void ComponentManipulator::UnregisterEntitySignature(EntityId entity)
+	{
+		auto foundIt{ m_entitiesSignaturesMap.find(entity) };
+
+		if(foundIt == std::end(m_entitiesSignaturesMap))
+		{
+			return;
+		}
+
+		m_entitiesSignaturesMap.erase(foundIt);
+	}
 	void ComponentManipulator::RegisterComponentContainer(SharedPtr<IComponentContainer>&& container)
 	{
 		const ContainerIdT containerId{ container->GetComponentId() };

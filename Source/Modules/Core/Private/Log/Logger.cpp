@@ -22,6 +22,10 @@ namespace ishak {
 		{
 
 		}
+		if(m_allLogs.Size() > 5000)
+		{
+			return;
+		}
 
 		m_allLogs.Add({ verb, message });
 	}

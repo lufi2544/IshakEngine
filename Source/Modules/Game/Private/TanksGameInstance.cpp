@@ -13,6 +13,7 @@ namespace ishak {
 
 		auto createdTank2 = GetWorld()->SpawnEntity<Tank>(GetWorld());
 		createdTank2.lock()->SetPosition({ 120, 40 });
+		
 	}
 	
 }// ishak

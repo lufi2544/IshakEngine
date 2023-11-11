@@ -245,6 +245,7 @@ namespace ishak {
 
 	bool String::operator==(const String& other) noexcept
 	{
+		bool isEqual{ strcmp(m_buffer, other.m_buffer) == 0 };
 		return strcmp(m_buffer, other.m_buffer) == 0;		
 	}
 

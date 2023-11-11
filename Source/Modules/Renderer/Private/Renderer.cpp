@@ -19,6 +19,7 @@ namespace ishak {
 			return;
 		}
 
+
 		// Create new Renderer and window associated.
 
 		Uint32 extraRendererFlags = 0;
@@ -52,8 +53,10 @@ namespace ishak {
 
 
 	void Renderer::PreRender()
-	{		
-		SDL_RenderClear(m_rendererWindowPair.second);
+	{			
+
+		SDL_SetRenderDrawColor(m_rendererWindowPair.second, 21, 21, 21, 255);
+		SDL_RenderClear(m_rendererWindowPair.second);			
 
 	  //=========================================================================
 	  // IMGUI
@@ -63,16 +66,27 @@ namespace ishak {
 		ImGui::NewFrame();		
 		//ImGui::ShowDemoWindow();
 	  //=========================================================================
+	  
 	}
 
-	void Renderer::Render(const TArray<RendererCommand>& commands)
+	void Renderer::Render()
 	{	
 		PreRender();
 
-		for (auto&& command : commands)
+		if(m_frameCommandsQueue.size() == 0)
 		{
-			SubmitRendererCommand(command);
+			ISHAK_LOG(Error, "RendererCommandsEmpty")
+		}else
+		{
+			ISHAK_LOG(Warning, "WITH COMMAND")
 		}
+
+		for (auto& [entity, renderingCommand] : m_frameCommandsQueue)
+		{
+			SubmitRendererCommand(renderingCommand);			
+		}
+
+		ClearFrameRendererCommands();
 
 		GLog->Draw();
 
@@ -92,6 +106,7 @@ namespace ishak {
 
 	void Renderer::PostSetRenderingTarget(Window* window)
 	{
+
 		//=========================================================================
 		// IMGUI
 		//=========================================================================	  
@@ -111,24 +126,63 @@ namespace ishak {
 			
 	}
 
+	void Renderer::QueueRenderCommand(const RendererCommand& command)
+	{
+		auto foundIt{ m_frameCommandsQueue.find(command.entityId) };
+		if(foundIt != std::end(m_frameCommandsQueue))
+		{
+			// if found, we submit the command
+			return;			
+		}
+
+		m_frameCommandsQueue.insert(std::make_pair(command.entityId, command));
+	}
+
+	void Renderer::QueueRenderCommandTEST(const RendererCommand& command)
+	{
+		auto foundIt{ m_frameCommandsQueue.find(command.entityId) };
+		if (foundIt != std::end(m_frameCommandsQueue))
+		{
+			// if found, we submit the command
+			return;			
+		}
+
+		m_frameCommandsQueue.insert(std::make_pair(command.entityId, command));
+	}
+
+	void Renderer::TEST()
+	{
+		auto foundIt{ m_frameCommandsQueue.find(Ecs::kNullId) };
+	}
+
+	void Renderer::ClearFrameRendererCommands()
+	{
+		m_frameCommandsQueue.clear();
+	}
+
 	void Renderer::SubmitRendererCommand(const RendererCommand& command)
 	{
-		const bool bRenderColor{ command.texturePath.IsEmpty()};
-		if(!m_rendererWindowPair.first)
+		if(command.entityId == Ecs::kNullId)
+		{
+			return;
+		}
+		const bool bRenderColor{ command.texturePath.IsEmpty() };
+		if (!m_rendererWindowPair.first)
 		{
 			return;
 		}
 		auto& renderer{ m_rendererWindowPair.second };
-		if(bRenderColor)
-		{			
-			SDL_SetRenderDrawColor(renderer, command.color.r, command.color.g, command.color.b, 0);			
+		if (bRenderColor)
+		{
+			//SDL_SetRenderDrawColor(renderer, command.color.r, command.color.g, command.color.b, 0);
 
-		}else
+		}
+		else
 		{
 			SDL_Texture* cachedTexture{ m_rendererCache.GetTexture(command.texturePath, *this) };
-			if(cachedTexture)
+			if (cachedTexture)
 			{
-				SDL_Rect destRect{ (int)command.position.x, (int)command.position.y, 32, 32 };				
+				SDL_Rect destRect{ (int)command.position.x, (int)command.position.y, 32, 32 };
 				SDL_RenderCopy(renderer, cachedTexture, NULL, &destRect);
 			}
 		}

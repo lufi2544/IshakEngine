@@ -162,12 +162,13 @@ namespace ishak { namespace Ecs {
 			const CollectionIndexT freeIdx{ TryGetFreeIdxForComponent() };
 			if(freeIdx == NULL_CONTAINER_IDX)
 			{
+				// TODO Add TESTS for retreiving entity after this resize happens.
 				// Not free space, memory reallocation for the components array.	
-
 				const uint32 lastComponentsCollectionCapacity{ m_components.Capacity() };
 
-				// New allocation for the array done.
-				m_components.Add(component);
+				// New allocation for the array done. Need this so the array grows and capacity is updated
+				m_components.AddDefaulted(1);				
+
 				const uint32 currentComponentsCollectionCapacity{ m_components.Capacity() };
 
 				// Fill the new free components in the collection after reallocating memory.
@@ -177,8 +178,10 @@ namespace ishak { namespace Ecs {
 				const uint32 firstIdxToFlagAsFree{ lastComponentsCollectionCapacity };
 				const uint32 lastIdxToFlagAsFree{ currentComponentsCollectionCapacity - 1 };
 				AllocateFreeSpacesIndexes(firstIdxToFlagAsFree, lastIdxToFlagAsFree);
+				
+				const CollectionIndexT entityComponentIdx{TryGetFreeIdxForComponent()};				
+				m_components[entityComponentIdx] = component;
 
-				const CollectionIndexT entityComponentIdx{ TryGetFreeIdxForComponent() };
 				assert(entityComponentIdx != NULL_CONTAINER_IDX);
 
 				m_entityComponentIdxMap[entity] = entityComponentIdx;

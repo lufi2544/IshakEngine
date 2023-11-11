@@ -1,8 +1,10 @@
 #include "EcsContext.h"
 
+#include "Log/Logger.h"
+
 namespace ishak{ namespace Ecs{
 
-	EcsContext::EcsContext(UniquePtr<EntityManager>&& manager, UniquePtr<ComponentManipulator>&& compManipulator)
+	EcsContext::EcsContext(SharedPtr<EntityManager> manager, UniquePtr<ComponentManipulator>&& compManipulator)
 		: m_entityManager(std::move(manager))
 		, m_componentManipulator(std::move(compManipulator))
 	{
@@ -32,11 +34,18 @@ namespace ishak{ namespace Ecs{
 
 	void EcsContext::UnregisterEntity(void* obj)
 	{
-		m_entityManager->UnregisterEntity(obj);
+		EntityId unregisteredEntityId = m_entityManager->UnregisterEntity(obj);
+		if(unregisteredEntityId == Ecs::kNullId)
+		{
+			return;
+		}
+
+		m_componentManipulator->UnregisterEntitySignature(unregisteredEntityId);
 	}
 
 	void EcsContext::UpdateContext(float dt)
 	{
+		ISHAK_LOG(Warning, "Updating Context")
 		m_componentManipulator->UpdateComponentsStates();
 
 		// Maybe this is not that efficient if we have different systems and every frame we are bringin 

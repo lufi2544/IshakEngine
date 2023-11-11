@@ -36,6 +36,7 @@ namespace ishak { namespace Ecs {
 			}
 
 			Signature GetEntitySignature(EntityId entity, bool& bFound);
+			void UnregisterEntitySignature(EntityId entity);
 
 			template<typename... ComponentC>
 			void BatchEntitiesComponents(std::unordered_map<EntityId, std::tuple<ComponentC...>>* comps, const Signature& forSignature)

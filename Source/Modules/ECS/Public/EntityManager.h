@@ -20,13 +20,13 @@ namespace ishak { namespace Ecs {
 		
 		EntityId RegisterEntity(void* entityObject);
 		EntityId GetEntityId(void* ptr);
-		void UnregisterEntity(void* entityObject);
+		EntityId UnregisterEntity(void* entityObject);
 
 		TArray<EntityId>& GetEntitiesCollection();		
 		
 	private:		
 		TArray<EntityId> m_entities;
-		UniquePtr<IEntityCreator> m_entityCreator;		
+		SharedPtr<IEntityCreator> m_entityCreator;		
 
 		std::unordered_map<void*, EntityId> m_entityMap;
 	};

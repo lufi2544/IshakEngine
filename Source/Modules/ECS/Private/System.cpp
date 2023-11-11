@@ -19,7 +19,7 @@ namespace ishak::Ecs {
 	void System::SetComponentManipulator(ComponentManipulator* compManipulator)
 	{
 		m_compManipulator = compManipulator;
-		SetRequirements();
+		SetComponentRequirements();
 	}
 
 

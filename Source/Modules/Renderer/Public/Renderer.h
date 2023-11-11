@@ -5,6 +5,8 @@
 #include "SDL/SDL_image.h"
 #include "RendererContext.h"
 
+#include "EntityId.h"
+
 namespace ishak {
 
 	class Window;
@@ -25,7 +27,7 @@ namespace ishak {
 		Renderer() = default;
 		void AddRenderingTarget(Window* window);
 				
-		void Render(const TArray<RendererCommand>& commands);		
+		void Render();		
 		void EndFrame();
 
 		RendererT GetSDLRenderer()
@@ -34,12 +36,17 @@ namespace ishak {
 		}
 
 		void ShutDown();
+		void QueueRenderCommand(const RendererCommand& command);
+		void QueueRenderCommandTEST(const RendererCommand& command);
+		void TEST();
 
 	private:
-		void PostSetRenderingTarget(Window* window);
-		void SubmitRendererCommand(const RendererCommand& command);
 		void PreRender();
+		void SubmitRendererCommand(const RendererCommand& command);
+		void PostSetRenderingTarget(Window* window);
+		void ClearFrameRendererCommands();
 		void PostRender();
+
 			
 	private:
 
@@ -55,6 +62,8 @@ namespace ishak {
 
 		std::pair<Window*, RendererT> m_rendererWindowPair;
 		
+		// TODO TMAP!!!
+		std::map<Ecs::EntityId, RendererCommand>m_frameCommandsQueue;		
 	};
 
 }// ishak

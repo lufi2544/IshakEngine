@@ -18,7 +18,8 @@ public class RendererModuleBuilder : ModuleBuilder
 			"SDL",
 			"SDLIMAGE",
 			"Platform",
-			"IMGUI"
+			"IMGUI",
+			"ECS"
         };
     }
 	

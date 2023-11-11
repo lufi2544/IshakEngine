@@ -49,17 +49,19 @@ namespace ishak { namespace Ecs {
 		return kNullId;
 	}
 
-	void EntityManager::UnregisterEntity(void* entityObject)
+	EntityId EntityManager::UnregisterEntity(void* entityObject)
 	{
 		auto foundIt{ m_entityMap.find(entityObject) };
 
 		if(foundIt == std::end(m_entityMap))
 		{
 			// entity not found
-			return;
+			return kNullId;
 		}		
+		const EntityId cachedEntityFound{ foundIt->second };
 
 		m_entityMap.erase(foundIt);
+		return cachedEntityFound;
 	}
 
 	TArray<EntityId>& EntityManager::GetEntitiesCollection()

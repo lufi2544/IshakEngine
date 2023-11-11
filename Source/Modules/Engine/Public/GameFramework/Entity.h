@@ -4,21 +4,21 @@
 #include "CoreConfig.h"
 #include "Functionality/Factory.h"
 
-#include "EntityId.h"
 
-namespace ishak {
-	class World;
-}
+#include "EntityId.h"
 
 
 namespace ishak 
 {
+	class World;
+
 	/*** Main class for the Ishak Engine, for now, nothing fancy, for now... */
 	class CORE_API Entity 
 	{
 	public:
 		Entity() = default;
 		Entity(World* world);	
+		~Entity();
 
 		void BeginPlay();
 		void Tick(float deltaTime);
@@ -45,5 +45,7 @@ namespace ishak
 		World* m_World{ nullptr };		
 
 		Ecs::EntityId entityId{ Ecs::kNullId };
+
+		bool bVisible{ true };
 	};	
 } // ishak

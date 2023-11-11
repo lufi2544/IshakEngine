@@ -35,7 +35,13 @@ namespace ishak { namespace Ecs {
 
 		protected:
 
-			virtual void SetRequirements() { };
+			template<typename ComponentT>
+			ComponentT& GetComponent(EntityId entity)
+			{
+				return m_compManipulator->GetComponent<ComponentT>(entity);
+			}
+
+			virtual void SetComponentRequirements() { };
 
 			template <typename ComponentT>
 			void RequireComponent()

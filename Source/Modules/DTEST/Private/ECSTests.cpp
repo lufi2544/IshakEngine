@@ -389,7 +389,7 @@ namespace ishak {
 			}
 
 		protected:
-			void SetRequirements() override 
+			void SetComponentRequirements() override 
 			{
 				RequireComponent<TransformComponent>();
 				RequireComponent<TransformComponent1>();

@@ -5,6 +5,9 @@
 #include "Functionality/Factory.h"
 #include "Renderer.h"
 
+// ECS
+#include "Ecs.h"
+
 namespace ishak {
 
 	class Window;
@@ -19,7 +22,7 @@ namespace ishak {
 	* I might interface this? I have to figure it out.
 	*/
 	class ENGINE_API IshakEngine
-	{		
+	{				
 	public:
 		IshakEngine();
 		void Init();	
@@ -30,6 +33,18 @@ namespace ishak {
 
 	private:
 		void HandleModules(Factory* factory);
+		void InitEngineCore();
+
+		void InitEcs();
+		void InitCoreEngineEcs(SharedPtr<Ecs::EntityManager> entityManager);
+		void RegisterEcsCoreContainers(Ecs::ComponentManipulator* compMan);
+		void RegisterEcsCoreingSystems(Ecs::EcsContext* ecsContext);
+
+		void InitRenderingEcs(SharedPtr<Ecs::EntityManager> entityManager);
+		void RegisterEcsRenderingContainers(Ecs::ComponentManipulator* compMan);
+		void RegisterEcsRenderingSystems(Ecs::EcsContext* ecsContext);
+
+		void UpdateCoreEngineEcs(float dt);
 
 
 	public:
@@ -50,9 +65,17 @@ namespace ishak {
 
 			// TODO Factory, change this to unique ptr from the factory.
 			SharedPtr<GameInstance> gameInstance;
+			void ShutDown();
 		}m_gameFramework;
 
-	
+		
+		/** EcsContext Array for the Engine.
+		* We have to create different ecs contexts for the different parts that need to be updated.
+		* The Rendering and the Core Engine Logic will have different Contexts
+		*/
+		TArray<SharedPtr<Ecs::EcsContext>> m_ecsContextContainer;
+
+		// TODO Refactor this!!
 	};
 		
 	extern CORE_API IshakEngine* GEngine;

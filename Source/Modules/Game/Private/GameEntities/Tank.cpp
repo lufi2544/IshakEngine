@@ -16,7 +16,7 @@ namespace ishak{
 
 		m_renderContext.texturePath = (FileSystem::Get().GetAssetsDir() + tankTextureName);
 
-		ISHAK_LOG("Tank Created", Error)
+		ISHAK_LOG(Error, "Tank Created")
 	}
 
 	void Tank::DoTick(float deltaTime)

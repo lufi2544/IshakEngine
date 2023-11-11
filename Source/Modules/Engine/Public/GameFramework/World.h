@@ -9,6 +9,7 @@
 namespace ishak{
 
 	class GameInstance;
+	class Level;
 }
 
 namespace ishak {
@@ -37,6 +38,7 @@ namespace ishak {
 		WeakPtr<GameInstance> GetGameInstance();
 		void Init();
 		void Update(float deltaTime);
+		void ShutDown();
 
 		template<class FunctionT>
 		inline void DoInAllEntities(FunctionT function)
@@ -53,6 +55,8 @@ namespace ishak {
 
 		/* Game Instance Ptr, this will always exist while the World exists. */
 		WeakPtr<GameInstance> m_GameInstance;
+
+		SharedPtr<Level> m_level;
 	};
 
 }// ishak

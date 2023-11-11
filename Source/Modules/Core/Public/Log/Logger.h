@@ -39,6 +39,6 @@ namespace ishak
 
 #define GLog GetGlobalLogger()
 
-#define ISHAK_LOG(msg, Verb) GLog->Log(msg, ELoggerVerbosity::Verb);
+#define ISHAK_LOG(Verb, msg) GLog->Log(msg, ELoggerVerbosity::Verb);
 
 }
