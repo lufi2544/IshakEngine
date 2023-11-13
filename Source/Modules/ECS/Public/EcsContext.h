@@ -18,6 +18,11 @@ namespace ishak{ namespace Ecs{
 		NUM
 	};
 
+	/**
+	* Global class that will hold all the info related to the ECS( systems, entities, containers... )
+	* We will have containers that are unique for every ecscontext( only certain component containers for the Engine, other for the renderer,
+	* and others for the Custom( Game )). So in this case, we share the containers across the different contexts.
+	*/
 	class ECS_API EcsContext
 	{
 	public:

@@ -9,6 +9,9 @@
 
 namespace ishak { namespace Ecs {
 
+	/**  
+	* Class that handles entity registration/unregistration in Engine.
+	*/
 	class ECS_API EntityManager
 	{
 	public:

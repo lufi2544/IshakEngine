@@ -10,11 +10,6 @@ namespace ishak {
 
 	}
 
-	WeakPtr<GameInstance> World::GetGameInstance()
-	{
-		return m_GameInstance;
-	}
-
 	void World::Init()
 	{
 		m_level = std::make_shared<Level>(this);

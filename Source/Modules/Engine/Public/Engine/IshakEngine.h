@@ -36,6 +36,8 @@ namespace ishak {
 		void InitEngineCore();
 
 		void InitEcs();
+		void CreateSharedComponentsContainers();
+		void RegisterSharedContainersInComponentManipulator(Ecs::ComponentManipulator* compManipulator);
 		void InitCoreEngineEcs();
 		void RegisterEcsCoreContainers(Ecs::ComponentManipulator* compMan);
 		void RegisterEcsCoreSystems(Ecs::EcsContext* ecsContext);
@@ -45,6 +47,7 @@ namespace ishak {
 		void RegisterEcsRenderingSystems(Ecs::EcsContext* ecsContext);
 
 		void UpdateCoreEngineEcs(float dt);
+		void UpdateCustomEcs(float dt);
 
 
 	public:
@@ -73,7 +76,8 @@ namespace ishak {
 		* We have to create different ecs contexts for the different parts that need to be updated.
 		* The Rendering and the Core Engine Logic will have different Contexts
 		*/
-		UniquePtr<Ecs::EcsContextContainer> m_ecsContextContainer;
+		UniquePtr<Ecs::EcsContextContainer> m_ecsContextContainer;	
+		TArray<SharedPtr<Ecs::IComponentContainer>> m_sharedComponentsContainers;
 
 		// TODO Refactor this!!
 	};

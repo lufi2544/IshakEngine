@@ -26,6 +26,7 @@
 #include "Ecs/GlobalEntityCreator.h"
 #include "Ecs/Components/LevelComponent.h"
 #include "Ecs/Systems/GameFramework/LevelSystem.h"
+#include "Ecs/Components/TransformComponent.h"
 
 
 namespace ishak {	
@@ -50,6 +51,7 @@ namespace ishak {
 
 
 		m_gameFramework.gameInstance->SetEcsContext(m_ecsContextContainer.get());
+		RegisterEcsRenderingContainers(m_ecsContextContainer->GetEcsContext(Ecs::ContextID::CUSTOM)->GetComponentManipulator());
 
 		// Create World
 		ISHAK_LOG(Temp, "Creating World Context" )
@@ -104,9 +106,26 @@ namespace ishak {
 		SharedPtr<Ecs::EntityManager> entityManager{ std::make_shared<Ecs::EntityManager>(std::move(globalEntityCreator)) };		
 		m_ecsContextContainer = std::make_unique<Ecs::EcsContextContainer>(entityManager);
 
+		CreateSharedComponentsContainers();
 		InitCoreEngineEcs();
 		InitRenderingEcs();
 			
+	}
+
+	void IshakEngine::CreateSharedComponentsContainers()
+	{
+		// Add shared components containers along the different ecsContexts.
+		SharedPtr<Ecs::IComponentContainer> transformContainer = std::make_shared<Ecs::ComponentContainer<TransformComponent>>();
+
+		m_sharedComponentsContainers.Add(transformContainer);
+	}
+
+	void IshakEngine::RegisterSharedContainersInComponentManipulator(Ecs::ComponentManipulator* compManipulator)
+	{
+		for (auto container : m_sharedComponentsContainers)
+		{
+			compManipulator->RegisterComponentContainer(std::move(container));
+		}
 	}
 
 	void IshakEngine::InitCoreEngineEcs()
@@ -124,6 +143,8 @@ namespace ishak {
 	void IshakEngine::RegisterEcsCoreContainers(Ecs::ComponentManipulator* compMan)
 	{
 		//...
+
+		RegisterSharedContainersInComponentManipulator(compMan);
 	}
 
 	void IshakEngine::RegisterEcsCoreSystems(Ecs::EcsContext* ecsContext)
@@ -147,6 +168,8 @@ namespace ishak {
 		// Add the Rendering components 
 		SharedPtr<Ecs::IComponentContainer> renderingComponentCon = std::make_shared<Ecs::ComponentContainer<RenderingComponent>>();					
 		compMan->RegisterComponentContainer(std::move(renderingComponentCon));		
+
+		RegisterSharedContainersInComponentManipulator(compMan);
 	}
 
 	void IshakEngine::RegisterEcsRenderingSystems(Ecs::EcsContext* ecsContext)
@@ -187,13 +210,20 @@ namespace ishak {
 	void IshakEngine::Tick(float deltaTime)
 	{				
 		UpdateCoreEngineEcs(deltaTime);
+		UpdateCustomEcs(deltaTime);
 
+		// TODO Remove this
 		m_gameFramework.world->Update(deltaTime);
 	}
 
 	void IshakEngine::UpdateCoreEngineEcs(float dt)
 	{
 		m_ecsContextContainer->GetEcsContext(Ecs::ContextID::ENGINE)->UpdateContext(dt);
+	}
+
+	void IshakEngine::UpdateCustomEcs(float dt)
+	{
+		m_ecsContextContainer->GetEcsContext(Ecs::ContextID::CUSTOM)->UpdateContext(dt);
 	}
 
 

@@ -35,7 +35,13 @@ namespace ishak {
 		}
 
 	public:
-		WeakPtr<GameInstance> GetGameInstance();
+		
+		template<typename T = GameInstance>
+		WeakPtr<GameInstance> GetGameInstance()
+		{
+			return std::dynamic_pointer_cast<T>(m_GameInstance.lock());
+		}
+
 		void Init();
 		void Update(float deltaTime);
 		void ShutDown();

@@ -4,6 +4,7 @@
 
 namespace ishak { namespace Ecs{
 
+	/** Class in charge of creating an EntityId. Should be subclassed for custom assignation. */
 	class ECS_API IEntityCreator
 	{
 	public:

@@ -17,15 +17,19 @@ namespace ishak
 	{
 	public:
 		Entity() = default;
+		// TODO Create the Actor Class
 		Entity(World* world);	
+		Entity(World* world, Vector2 position);
 		~Entity();
 
 		void BeginPlay();
 		void Tick(float deltaTime);
 		void Render();
 
+		World* GetWorld();
+
 		String GetTexture() const;
-		Vector2 GetPosition() const;
+		Vector2 GetPosition();
 		inline Ecs::EntityId GetEntityId() { return entityId; }
 		void SetPosition(const Vector2& newPosition );
 

@@ -30,7 +30,7 @@ namespace ishak { namespace Ecs {
 		/** Global Component Container that manages the entire compoenents for a certain type. All the collection of components is mapped to a certain entity
 		* so when retreiving a compoenent for an entity, the retreival is instantanious.
 		* 
-		* Collection of components are contigus in memory, we reserve the space for certain amount of components, default components are created. When a component is requested to 
+		* Collection of components is contigus in memory, we reserve the space for certain amount of components, default components are created. When a component is requested to 
 		* be added to an entity, a free component from the collection is retreived and mapped to that entity.
 		* 
 		* **NOTE:This class also gives us the possibility to Flush the components collection, that means that we can release the free spaces in the components collection and allocate

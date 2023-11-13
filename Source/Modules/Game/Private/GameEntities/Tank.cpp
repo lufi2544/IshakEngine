@@ -10,6 +10,11 @@ namespace ishak{
 
 	}
 
+	Tank::Tank(World* world, Vector2 position)
+		: Entity(world, position)
+	{
+	}
+
 	void Tank::DoOnBeginPlay()
 	{
 		String tankTextureName{ "Tank_Right.png"};
@@ -25,7 +30,7 @@ namespace ishak{
 
 		auto velocity{ (Vector2{ 10, 0 }) * (speed * deltaTime)};
 		// Moving x amount every frame.
-		m_position += velocity;	     	
+		SetPosition(GetPosition() += velocity);
 	}
 
 	void Tank::Fire()

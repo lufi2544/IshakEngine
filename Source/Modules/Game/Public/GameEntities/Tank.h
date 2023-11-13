@@ -9,7 +9,8 @@ namespace ishak {
 	{
 	public:
 		Tank() = default;
-		Tank(World* world);
+		Tank(World* world); 
+		Tank(World* world, Vector2 position);
 
 		void Fire();
 
