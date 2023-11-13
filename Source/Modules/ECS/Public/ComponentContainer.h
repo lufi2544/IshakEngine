@@ -167,19 +167,21 @@ namespace ishak { namespace Ecs {
 				const uint32 lastComponentsCollectionCapacity{ m_components.Capacity() };
 
 				// New allocation for the array done. Need this so the array grows and capacity is updated
-				m_components.AddDefaulted(1);				
+				m_components.Add(ComponentT{ });
 
 				const uint32 currentComponentsCollectionCapacity{ m_components.Capacity() };
 
 				// Fill the new free components in the collection after reallocating memory.
-				m_components.AddDefaulted(m_components.Capacity() - m_components.Size());
+				const uint32 defaultToAdd{ m_components.Capacity() - m_components.Size() };
+				m_components.AddDefaulted(defaultToAdd);
 
 				// As we have already added one component, we have to start flagging as free one idx further.
 				const uint32 firstIdxToFlagAsFree{ lastComponentsCollectionCapacity };
 				const uint32 lastIdxToFlagAsFree{ currentComponentsCollectionCapacity - 1 };
 				AllocateFreeSpacesIndexes(firstIdxToFlagAsFree, lastIdxToFlagAsFree);
 				
-				const CollectionIndexT entityComponentIdx{TryGetFreeIdxForComponent()};				
+				// Once the array grows and the free indexes are updated, then we assign it to the new component
+				const CollectionIndexT entityComponentIdx{ TryGetFreeIdxForComponent() };				
 				m_components[entityComponentIdx] = component;
 
 				assert(entityComponentIdx != NULL_CONTAINER_IDX);

@@ -153,7 +153,7 @@ namespace ishak {
 			return Size() == 0;
 		}
 
-		// TODO Tests
+		
 		DataT& Last()
 		{
 			return m_data[m_size - 1];
@@ -165,8 +165,7 @@ namespace ishak {
 
 			return m_data[0];
 		}
-
-		// TODO Tests
+		
 		void PopBack()
 		{
 			Remove(Size() - 1);

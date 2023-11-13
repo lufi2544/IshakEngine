@@ -124,6 +124,37 @@ namespace ishak {
 				CHECK(freeSpaces.Contains(entity2ComponentIdx) == true);
 			}
 
+
+			TEST_CASE("Adding a component Container needs to resize, try to get the last entity added component, OK")
+			{
+				SharedPtr<IComponentContainer> container = std::make_shared<Ecs::ComponentContainer<HealthComponent>>();
+
+				// Register the component container
+				ComponentManipulator compManipulator;
+				compManipulator.RegisterComponentContainer(std::move(container));
+
+				HealthComponent healthComp{ 1, 2, };
+				int toAdd{ 8 };
+				for (int ientity = 0; ientity < toAdd; ++ientity)
+				{
+					// Adding a simple component
+					compManipulator.AddComponentDeferred(ientity, healthComp);
+				}
+
+				compManipulator.UpdateComponentsStates();
+
+				EntityId lastEntity{ 3 };
+
+				HealthComponent lastComponent{ 99, 99 };
+				compManipulator.AddComponentDeferred(lastEntity, lastComponent);
+				compManipulator.UpdateComponentsStates();
+
+				HealthComponent component{ compManipulator.GetComponent<HealthComponent>(lastEntity) };
+
+				CHECK(component.current == lastComponent.current);
+				CHECK(component.max == lastComponent.max);
+			}
+
 			TEST_CASE("Adding some components, removing them, freed space. Adding it Again, spaces taken, OK")
 			{
 				SharedPtr<IComponentContainer> container = std::make_shared<Ecs::ComponentContainer<HealthComponent>>(22);

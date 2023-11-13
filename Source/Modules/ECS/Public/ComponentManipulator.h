@@ -187,8 +187,7 @@ namespace ishak { namespace Ecs {
 			{
 				auto castedContainer{ GetCastedComponent<ComponentT>() };
 				const uint8 containerSignature = GetComponentContainerSignatureId<ComponentT>();
-
-				// TODO Tests
+				
 				// Unset the signature 
 				m_entitiesSignaturesMap[entity].set(containerSignature, false);
 
