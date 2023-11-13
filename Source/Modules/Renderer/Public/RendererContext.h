@@ -2,6 +2,7 @@
 
 #include "RendererConfig.h"
 #include "CoreMinimal.h"
+#include "Asset/Texture.h"
 #include "EntityId.h"
 
 
@@ -18,18 +19,18 @@ namespace ishak{
 			return command;
 		}
 
-		static RendererCommand FromTexture(Ecs::EntityId who, const String& texturePathParam, const Vector2& positionParam)
+		static RendererCommand FromTexture(Ecs::EntityId who, Texture*  texturePtr, const Vector2& positionParam)
 		{
 			RendererCommand command;
 			command.entityId = who;
-			command.texturePath = texturePathParam;
+			command.texture = texturePtr;
 			command.position = positionParam;
 
 			return command;
 		}
 
 		Ecs::EntityId entityId{ Ecs::kNullId };
-		String texturePath;
+		Texture* texture{ nullptr };
 		Vector4 color;
 		Vector2 position;
 	};

@@ -163,72 +163,18 @@ namespace ishak {
 		{
 			return;
 		}
-		const bool bRenderColor{ command.texturePath.IsEmpty() };
-		if (!m_rendererWindowPair.first)
+											
+		if (command.texture)
 		{
-			return;
+			SDL_Rect destRect{ (int)command.position.x, (int)command.position.y, 32, 32 };
+			SDL_RenderCopy(GetSDLRenderer(), command.texture->GetSDLTexture(), NULL, &destRect);
 		}
-		auto& renderer{ m_rendererWindowPair.second };
-		if (bRenderColor)
-		{
-			//SDL_SetRenderDrawColor(renderer, command.color.r, command.color.g, command.color.b, 0);
-
-		}
-		else
-		{
-			SDL_Texture* cachedTexture{ m_rendererCache.GetTexture(command.texturePath, *this) };
-			if (cachedTexture)
-			{
-				SDL_Rect destRect{ (int)command.position.x, (int)command.position.y, 32, 32 };
-				SDL_RenderCopy(renderer, cachedTexture, NULL, &destRect);
-			}
-		}
+		
 	}
 
 	void Renderer::EndFrame()
 	{	
 		SDL_RenderPresent(m_rendererWindowPair.second);
-	}
-
-	Renderer::RendererCache::~RendererCache()
-	{
-		for (auto& [textureName, texture] : textureCache)
-		{
-			SDL_DestroyTexture(texture);
-		}
-	}
-
-	SDL_Texture* Renderer::RendererCache::GetTexture(const String& texturePath, Renderer& renderer)
-	{
-		if (!renderer.m_rendererWindowPair.first)
-		{
-			return nullptr;
-		}
-
-		auto foundIt{ textureCache.find(texturePath) };
-
-		// found texture in cache
-		if (foundIt != std::end(textureCache))
-		{
-			return foundIt->second;
-		}
-		else
-		{
-
-			SDL_Surface* surface = IMG_Load(texturePath.c_str());
-			if(surface)
-			{
-				SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer.m_rendererWindowPair.second, surface);
-				SDL_FreeSurface(surface);
-
-				// not found, then create it in the cache
-				textureCache.insert(std::make_pair(texturePath, texture));
-
-				return texture;
-			}
-		}
-
-		return nullptr;
 	}
 
 	void Renderer::ShutDown()

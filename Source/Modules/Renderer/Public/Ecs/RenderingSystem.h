@@ -18,6 +18,6 @@ namespace ishak
 		void SetComponentRequirements() override;
 		void Update(float dt, Ecs::EntityId entity) override;
 
-		Renderer* m_wrenderer;
+		Renderer* m_renderer;
 	};
 }

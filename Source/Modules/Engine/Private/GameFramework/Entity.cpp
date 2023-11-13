@@ -5,6 +5,7 @@
 //ECS
 #include "Ecs//RenderingComponent.h"
 #include <Ecs/Components/TransformComponent.h>
+#include "Ecs/Components/TextureComponent.h"
 
 
 
@@ -35,10 +36,10 @@ namespace ishak {
 
 		if(bVisible)
 		{
-			RenderingComponent renderingC;
-			renderingC.texturePath = &m_renderContext.texturePath;			
+			TextureComponent renderingC;
+			renderingC.textureId = &m_renderContext.texturePath;			
 			 
-			ecsContext->GetComponentManipulator()->AddComponentDeferred<RenderingComponent>(entityId, renderingC);
+			ecsContext->GetComponentManipulator()->AddComponentDeferred<>(entityId, renderingC);
 		}
 		
 		GetWorld()->GetGameInstance().lock()->GetEcsContext(Ecs::ContextID::RENDERER)->GetComponentManipulator()->AddComponentDeferred(entityId, TransformComponent{ m_position });

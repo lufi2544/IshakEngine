@@ -49,17 +49,6 @@ namespace ishak {
 
 			
 	private:
-
-		struct RENDERER_API RendererCache
-		{
-			~RendererCache();
-
-			// TODO AssetManager for the textures
-			inline SDL_Texture* GetTexture(const String& texturePath, Renderer& renderer);
-
-			std::unordered_map<String, SDL_Texture*> textureCache;
-		}m_rendererCache;
-
 		std::pair<Window*, RendererT> m_rendererWindowPair;
 		
 		// TODO TMAP!!!

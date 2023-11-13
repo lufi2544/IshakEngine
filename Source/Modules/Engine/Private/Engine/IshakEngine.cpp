@@ -27,6 +27,7 @@
 #include "Ecs/Components/LevelComponent.h"
 #include "Ecs/Systems/GameFramework/LevelSystem.h"
 #include "Ecs/Components/TransformComponent.h"
+#include <Ecs/Components/TextureComponent.h>
 
 
 namespace ishak {	
@@ -167,7 +168,9 @@ namespace ishak {
 	{
 		// Add the Rendering components 
 		SharedPtr<Ecs::IComponentContainer> renderingComponentCon = std::make_shared<Ecs::ComponentContainer<RenderingComponent>>();					
+		SharedPtr<Ecs::IComponentContainer> textureComponent = std::make_shared<Ecs::ComponentContainer<TextureComponent>>();
 		compMan->RegisterComponentContainer(std::move(renderingComponentCon));		
+		compMan->RegisterComponentContainer(std::move(textureComponent));
 
 		RegisterSharedContainersInComponentManipulator(compMan);
 	}
