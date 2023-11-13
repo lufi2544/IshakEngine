@@ -17,25 +17,35 @@ namespace ishak{
 
 		void Init();
 		void SetWorld(World* world);
-		void SetEcsContext(TArray<SharedPtr<Ecs::EcsContext>>* context);
+		void SetEcsContext(Ecs::EcsContextContainer* contextContainer);		
 		void ShutDown();
 
 		World* GetWorld();
 		World* GetWorld() const;		
-		TArray<SharedPtr<Ecs::EcsContext>>* GetEcsContext()
+
+		Ecs::EcsContext* GetEcsContext(Ecs::ContextID contextId)
 		{
-			return m_ecsContextPtr;
+			return m_ptrEcsContextContainer->GetEcsContext(contextId);
 		}
 		
 	protected:
+
+		Ecs::EcsContext* CreteCustomEcsContext(SharedPtr<Ecs::EntityManager> entityManager);
+		void RegisterEcsGameContainers(Ecs::ComponentManipulator* compMan);
+		virtual void DoRegisterEcsGameContainers(Ecs::ComponentManipulator* compMan){  }
+
+		void RegisterEcsGameSystems(Ecs::EcsContext* ecsContext);
+		virtual void DoRegisterEcsGameSystems(Ecs::EcsContext* ecsContext) {  }
+
 		virtual void DoInit(){ }
+		virtual void DoInitEcsContext(Ecs::EcsContext* gameEcsContext){ }
 		
 	private:
 		/** Main world instance. */
 		World* m_world{ nullptr };
 
-		//TODO Change WorkAround for now
-		TArray<SharedPtr<Ecs::EcsContext>>* m_ecsContextPtr{ nullptr };
+		/** Ptr to the Engine Ecs ContextContainer. */
+		Ecs::EcsContextContainer* m_ptrEcsContextContainer;
 	};
 
 }// ishak

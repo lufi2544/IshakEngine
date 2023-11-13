@@ -12,13 +12,39 @@ namespace ishak{
 	}
 
 	void GameInstance::SetWorld(World* world)
-	{
+	{		
 		m_world = world;
 	}
 
-	void GameInstance::SetEcsContext(TArray<SharedPtr<Ecs::EcsContext>>* context)
+	void GameInstance::SetEcsContext(Ecs::EcsContextContainer* engineContextContainer)
 	{
-		m_ecsContextPtr = context;
+		Ecs::EcsContext* customGameEcsContext{ CreteCustomEcsContext(engineContextContainer->entityManger) };
+		engineContextContainer->AddContext(customGameEcsContext);
+		m_ptrEcsContextContainer = engineContextContainer;
+	}
+
+	Ecs::EcsContext* GameInstance::CreteCustomEcsContext(SharedPtr<Ecs::EntityManager> entityManager)
+	{
+		UniquePtr<Ecs::ComponentManipulator> componentManipulator{ std::make_unique<Ecs::ComponentManipulator>() };
+		Ecs::EcsContext* gameEcsContext{ new Ecs::EcsContext(entityManager, std::move(componentManipulator)) };
+
+		RegisterEcsGameContainers(gameEcsContext->GetComponentManipulator());
+		RegisterEcsGameSystems(gameEcsContext);
+
+		return gameEcsContext;
+	}
+
+	void GameInstance::RegisterEcsGameContainers(Ecs::ComponentManipulator* compMan)
+	{
+		//...
+		DoRegisterEcsGameContainers(compMan);
+	}
+
+	void GameInstance::RegisterEcsGameSystems(Ecs::EcsContext* ecsContext)
+	{
+		//...
+
+		DoRegisterEcsGameSystems(ecsContext);
 	}
 
 	void GameInstance::ShutDown()
@@ -35,5 +61,6 @@ namespace ishak{
 	{
 		return m_world;
 	}
+
 
 }//ishak

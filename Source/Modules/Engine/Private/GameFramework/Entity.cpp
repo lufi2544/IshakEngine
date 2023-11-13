@@ -20,10 +20,8 @@ namespace ishak {
 
 	}
 	void Entity::BeginPlay()
-	{
-		auto ecsHandler{ m_World->GetGameInstance().lock()->GetEcsContext() };
-
-		Ecs::EcsContext* ecsContext{ (*(ecsHandler))[Ecs::ECSContextID::RENDERER].get()};
+	{		
+		Ecs::EcsContext* ecsContext{ m_World->GetGameInstance().lock()->GetEcsContext(Ecs::ContextID::RENDERER) };
 		entityId = ecsContext->GetEntityManager()->RegisterEntity(this);
 
 		if(bVisible)

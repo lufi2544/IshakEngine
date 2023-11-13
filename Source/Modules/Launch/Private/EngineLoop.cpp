@@ -40,8 +40,7 @@ namespace ishak{
 		float accumulatedTime{ 0.0f };
 
 		while (!GEngine->bWantsToExit) 
-		{
-			ISHAK_LOG(Error, "INIT FRAME")
+		{			
 			high_resolution_clock::time_point currentTime{ high_resolution_clock::now() };
 
 			// Since Last Engine Tick
@@ -49,15 +48,9 @@ namespace ishak{
 			
 			previusTime = currentTime;
 			accumulatedTime += tickDeltaTime;
-
-
-			
-			
-			ISHAK_LOG(Error, std::to_string(accumulatedTime).c_str());
-			//Since 
+									
 			while(accumulatedTime >= FIXED_DELTA)
-			{
-				ISHAK_LOG(Error, "PROCESS")
+			{				
 				GEngine->ProcessInput();
 				GEngine->Tick(FIXED_DELTA);
 
@@ -71,8 +64,7 @@ namespace ishak{
 				Sleep(toSleep);
 			}
 						
-			GEngine->Render();
-			ISHAK_LOG(Error, "ENDFRAME")
+			GEngine->Render();			
 		}
 
 

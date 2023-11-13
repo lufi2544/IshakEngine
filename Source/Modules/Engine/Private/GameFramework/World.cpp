@@ -40,16 +40,16 @@ namespace ishak {
 
 		// TODO Refactor ECS remove the entities from all the ecsContexts
 
-		auto ecsHandler{ GetGameInstance().lock()->GetEcsContext() };
-		Ecs::EcsContext* ecsContext{ (*(ecsHandler))[Ecs::ECSContextID::RENDERER].get() };		
-		if (!ecsContext)
+		Ecs::EcsContext* ecsRendererContext{ GetGameInstance().lock()->GetEcsContext(Ecs::ContextID::RENDERER) };
+		
+		if (!ecsRendererContext)
 		{
 			return;
 		}
 
 		for (auto&& entity : m_WorldEntities)
 		{
-			ecsContext->UnregisterEntity(entity.get());
+			ecsRendererContext->UnregisterEntity(entity.get());
 		}
 	}
 

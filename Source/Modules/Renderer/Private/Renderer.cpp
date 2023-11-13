@@ -76,9 +76,6 @@ namespace ishak {
 		if(m_frameCommandsQueue.size() == 0)
 		{
 			ISHAK_LOG(Error, "RendererCommandsEmpty")
-		}else
-		{
-			ISHAK_LOG(Warning, "WITH COMMAND")
 		}
 
 		for (auto& [entity, renderingCommand] : m_frameCommandsQueue)

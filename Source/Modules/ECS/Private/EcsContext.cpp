@@ -44,8 +44,7 @@ namespace ishak{ namespace Ecs{
 	}
 
 	void EcsContext::UpdateContext(float dt)
-	{
-		ISHAK_LOG(Warning, "Updating Context")
+	{		
 		m_componentManipulator->UpdateComponentsStates();
 
 		// Maybe this is not that efficient if we have different systems and every frame we are bringin 

@@ -29,8 +29,7 @@ namespace ishak
 
 		auto t{ *compo.texturePath };
 		auto p{ *compo.position };
-
-		ISHAK_LOG(Temp, "ADDING COMMAND")
+		
 		m_wrenderer->QueueRenderCommand(RendererCommand::FromTexture(entity, t, p));
 	}
 }// ishak

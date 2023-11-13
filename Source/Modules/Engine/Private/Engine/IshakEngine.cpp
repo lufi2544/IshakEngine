@@ -49,7 +49,7 @@ namespace ishak {
 		m_gameFramework.gameInstance = factory.GetOrBuild<GameInstance>();
 
 
-		m_gameFramework.gameInstance->SetEcsContext(&m_ecsContextContainer);
+		m_gameFramework.gameInstance->SetEcsContext(m_ecsContextContainer.get());
 
 		// Create World
 		ISHAK_LOG(Temp, "Creating World Context" )
@@ -96,30 +96,29 @@ namespace ishak {
 	{
 		ISHAK_LOG(Temp, "Initializing ENGINE ECS..................")
 
-
-		// Prepare the ContextContainer
-		m_ecsContextContainer.Reserve(Ecs::ECSContextID::NUM);
+		
 
 		UniquePtr<GlobalEntityCreator> globalEntityCreator{ std::make_unique<GlobalEntityCreator>() };
 		 
 		// For now we have only one entity Manger, in the future I may add different EntityManagers, but for now is okay to have it this way.
-		SharedPtr<Ecs::EntityManager> entityManager{ std::make_unique<Ecs::EntityManager>(std::move(globalEntityCreator)) };
+		SharedPtr<Ecs::EntityManager> entityManager{ std::make_shared<Ecs::EntityManager>(std::move(globalEntityCreator)) };		
+		m_ecsContextContainer = std::make_unique<Ecs::EcsContextContainer>(entityManager);
 
-		InitCoreEngineEcs(entityManager);
-		InitRenderingEcs(entityManager);
+		InitCoreEngineEcs();
+		InitRenderingEcs();
 			
 	}
 
-	void IshakEngine::InitCoreEngineEcs(SharedPtr<Ecs::EntityManager> entityManager)
+	void IshakEngine::InitCoreEngineEcs()
 	{			
 		/* Add the Engine Init for CompManipulator and Systems here */
 		UniquePtr<Ecs::ComponentManipulator> componentManipulator{ std::make_unique<Ecs::ComponentManipulator>() };
-		SharedPtr<Ecs::EcsContext> coreEcsContext = std::make_shared<Ecs::EcsContext>(std::move(entityManager), std::move(componentManipulator));
+		Ecs::EcsContext* coreEcsContext = new Ecs::EcsContext(m_ecsContextContainer->entityManger, std::move(componentManipulator));
 		
 		RegisterEcsCoreContainers(coreEcsContext->GetComponentManipulator());
-		RegisterEcsCoreingSystems(coreEcsContext.get());
+		RegisterEcsCoreSystems(coreEcsContext);
 
-		m_ecsContextContainer.Add(std::move(coreEcsContext));
+		m_ecsContextContainer->AddContext(coreEcsContext);
 	}
 
 	void IshakEngine::RegisterEcsCoreContainers(Ecs::ComponentManipulator* compMan)
@@ -127,20 +126,20 @@ namespace ishak {
 		//...
 	}
 
-	void IshakEngine::RegisterEcsCoreingSystems(Ecs::EcsContext* ecsContext)
+	void IshakEngine::RegisterEcsCoreSystems(Ecs::EcsContext* ecsContext)
 	{
 		//...
 	}
 
-	void IshakEngine::InitRenderingEcs(SharedPtr<Ecs::EntityManager> entityManager)
+	void IshakEngine::InitRenderingEcs()
 	{
 		UniquePtr<Ecs::ComponentManipulator> componentManipulator{ std::make_unique<Ecs::ComponentManipulator>() };
-		SharedPtr<Ecs::EcsContext> renderingEcsContext = std::make_shared<Ecs::EcsContext>(std::move(entityManager), std::move(componentManipulator));
+		Ecs::EcsContext* renderingEcsContext = new Ecs::EcsContext(m_ecsContextContainer->entityManger, std::move(componentManipulator));
 
 		RegisterEcsRenderingContainers(renderingEcsContext->GetComponentManipulator());
-		RegisterEcsRenderingSystems(renderingEcsContext.get());
+		RegisterEcsRenderingSystems(renderingEcsContext);
 
-		m_ecsContextContainer.Add(std::move(renderingEcsContext));
+		m_ecsContextContainer->AddContext(renderingEcsContext);
 	}
 
 	void IshakEngine::RegisterEcsRenderingContainers(Ecs::ComponentManipulator* compMan)
@@ -186,8 +185,7 @@ namespace ishak {
 	}
 
 	void IshakEngine::Tick(float deltaTime)
-	{		
-		ISHAK_LOG(Warning, "TICKING")
+	{				
 		UpdateCoreEngineEcs(deltaTime);
 
 		m_gameFramework.world->Update(deltaTime);
@@ -195,18 +193,16 @@ namespace ishak {
 
 	void IshakEngine::UpdateCoreEngineEcs(float dt)
 	{
-		m_ecsContextContainer[Ecs::ECSContextID::ENGINE]->UpdateContext(dt);
+		m_ecsContextContainer->GetEcsContext(Ecs::ContextID::ENGINE)->UpdateContext(dt);
 	}
 
 
 	void IshakEngine::Render()
-	{			
-		ISHAK_LOG(Warning, "RENDERING")
-
+	{					
 		// Here we would process the EcsContext related to the Redering
 		// Then render the entities
 				
-		m_ecsContextContainer[Ecs::ECSContextID::RENDERER]->UpdateContext(0.00f);
+		m_ecsContextContainer->GetEcsContext(Ecs::ContextID::RENDERER)->UpdateContext(0.00f);
 
 		m_renderer->Render();					
 		m_renderer->EndFrame();
