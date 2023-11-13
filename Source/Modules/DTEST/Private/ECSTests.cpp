@@ -28,10 +28,7 @@ namespace ishak {
 			{
 				UniquePtr<EntityManager> manager = std::make_unique<EntityManager>();
 				UniquePtr<ComponentManipulator> manip = std::make_unique<ComponentManipulator>();
-				EcsContext context{ std::move(manager), std::move(manip) };
-
-
-				
+				EcsContext context{ std::move(manager), std::move(manip) };				
 
 				EntityId entity{ 22 };						
 				SharedPtr<IComponentContainer> container = std::make_shared<Ecs::ComponentContainer<HealthComponent>>();
