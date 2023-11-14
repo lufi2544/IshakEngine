@@ -10,7 +10,9 @@ namespace ishak {
 	public:
 		Tank() = default;
 		Tank(World* world); 
-		Tank(World* world, Vector2 position);
+
+		// TODO Create Transform struct
+		Tank(World* world, Vector2 position, float rotation = 0.0f, float scale = 1.0f);
 
 		void Fire();
 

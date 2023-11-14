@@ -36,9 +36,7 @@ namespace ishak {
 		}
 
 		void ShutDown();
-		void QueueRenderCommand(const RendererCommand& command);
-		void QueueRenderCommandTEST(const RendererCommand& command);
-		void TEST();
+		void QueueRenderCommand(const RendererCommand& command);		
 
 	private:
 		void PreRender();

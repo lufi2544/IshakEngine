@@ -38,6 +38,8 @@ namespace ishak{
 
 		high_resolution_clock::time_point previusTime{ high_resolution_clock::now() };
 		float accumulatedTime{ 0.0f };
+		bool bFirstTimeLooping{ true };
+
 
 		while (!GEngine->bWantsToExit) 
 		{			
@@ -48,7 +50,13 @@ namespace ishak{
 			
 			previusTime = currentTime;
 			accumulatedTime += tickDeltaTime;
-									
+										
+			if(bFirstTimeLooping)
+			{
+				accumulatedTime = FIXED_DELTA;
+				bFirstTimeLooping = false;
+			}
+
 			while(accumulatedTime >= FIXED_DELTA)
 			{				
 				GEngine->ProcessInput();

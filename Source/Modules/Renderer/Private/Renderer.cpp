@@ -133,24 +133,7 @@ namespace ishak {
 		}
 
 		m_frameCommandsQueue.insert(std::make_pair(command.entityId, command));
-	}
-
-	void Renderer::QueueRenderCommandTEST(const RendererCommand& command)
-	{
-		auto foundIt{ m_frameCommandsQueue.find(command.entityId) };
-		if (foundIt != std::end(m_frameCommandsQueue))
-		{
-			// if found, we submit the command
-			return;			
-		}
-
-		m_frameCommandsQueue.insert(std::make_pair(command.entityId, command));
-	}
-
-	void Renderer::TEST()
-	{
-		auto foundIt{ m_frameCommandsQueue.find(Ecs::kNullId) };
-	}
+	}	
 
 	void Renderer::ClearFrameRendererCommands()
 	{
@@ -166,8 +149,8 @@ namespace ishak {
 											
 		if (command.texture)
 		{
-			SDL_Rect destRect{ (int)command.position.x, (int)command.position.y, 32, 32 };
-			SDL_RenderCopy(GetSDLRenderer(), command.texture->GetSDLTexture(), NULL, &destRect);
+			SDL_Rect destRect{ (int)command.position.x, (int)command.position.y, command.scaledW, command.scaledH };
+			SDL_RenderCopyEx(GetSDLRenderer(), command.texture->GetSDLTexture(), NULL, &destRect, command.rotation, NULL, SDL_FLIP_NONE);
 		}
 		
 	}

@@ -17,9 +17,11 @@ namespace ishak {
 
 	}
 
-	Entity::Entity(World* world, Vector2 position)
+	Entity::Entity(World* world, Vector2 position, float rotation, float scale)
 		: m_World(world)
 		, m_position(position)
+		, m_rotation(rotation)
+		, m_scale(scale)
 	{
 
 	}
@@ -34,15 +36,15 @@ namespace ishak {
 		Ecs::EcsContext* ecsContext{ m_World->GetGameInstance().lock()->GetEcsContext(Ecs::ContextID::RENDERER) };
 		entityId = ecsContext->GetEntityManager()->RegisterEntity(this);
 
+		SetPositionAndRotationAndScale(m_position, m_rotation, m_scale);
+
 		if(bVisible)
 		{
 			TextureComponent renderingC;
 			renderingC.textureId = &m_renderContext.texturePath;			
 			 
 			ecsContext->GetComponentManipulator()->AddComponentDeferred<>(entityId, renderingC);
-		}
-		
-		GetWorld()->GetGameInstance().lock()->GetEcsContext(Ecs::ContextID::RENDERER)->GetComponentManipulator()->AddComponentDeferred(entityId, TransformComponent{ m_position });
+		}		
 
 		DoOnBeginPlay();
 	}
@@ -96,6 +98,29 @@ namespace ishak {
 
 		TransformComponent& transform{ compManipulator->GetComponent<TransformComponent>(entityId) };
 		transform.position = newPosition;
+	}
+
+	void Entity::SetPositionAndRotationAndScale(const Vector2& newPosition, const float& newRotation, const float& newScaleParam)
+	{
+		m_scale = newScaleParam;
+		m_position = newPosition;
+		m_rotation = newRotation;
+		Ecs::ComponentManipulator* compManipulator{ GetWorld()->GetGameInstance().lock()->GetEcsContext(Ecs::ContextID::ENGINE)->GetComponentManipulator() };
+		if (!compManipulator)
+		{
+			return;
+		}
+
+		if (!compManipulator->HasComponent<TransformComponent>(entityId))
+		{
+			// Add Compoonent
+			GetWorld()->GetGameInstance().lock()->GetEcsContext(Ecs::ContextID::ENGINE)->GetComponentManipulator()->AddComponentDeferred(entityId, TransformComponent{ newPosition, newRotation, newScaleParam });
+			return;
+		}
+
+		TransformComponent& transform{ compManipulator->GetComponent<TransformComponent>(entityId) };
+		transform.position = newPosition;
+		transform.rotation = newRotation;
 	}
 
 	String Entity::GetTexture() const

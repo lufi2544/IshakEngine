@@ -10,8 +10,8 @@ namespace ishak{
 
 	}
 
-	Tank::Tank(World* world, Vector2 position)
-		: Entity(world, position)
+	Tank::Tank(World* world, Vector2 position, float rotation, float scale)
+		: Entity(world, position, rotation, scale)
 	{
 	}
 

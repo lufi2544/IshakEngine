@@ -2,9 +2,11 @@
 
 namespace ishak
 {
-	Texture::Texture(const String& id, SDL_Texture* sdltexture)
+	Texture::Texture(const String& id, SDL_Texture* sdltexture, int w, int h)
 		: Asset(id)
 		, m_sdlTexture{ sdltexture }
+		, width{ w }
+		, height{ h }
 	{
 
 	}

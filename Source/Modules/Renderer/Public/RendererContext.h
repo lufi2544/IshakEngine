@@ -19,12 +19,21 @@ namespace ishak{
 			return command;
 		}
 
-		static RendererCommand FromTexture(Ecs::EntityId who, Texture*  texturePtr, const Vector2& positionParam)
+		static RendererCommand FromTexture(
+			Ecs::EntityId who,
+			Texture*  texturePtr, 
+			const Vector2& positionParam, 
+			const float& rotationParam, 
+			const int& scaledW, 
+			const int& scaledH)
 		{
 			RendererCommand command;
 			command.entityId = who;
 			command.texture = texturePtr;
 			command.position = positionParam;
+			command.rotation = rotationParam;
+			command.scaledW = scaledW;
+			command.scaledH = scaledH;
 
 			return command;
 		}
@@ -33,6 +42,9 @@ namespace ishak{
 		Texture* texture{ nullptr };
 		Vector4 color;
 		Vector2 position;
+		float rotation;
+		int scaledW;
+		int scaledH;
 	};
 
 }// ishak

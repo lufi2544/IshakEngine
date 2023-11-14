@@ -19,7 +19,7 @@ namespace ishak
 		Entity() = default;
 		// TODO Create the Actor Class
 		Entity(World* world);	
-		Entity(World* world, Vector2 position);
+		Entity(World* world, Vector2 position, float rotation = 0.0f, float scale = 0.0f);
 		~Entity();
 
 		void BeginPlay();
@@ -32,6 +32,7 @@ namespace ishak
 		Vector2 GetPosition();
 		inline Ecs::EntityId GetEntityId() { return entityId; }
 		void SetPosition(const Vector2& newPosition );
+		void SetPositionAndRotationAndScale(const Vector2& newPosition, const float& newRotation, const float& newScaleParam);
 
 	protected:
 		virtual void DoOnBeginPlay(){ }
@@ -44,7 +45,11 @@ namespace ishak
 			String texturePath;
 		} m_renderContext;
 
+		// TODO Delete in the tick, create the movement system.
 		Vector2 m_position{ 0, 0 };
+		float m_rotation{ 0.0f };
+		float m_scale{ 1.0f };
+
 	private:
 		World* m_World{ nullptr };		
 

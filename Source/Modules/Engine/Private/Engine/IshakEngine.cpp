@@ -96,11 +96,7 @@ namespace ishak {
 	}
 
 	void IshakEngine::InitEcs()
-	{
-		ISHAK_LOG(Temp, "Initializing ENGINE ECS..................")
-
-		
-
+	{		
 		UniquePtr<GlobalEntityCreator> globalEntityCreator{ std::make_unique<GlobalEntityCreator>() };
 		 
 		// For now we have only one entity Manger, in the future I may add different EntityManagers, but for now is okay to have it this way.
@@ -131,6 +127,7 @@ namespace ishak {
 
 	void IshakEngine::InitCoreEngineEcs()
 	{			
+		ISHAK_LOG(Temp, "Initializing ENGINE ECS..................")
 		/* Add the Engine Init for CompManipulator and Systems here */
 		UniquePtr<Ecs::ComponentManipulator> componentManipulator{ std::make_unique<Ecs::ComponentManipulator>() };
 		Ecs::EcsContext* coreEcsContext = new Ecs::EcsContext(m_ecsContextContainer->entityManger, std::move(componentManipulator));
@@ -155,6 +152,7 @@ namespace ishak {
 
 	void IshakEngine::InitRenderingEcs()
 	{
+		ISHAK_LOG(Temp, "Initializing RENDERING ECS..................")
 		UniquePtr<Ecs::ComponentManipulator> componentManipulator{ std::make_unique<Ecs::ComponentManipulator>() };
 		Ecs::EcsContext* renderingEcsContext = new Ecs::EcsContext(m_ecsContextContainer->entityManger, std::move(componentManipulator));
 

@@ -1,5 +1,6 @@
 // ISHAK
 #include "GameFramework/GameInstance.h"
+#include "Log/Logger.h"
 
 namespace ishak{
 
@@ -18,6 +19,7 @@ namespace ishak{
 
 	void GameInstance::SetEcsContext(Ecs::EcsContextContainer* engineContextContainer)
 	{
+		ISHAK_LOG(Temp, "Initializing GAME ECS..................")
 		Ecs::EcsContext* customGameEcsContext{ CreteCustomEcsContext(engineContextContainer->entityManger) };
 		engineContextContainer->AddContext(customGameEcsContext);
 		m_ptrEcsContextContainer = engineContextContainer;
