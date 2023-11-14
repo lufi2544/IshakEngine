@@ -4,7 +4,7 @@
 namespace ishak
 {
 	Asset::Asset(const String& idParam)
-		: m_id{ idParam }
+		: m_path{ idParam }
 	{
 
 	}

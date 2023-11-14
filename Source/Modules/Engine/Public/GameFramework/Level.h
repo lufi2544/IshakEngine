@@ -5,18 +5,20 @@
 
 #include "Ecs.h"
 
+#include "Level/LevelBackGround.h"
+
 namespace ishak
 {
-	class World;
+	class World;	
 
 	class ENGINE_API Level
 	{
 	public:
 		Level(World* world);
-		void Init();
+		void Init(const String& backgroundImageName);
 	private:
 		World* m_world{ nullptr };
-		Vector4 m_backGroundColor{ 0, 0, 0, 0 };
-		Ecs::EntityId entityId{ Ecs::kNullId };
+		
+		UniquePtr<LevelBackGround> m_levelBackground;
 	};
 }// ishak

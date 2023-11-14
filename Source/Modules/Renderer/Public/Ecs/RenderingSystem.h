@@ -12,12 +12,10 @@ namespace ishak
 	class RENDERER_API RenderingSystem : public Ecs::System
 	{
 	public:
-		RenderingSystem(Renderer* renderer);
+		RenderingSystem();
 		
 
 		void SetComponentRequirements() override;
-		void Update(float dt, Ecs::EntityId entity) override;
-
-		Renderer* m_renderer;
+		void Update(float dt, Ecs::EntityId entity) override;		
 	};
 }

@@ -59,9 +59,11 @@ namespace ishak {
 		m_gameFramework.world = std::make_unique<World>(m_gameFramework.gameInstance);
 		m_gameFramework.gameInstance->SetWorld(m_gameFramework.world.get());
 
-		m_gameFramework.gameInstance->Init();		
+		m_gameFramework.gameInstance->Init();
+	}
 
-
+	void IshakEngine::InitEngineCore()
+	{		
 		// Init Main Window and Rendering stuff.
 		if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 		{
@@ -74,16 +76,13 @@ namespace ishak {
 			"IshakEngine",
 			0, 0,// where
 			800, 600, // dimensions
-			WindowFlags::WINDOW_CENTRALIZED  |  WindowFlags::WINDOW_VSYNC | WindowFlags::WINDOW_FULLSCREEN_MATCH_MONITOR
+			WindowFlags::WINDOW_CENTRALIZED | WindowFlags::WINDOW_VSYNC | WindowFlags::WINDOW_FULLSCREEN_MATCH_MONITOR
 		};
 
-		m_GameMainWindow = ishak::Window::MakeWindow(winCreationContext);		
-		m_renderer->AddRenderingTarget(m_GameMainWindow.get());			
-	}
+		m_GameMainWindow = ishak::Window::MakeWindow(winCreationContext);
+		Renderer::Get().AddRenderingTarget(m_GameMainWindow.get());
 
-	void IshakEngine::InitEngineCore()
-	{
-		m_renderer = std::make_unique<Renderer>();
+		auto& f{ Renderer::Get() };
 
 		InitEcs();
 	}
@@ -176,7 +175,7 @@ namespace ishak {
 	void IshakEngine::RegisterEcsRenderingSystems(Ecs::EcsContext* ecsContext)
 	{		
 		// Add the Rendering Systems
-		UniquePtr<RenderingSystem> renderingSys{ std::make_unique<RenderingSystem>(m_renderer.get()) };		
+		UniquePtr<RenderingSystem> renderingSys{ std::make_unique<RenderingSystem>() };
 
 		//**NOTE: Registration is the Update order.		
 		ecsContext->RegisterSystem(std::move(renderingSys));
@@ -235,15 +234,15 @@ namespace ishak {
 				
 		m_ecsContextContainer->GetEcsContext(Ecs::ContextID::RENDERER)->UpdateContext(0.00f);
 
-		m_renderer->Render();					
-		m_renderer->EndFrame();
+		Renderer::Get().Render();
+		Renderer::Get().EndFrame();
 	}
 
 	// Last chance to delete stuff.
 	void IshakEngine::ShutDown()
 	{			
 		m_gameFramework.ShutDown();
-		m_renderer->ShutDown();
+		Renderer::Get().ShutDown();
 	}
 
 	void IshakEngine::GameFramework::ShutDown()

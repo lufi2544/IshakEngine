@@ -15,8 +15,7 @@
 
 namespace ishak
 {
-	RenderingSystem::RenderingSystem(Renderer* renderer)
-		: m_renderer(renderer)
+	RenderingSystem::RenderingSystem()
 	{
 
 	}
@@ -34,37 +33,46 @@ namespace ishak
 			return;
 		}
 		
-		TextureComponent& compo{ m_compManipulator->GetComponent<TextureComponent>(entity) };
-		String texturePath{ *compo.textureId };
+		TextureComponent& textureComponent{ m_compManipulator->GetComponent<TextureComponent>(entity) };
 		const TransformComponent transform{ m_compManipulator->GetComponent<TransformComponent>(entity) };
-
-		if (!compo.texture.lock())
+		if (!textureComponent.texture.lock())
 		{
+			String texturePath{ *textureComponent.texturePath };		
 			// Texture not found in component, then try to retreive from AssetManager.
 			WeakPtr<Texture> wTexture{ AssetManager::Get().GetAsset<Texture>(texturePath) };
-			if (!wTexture.lock())
+			if(!wTexture.lock())
 			{
-				// Texture non existant in the AssetManager, then load it into memory				
-				SDL_Surface* image = IMG_Load(texturePath.c_str());								
-				if (image)
-				{
-					SDL_Texture* sdltexture = SDL_CreateTextureFromSurface(m_renderer->GetSDLRenderer(), image);										
-					SharedPtr<Texture> texture{ std::make_shared<Texture>(texturePath, sdltexture, image->w, image->h) }; 
-					//TODO Refactor, make an specialization of the fuction in the Asset Manger, so the asset manater created the memory for this.
-					AssetManager::Get().AddAsset(std::move(texture));
-					SDL_FreeSurface(image);
-				}
-
+				// Error loading the asset in the manager.
+				assert(false);
 			}
 
-			compo.texture = AssetManager::Get().GetAsset<Texture>(texturePath);
+			textureComponent.texture = wTexture;
 		}
 
-		Texture* texture{ compo.texture.lock().get() };
-		const int scaledWidth{ texture->GetWidth() * (int)transform.scale };
-		const int scaleHeight{ texture->GetHeight() * (int)transform.scale };
+		Texture* texture{ textureComponent.texture.lock().get() };
 
-		m_renderer->QueueRenderCommand(RendererCommand::FromTexture(entity, texture, transform.position, transform.rotation, scaledWidth, scaleHeight));
+		int scaledWidth = 0;
+		int scaleHeight = 0;
+		// Evaluate if we have to render from a coordinate in a texture, in this case the rendering target rectangle
+		// won't be the texture widht itslf.
+		if(textureComponent.renderingCoordinates.x == -1 && textureComponent.renderingCoordinates.y == -1)
+		{
+			scaledWidth = texture->GetWidth() * (int)transform.scale;
+			scaleHeight = texture->GetHeight() * (int)transform.scale;
+		}else
+		{
+			scaledWidth = textureComponent.customWidht;
+			scaleHeight = textureComponent.customHeight;
+		}
+		Vector2 renderingCoordinates{ 0,0 };
+		
+		// Check if we have to render the texture from certain coordinates.
+		if(textureComponent.renderingCoordinates.x != 0 || textureComponent.renderingCoordinates.y != 0)
+		{
+			renderingCoordinates = textureComponent.renderingCoordinates;
+		}
+
+		Renderer::Get().QueueRenderCommand(RendererCommand::FromTexture(entity, texture, transform.position, transform.rotation, scaledWidth, scaleHeight, renderingCoordinates));
 	}
 }// ishak
 

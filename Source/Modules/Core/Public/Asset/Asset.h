@@ -6,15 +6,17 @@
 
 namespace ishak
 {
-	class CORE_API Asset
+	class CORE_API Asset : public std::enable_shared_from_this<Asset>
 	{
 	public:
 		Asset(const String& idParam);
 
-		String GetId() { return m_id; }
+		virtual SharedPtr<Asset> Load() = 0;
 
-	private:
+		String GetId() { return m_path; }
+
+	protected:
 		/** This id is the absolute path for the asset. */
-		String m_id;
+		String m_path;
 	};
 }//ishak

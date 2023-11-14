@@ -11,6 +11,18 @@
 
 namespace ishak {
 
+	Renderer* Renderer::singleton = nullptr;
+
+	Renderer& Renderer::Get()
+	{		
+		if(!singleton)
+		{
+			singleton = new Renderer();
+		}
+
+		return *singleton;
+	}
+
 	void Renderer::AddRenderingTarget(Window* window)
 	{
 		
@@ -148,9 +160,24 @@ namespace ishak {
 		}
 											
 		if (command.texture)
-		{
+		{	
+			bool bShouldRenderFromCoordinates{ false };
+			SDL_Rect srcRectangle;
+			// Check wether we should render the texture from a certain coordinate.
+			if(command.renderingCoordinates.x != -1 || command.renderingCoordinates.y != -1)
+			{				
+				srcRectangle = SDL_Rect{ (int)command.renderingCoordinates.x, (int)command.renderingCoordinates.y, command.scaledW, command.scaledH };
+				bShouldRenderFromCoordinates = true;
+			}
+
 			SDL_Rect destRect{ (int)command.position.x, (int)command.position.y, command.scaledW, command.scaledH };
-			SDL_RenderCopyEx(GetSDLRenderer(), command.texture->GetSDLTexture(), NULL, &destRect, command.rotation, NULL, SDL_FLIP_NONE);
+			SDL_RenderCopyEx(
+				GetSDLRenderer(),
+				command.texture->GetSDLTexture(),
+				bShouldRenderFromCoordinates ? &srcRectangle :  NULL,
+				&destRect,
+				command.rotation,
+				NULL, SDL_FLIP_NONE);
 		}
 		
 	}

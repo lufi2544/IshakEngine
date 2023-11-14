@@ -55,9 +55,7 @@ namespace ishak {
 
 		// TODO Window Manager.
 		SharedPtr<Window> m_GameMainWindow;		
-		
-		UniquePtr<ishak::Renderer> m_renderer;
-
+				
 		/** Wrapped up all the game framework stuff here for now. */
 		struct GameFramework
 		{

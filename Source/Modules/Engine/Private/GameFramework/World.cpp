@@ -13,7 +13,7 @@ namespace ishak {
 	void World::Init()
 	{
 		m_level = std::make_shared<Level>(this);
-		m_level->Init();
+		m_level->Init("jungle.jpg");
 	}
 	
 	void World::Update(float deltaTime)

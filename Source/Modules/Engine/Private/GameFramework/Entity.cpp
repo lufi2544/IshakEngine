@@ -41,7 +41,7 @@ namespace ishak {
 		if(bVisible)
 		{
 			TextureComponent renderingC;
-			renderingC.textureId = &m_renderContext.texturePath;			
+			renderingC.texturePath = &m_renderContext.texturePath;			
 			 
 			ecsContext->GetComponentManipulator()->AddComponentDeferred<>(entityId, renderingC);
 		}		

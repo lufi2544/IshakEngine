@@ -23,8 +23,9 @@ namespace ishak {
 	class RENDERER_API Renderer
 	{
 		typedef SDL_Renderer* RendererT;
-	public:
-		Renderer() = default;
+	public:		
+
+		static Renderer& Get();
 		void AddRenderingTarget(Window* window);
 				
 		void Render();		
@@ -39,6 +40,7 @@ namespace ishak {
 		void QueueRenderCommand(const RendererCommand& command);		
 
 	private:
+		Renderer() = default;
 		void PreRender();
 		void SubmitRendererCommand(const RendererCommand& command);
 		void PostSetRenderingTarget(Window* window);
@@ -47,7 +49,9 @@ namespace ishak {
 
 			
 	private:
+		static Renderer* singleton;
 		std::pair<Window*, RendererT> m_rendererWindowPair;
+
 		
 		// TODO TMAP!!!
 		std::map<Ecs::EntityId, RendererCommand>m_frameCommandsQueue;		

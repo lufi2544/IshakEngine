@@ -13,13 +13,19 @@ namespace ishak
 		AssetManager() = default;
 
 	public:
-		static AssetManager& Get()
-		{
-			static AssetManager lazySingleton;
-			return lazySingleton;
-		}
+		static AssetManager& Get();
 
 		void AddAsset(SharedPtr<Asset>&& asset);
+		void AddAsset(const SharedPtr<Asset>& asset);
+		
+		template<typename T>
+		WeakPtr<T> LoadAsset(const String& assetPath)
+		{
+			SharedPtr<T> loadedAsset{ std::make_shared<T>(assetPath) };
+			loadedAsset->Load();
+			AddAsset(loadedAsset);
+			return loadedAsset;
+		}
 
 		template<typename T>
 		WeakPtr<T> GetAsset(const String& id)
@@ -27,7 +33,8 @@ namespace ishak
 			auto fountIt{ m_assets.find(id) };
 			if(fountIt == std::end(m_assets))
 			{
-				return { };
+				// Not found, then load
+				return LoadAsset<T>(id);
 			}
 
 			return std::static_pointer_cast<T>(fountIt->second);

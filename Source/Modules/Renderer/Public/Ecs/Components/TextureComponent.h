@@ -13,8 +13,11 @@ namespace ishak
 	{
 		TextureComponent() = default;
 
-		String* textureId;
+		String* texturePath{ nullptr };
 		WeakPtr<Texture> texture;
+		Vector2 renderingCoordinates{ -1, -1 };
+		int customWidht{ 0 };
+		int customHeight{ 0 };
 	};
 
 }//ishak

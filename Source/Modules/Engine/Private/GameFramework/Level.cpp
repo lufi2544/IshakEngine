@@ -1,8 +1,16 @@
 #include "GameFramework/Level.h"
 
-#include "GameFramework/World.h"
+// CORE
 #include "Ecs/Components/LevelComponent.h"
+#include "FileSystem/FileSystem.h"
+#include "Asset/AssetManager.h"
+#include "Log/Logger.h"
+
+//GAMEFRAMEWORK
+#include "GameFramework/World.h"
 #include "GameFramework/GameInstance.h"
+
+#include "Level/LevelBackGround_Miscellaneous.h"
 
 
 namespace ishak
@@ -12,15 +20,23 @@ namespace ishak
 	{
 	}
 
-	void Level::Init()
+	void Level::Init(const String& backgroundImage)
 	{
-		
-		/*
-		Ecs::EcsContext* ecsContext{ m_world->GetGameInstance().lock()->GetEcsContext() };
-		entityId = ecsContext->GetEntityManager()->RegisterEntity(this);
+		const String backGroundPath{ FileSystem::Get().GetAssetsDir() + backgroundImage };
 
-		LevelComponent levelComponent{ {0, 0, 0, 0} };
-		ecsContext->GetComponentManipulator()->AddComponentDeferred<LevelComponent>(entityId, levelComponent);
-		*/
+		// TODO Static method for creating an asset, better to get the asset and if it is not loaded, then create it.
+
+		WeakPtr<Texture> levelTexture{ AssetManager::Get().LoadAsset<Texture>(backGroundPath) };
+		if(!levelTexture.lock())
+		{
+			// error trying to load background for level			
+			ISHAK_LOG(Error, "error trying to load background for level")
+			return;
+		}		
+		
+		m_levelBackground = std::make_unique<LevelBackGround_Miscellaneous>(
+			m_world->GetGameInstance().lock()->GetEcsContext(Ecs::ContextID::RENDERER),
+			levelTexture,
+			Vector2{ 32, 32 });
 	}
 }//ishak

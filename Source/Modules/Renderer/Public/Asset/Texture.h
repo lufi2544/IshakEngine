@@ -11,16 +11,19 @@ namespace ishak
 	{
 	public:
 		Texture(const String& id, SDL_Texture* sdltexture, int w, int h);
+		Texture(const String& path);
 		inline SDL_Texture* GetSDLTexture() { return m_sdlTexture; }		
+
+		SharedPtr<Asset> Load() override;
 
 		int GetWidth() const
 		{
-			return width;
+			return m_width;
 		}
 
 		int GetHeight() const
 		{
-			return height;
+			return m_height;
 		}
 
 
@@ -28,8 +31,8 @@ namespace ishak
 
 	private:
 		SDL_Texture* m_sdlTexture{ nullptr };
-		int width{ 0 };
-		int height{ 0 };
+		int m_width{ 0 };
+		int m_height{ 0 };
 	};
 
 
