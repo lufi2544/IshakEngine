@@ -26,7 +26,7 @@ namespace ishak{
 
 	void Tank::DoTick(float deltaTime)
 	{
-		const float speed{ 10.0f };
+		const float speed{ 2.0f };
 
 		auto velocity{ (Vector2{ 10, 0 }) * (speed * deltaTime)};
 		// Moving x amount every frame.

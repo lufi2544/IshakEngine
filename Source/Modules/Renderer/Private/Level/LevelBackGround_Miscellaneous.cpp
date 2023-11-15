@@ -20,7 +20,7 @@ namespace ishak
 		uint8(*fromCharToUint8Number)(char) = [](char from) -> uint8
 		{
 			// TODO Create NuberTypes Library, 30 is the 0 in the ascii table.
-			return from - 48;
+			return from - '0';
 		};
 
 		// TODO REFACTOR!!!!
@@ -41,7 +41,11 @@ namespace ishak
 					char character{ line[idx] };
 					if (character == ',' || idx == line.size() - 1)
 					{
-						
+						if(idx == line.size() - 1)
+						{
+							const uint8 number{ fromCharToUint8Number(character) };
+							mapFileTileId.Add(number);
+						}
 						if(bShouldUpdate)
 						{
 							++width;
@@ -50,7 +54,8 @@ namespace ishak
 								bShouldUpdate = false;
 							}
 						}
-						//1178
+						
+
 						TArray<uint32> toAddNumbers;
 						for (uint32 idx = 0; idx < mapFileTileId.Size(); ++idx)
 						{
