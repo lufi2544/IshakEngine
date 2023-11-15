@@ -358,6 +358,15 @@ namespace ishak {
 			return idx < m_size;
 		}
 
+		/** Returns true if we can access to the passed idx. */
+		bool CheckAssertSizeAt(std::uint32_t idx)
+		{
+			const bool bCond{ idx < m_size };
+			assert(bCond == true);
+
+			return bCond;
+		}
+
 	private:
 
 		void AllocateCapacityAndMoveData()

@@ -15,8 +15,9 @@
 
 namespace ishak
 {
-	Level::Level(World* world)
-		: m_world(world)
+	Level::Level(World* world, String const& name)
+		: m_world{ world }
+		, m_name{ name }
 	{
 	}
 
@@ -34,9 +35,14 @@ namespace ishak
 			return;
 		}		
 		
+
+		MiscellaneousCreationMap creationMap{ m_name };
+
+
 		m_levelBackground = std::make_unique<LevelBackGround_Miscellaneous>(
 			m_world->GetGameInstance().lock()->GetEcsContext(Ecs::ContextID::RENDERER),
 			levelTexture,
-			Vector2{ 32, 32 });
+			Vector2{ 32, 32 }, 
+			creationMap);
 	}
 }//ishak

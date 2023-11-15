@@ -8,6 +8,16 @@
 
 namespace ishak
 {
+
+	/** Info for the creation of a RenderingTile. */
+	struct RENDERER_API RenderingTileInfo
+	{		
+		RenderingTileInfo() = default;
+
+		Vector2 renderingPosition{ -1, -1 };
+		Vector2 tileDimensions{ -1, -1 };		
+	};
+
 	class RENDERER_API RenderingTile
 	{
 	public:

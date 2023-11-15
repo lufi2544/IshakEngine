@@ -76,14 +76,12 @@ namespace ishak {
 			"IshakEngine",
 			0, 0,// where
 			800, 600, // dimensions
-			WindowFlags::WINDOW_CENTRALIZED | WindowFlags::WINDOW_VSYNC | WindowFlags::WINDOW_FULLSCREEN_MATCH_MONITOR
+			WindowFlags::WINDOW_CENTRALIZED | WindowFlags::WINDOW_VSYNC | WindowFlags::WINDOW_FULL_SCREEN
 		};
 
 		m_GameMainWindow = ishak::Window::MakeWindow(winCreationContext);
 		Renderer::Get().AddRenderingTarget(m_GameMainWindow.get());
-
-		auto& f{ Renderer::Get() };
-
+		
 		InitEcs();
 	}
 
