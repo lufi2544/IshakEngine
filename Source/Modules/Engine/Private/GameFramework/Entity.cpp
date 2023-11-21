@@ -2,6 +2,9 @@
 #include "GameFramework/GameInstance.h"
 #include "GameFramework/World.h"
 
+//Rendering
+#include "RendererTypes.h"
+
 //ECS
 #include "Ecs//RenderingComponent.h"
 #include <Ecs/Components/TransformComponent.h>
@@ -40,10 +43,11 @@ namespace ishak {
 
 		if(bVisible)
 		{
-			TextureComponent renderingC;
-			renderingC.texturePath = &m_renderContext.texturePath;			
+			TextureComponent textureC;
+			textureC.texturePath = &m_renderContext.texturePath;
+			textureC.ZOrder = (uint8)ERendererLayers::Player;
 			 
-			ecsContext->GetComponentManipulator()->AddComponentDeferred<>(entityId, renderingC);
+			ecsContext->GetComponentManipulator()->AddComponentDeferred<>(entityId, textureC);
 		}		
 
 		DoOnBeginPlay();

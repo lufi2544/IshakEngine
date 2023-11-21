@@ -90,9 +90,9 @@ namespace ishak {
 			ISHAK_LOG(Error, "RendererCommandsEmpty")
 		}
 
-		for (auto& [entity, renderingCommand] : m_frameCommandsQueue)
+		for (auto& [entity, renderingCommandPair] : m_frameCommandsQueue)
 		{
-			SubmitRendererCommand(renderingCommand);			
+			SubmitRendererCommand(renderingCommandPair.second);			
 		}
 
 		ClearFrameRendererCommands();
@@ -136,20 +136,22 @@ namespace ishak {
 	}
 
 	void Renderer::QueueRenderCommand(const RendererCommand& command)
-	{
-		auto foundIt{ m_frameCommandsQueue.find(command.entityId) };
-		if(foundIt != std::end(m_frameCommandsQueue))
+	{		
+		// TODO Create a data structure for the Z Order;
+		if(commandedEntities.Contains(command.entityId))
 		{
-			// if found, we submit the command
-			return;			
+			// entity already registered
+			return;
 		}
-
-		m_frameCommandsQueue.insert(std::make_pair(command.entityId, command));
+		
+		m_frameCommandsQueue.insert(std::make_pair(command.zOrder, std::make_pair(command.entityId, command)));
+		commandedEntities.Add(command.entityId);
 	}	
 
 	void Renderer::ClearFrameRendererCommands()
 	{
 		m_frameCommandsQueue.clear();
+		commandedEntities.Clear();
 	}
 
 	void Renderer::SubmitRendererCommand(const RendererCommand& command)

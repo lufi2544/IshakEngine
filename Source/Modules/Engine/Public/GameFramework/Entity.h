@@ -50,7 +50,7 @@ namespace ishak
 		float m_rotation{ 0.0f };
 		float m_scale{ 1.0f };
 
-	private:
+	private:		
 		World* m_World{ nullptr };		
 
 		Ecs::EntityId entityId{ Ecs::kNullId };

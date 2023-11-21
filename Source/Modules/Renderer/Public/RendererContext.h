@@ -26,7 +26,8 @@ namespace ishak{
 			const float& rotationParam, 
 			const int& scaledW, 
 			const int& scaledH,
-			const Vector2& renderingCoordinates)
+			const Vector2& renderingCoordinates, 
+			uint8 zOrder)
 		{
 			RendererCommand command;
 			command.entityId = who;
@@ -36,6 +37,7 @@ namespace ishak{
 			command.scaledW = scaledW;
 			command.scaledH = scaledH;
 			command.renderingCoordinates = renderingCoordinates;
+			command.zOrder = zOrder;
 
 			return command;
 		}
@@ -48,6 +50,7 @@ namespace ishak{
 		int scaledW{ 0 };
 		int scaledH{ 0 };
 		Vector2 renderingCoordinates{ -1, -1 };
+		uint8 zOrder{ 0 };
 	};
 
 }// ishak

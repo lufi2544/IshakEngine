@@ -16,7 +16,7 @@ namespace ishak
 		MiscellaneousCreationMap() = default;
 		MiscellaneousCreationMap(String const& levelName);
 
-		TArray<uint8> const* GetTileMiscellaneous() const;
+		TArray<uint32> const* GetTileMiscellaneous() const;
 		const Vector2& GetDimensions() const
 		{
 			return m_dimensions;
@@ -24,7 +24,7 @@ namespace ishak
 
 
 	private:
-		TArray<uint8> m_tileTypeCollection;		
+		TArray<uint32> m_tileTypeCollection;		
 		Vector2 m_dimensions;
 	};
 

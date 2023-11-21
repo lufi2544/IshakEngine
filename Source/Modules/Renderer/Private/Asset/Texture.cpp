@@ -2,6 +2,8 @@
 #include "Renderer.h"
 #include "Asset/AssetManager.h"
 
+#include "Log/Logger.h"
+
 namespace ishak
 {
 	Texture::Texture(const String& id, SDL_Texture* sdltexture, int w, int h)
@@ -10,7 +12,7 @@ namespace ishak
 		, m_width{ w }
 		, m_height{ h }
 	{
-
+		
 	}
 
 	Texture::Texture(const String& path)
@@ -30,9 +32,13 @@ namespace ishak
 			SDL_FreeSurface(image);
 
 			SharedPtr<Asset> returnThis{ shared_from_this() };
-
+			
 			return returnThis;
 		}
+
+		// TODO String, create Format
+		std::string error = "Eror Loading Texture: " + std::string(m_path.c_str());		
+		ISHAK_LOG(Error, error.c_str());
 
 		return nullptr;
 	}

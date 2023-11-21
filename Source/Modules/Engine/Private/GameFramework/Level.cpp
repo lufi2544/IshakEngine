@@ -27,7 +27,7 @@ namespace ishak
 
 		// TODO Static method for creating an asset, better to get the asset and if it is not loaded, then create it.
 
-		WeakPtr<Texture> levelTexture{ AssetManager::Get().LoadAsset<Texture>(backGroundPath) };
+		WeakPtr<Texture> levelTexture{ AssetManager::Get().GetAsset<Texture>(backGroundPath) };
 		if(!levelTexture.lock())
 		{
 			// error trying to load background for level			

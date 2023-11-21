@@ -4,6 +4,7 @@
 #include "Ecs/Components/TransformComponent.h"
 
 #include "FileSystem/FileSystem.h"
+#include "RendererTypes.h"
 
 #include <fstream>
 
@@ -96,11 +97,10 @@ namespace ishak
 		m_dimensions = Vector2{ width, height };
 	}
 
-	TArray<uint8> const* MiscellaneousCreationMap::GetTileMiscellaneous() const
+	TArray<uint32> const* MiscellaneousCreationMap::GetTileMiscellaneous() const
 	{
 		return &m_tileTypeCollection;
 	}
-
 
 	LevelBackGround_Miscellaneous::LevelBackGround_Miscellaneous(
 		Ecs::EcsContext* ecsContext,
@@ -120,6 +120,7 @@ namespace ishak
 		// Create Tile Infos for the different possible tiles in the map
 		assert(tiledimensions.x != 0);
 		assert(tiledimensions.y != 0);
+
 		// Iterate through all the global texture and according to dimensions, create tiles.
 		const int textureWitdth{ levelMiscellaneousTexture.lock()->GetWidth() };
 		const int textureHeight{ levelMiscellaneousTexture.lock()->GetHeight() };
@@ -139,7 +140,7 @@ namespace ishak
 
 
 		// Create the map tiles
-		auto miscellaneous{ *creationMap.GetTileMiscellaneous() };
+		TArray<uint32> miscellaneous{ *creationMap.GetTileMiscellaneous() };
 		const Vector2& mapDimensions{ creationMap.GetDimensions() };
 
 		int m = 0;
@@ -156,7 +157,15 @@ namespace ishak
 				Ecs::EntityId tileEntityId{ entityManager->RegisterEntity(renderingTile.get()) };
 				renderingTile->SetEntityId(tileEntityId);
 
-				TextureComponent renderingTileTextureComponent{ NULL, levelMiscellaneousTexture, info.renderingPosition, (int)info.tileDimensions.x, (int)info.tileDimensions.y };
+				TextureComponent renderingTileTextureComponent
+				{ 
+					NULL,
+					levelMiscellaneousTexture,
+					info.renderingPosition, 
+					(int)info.tileDimensions.x, 
+					(int)info.tileDimensions.y,
+					(uint8)ERendererLayers::Level
+				};
 				componentManip->AddComponentDeferred<TextureComponent>(tileEntityId, renderingTileTextureComponent);
 				componentManip->AddComponentDeferred<TransformComponent>(tileEntityId, TransformComponent{ Vector2{ tileX * tiledimensions.x, tileY * tiledimensions.y } });
 

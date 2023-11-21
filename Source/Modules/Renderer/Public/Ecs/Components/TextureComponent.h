@@ -18,6 +18,7 @@ namespace ishak
 		Vector2 renderingCoordinates{ -1, -1 };
 		int customWidht{ 0 };
 		int customHeight{ 0 };
+		uint8 ZOrder{ 0 };
 	};
 
 }//ishak

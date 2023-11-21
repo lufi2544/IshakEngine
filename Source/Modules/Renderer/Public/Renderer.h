@@ -54,7 +54,8 @@ namespace ishak {
 
 		
 		// TODO TMAP!!!
-		std::map<Ecs::EntityId, RendererCommand>m_frameCommandsQueue;		
+		std::multimap<uint8, std::pair<Ecs::EntityId, RendererCommand>>m_frameCommandsQueue;			
+		TArray<Ecs::EntityId> commandedEntities;
 	};
 
 }// ishak

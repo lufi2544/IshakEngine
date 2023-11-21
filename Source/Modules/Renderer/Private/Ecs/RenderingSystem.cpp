@@ -72,7 +72,15 @@ namespace ishak
 			renderingCoordinates = textureComponent.renderingCoordinates;
 		}
 
-		Renderer::Get().QueueRenderCommand(RendererCommand::FromTexture(entity, texture, transform.position, transform.rotation, scaledWidth, scaleHeight, renderingCoordinates));
+		Renderer::Get().QueueRenderCommand(RendererCommand::FromTexture(
+			entity,
+			texture, 
+			transform.position,
+			transform.rotation,
+			scaledWidth,
+			scaleHeight,
+			renderingCoordinates,
+			textureComponent.ZOrder));
 	}
 }// ishak
 
