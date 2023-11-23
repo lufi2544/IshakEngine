@@ -8,7 +8,8 @@
 #include "TypeTraits/TypeTraits.h"
 #include "DataContainers/Array.h"
 #include "Memory/MemoryTypes.h"
-#include "String/FString.h"
+#include "Containers/FString.h"
+#include "Containers/IshakPair.h"
 
 #include <iostream>
 #include <memory>

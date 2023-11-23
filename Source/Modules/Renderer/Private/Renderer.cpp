@@ -179,7 +179,8 @@ namespace ishak {
 				bShouldRenderFromCoordinates ? &srcRectangle :  NULL,
 				&destRect,
 				command.rotation,
-				NULL, SDL_FLIP_NONE);
+				NULL, 
+				SDL_FLIP_NONE);
 		}
 		
 	}
