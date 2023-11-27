@@ -6,7 +6,7 @@
 #include "EntityId.h"
 #include "ComponentContainer.h"
 #include "ComponentManipulator.h"
-#include "ECSContext.h"
+#include "EcsContext.h"
 #include "EntityManager.h"
 #include "IEntityCreator.h"
 #include "System.h"

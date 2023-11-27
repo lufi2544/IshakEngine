@@ -3,6 +3,7 @@
 #include "SystemConfig.h"
 #include "ECSConfig.h"
 #include "EntityId.h"
+#include "ComponentManipulator.h"
 
 // STD
 #include <tuple>
@@ -10,9 +11,7 @@
 #include <array>
 
 namespace ishak { namespace Ecs {
-
-		class ComponentManipulator;
-
+	
 		/**
 		* Base class for the ECS Systems. This will Udpate every frame if there are entities in the world
 		* that contain the Required component types from the Signature of the System.

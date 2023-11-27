@@ -9,6 +9,10 @@
 
 #include "Log/Logger.h"
 
+#if LINUX 
+	#include <unistd.h>
+#endif
+
 
 namespace ishak{
 
@@ -69,7 +73,15 @@ namespace ishak{
 			if(accumulatedTime < FIXED_DELTA)
 			{
 				float toSleep{ FIXED_DELTA - accumulatedTime };
+				// TODO Add a refactor for the platforms here
+				
+#if LINUX 
+				sleep(toSleep);
+#else // WINDOWS
+				
 				Sleep(toSleep);
+#endif // LINUX
+				
 			}
 						
 			GEngine->Render();			

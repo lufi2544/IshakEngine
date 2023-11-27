@@ -4,9 +4,9 @@
 #include "CoreMinimal.h"
 
 // Ecs
+#include "ECSSignature.h"
 #include "ECSConfig.h"
 #include "EntityId.h"
-#include "System.h"
 #include "Component.h"
 #include "ComponentContainer.h"
 

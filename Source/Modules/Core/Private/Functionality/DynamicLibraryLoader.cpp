@@ -36,13 +36,14 @@ namespace ishak{
 
 	void DllLoader::UnLoadEngineDlls()
 	{
-		for (const HMODULE& module : m_LoadedModules)
+/*		for (const HMODULE& module : m_LoadedModules)
 		{
 			if (module)
 			{
 				FreeLibrary(module);
 			}
 		}
+*/
 	}
 
 	void DllLoader::ExploreModulesToLoad(const std::string& modulesDir, TArray<std::string>* out_ModulesToLoad)
@@ -81,7 +82,7 @@ namespace ishak{
 
 	void DllLoader::LoadModulesDlls(const TArray<std::string>& modules)
 	{
-		for (const std::string& moduleName : modules)
+/*		for (const std::string& moduleName : modules)
 		{
 			HMODULE loadedModule = LoadLibrary(moduleName.c_str());
 			if (loadedModule)
@@ -89,6 +90,7 @@ namespace ishak{
 				m_LoadedModules.Add(loadedModule);
 			}
 		}
+*/
 	}
 
 	bool DllLoader::HasAnyCpp(const fs::directory_entry& dir)

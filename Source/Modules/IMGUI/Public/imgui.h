@@ -72,11 +72,21 @@ Index of this file:
 // IMGUI_API is used for core imgui functions, IMGUI_IMPL_API is used for the default backends files (imgui_impl_xxx.h)
 // Using dear imgui via a shared library is not recommended: we don't guarantee backward nor forward ABI compatibility + this is a call-heavy library and function call overhead adds up.
 
-#ifdef IMGUI_LIB
-    #define IMGUI_API __declspec(dllimport)
-#else 
-    #define IMGUI_API __declspec(dllexport)    
-#endif // IMGUI_API
+#if LINUX
+	#ifdef IMGUI_LIB
+		#define IMGUI_API
+	#else
+		#define IMGUI_API __attribute__((visibility("default")))
+	#endif // IMGUI_LIB
+
+#else // WINDOWS
+	#ifdef IMGUI_LIB
+	    #define IMGUI_API __declspec(dllimport)
+	#else 
+	    #define IMGUI_API __declspec(dllexport)    
+	#endif // IMGUI_LIB
+#endif // LINUX
+	  	
     
 #ifndef IMGUI_IMPL_API
 #define IMGUI_IMPL_API              IMGUI_API

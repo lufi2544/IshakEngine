@@ -3,6 +3,10 @@
 #include "CoreMinimal.h"
 #include "CoreConfig.h"
 
+#ifdef LINUX
+	#include <cstring>
+#endif // LINUX
+
 namespace ishak {
 
 	struct CORE_API String

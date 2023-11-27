@@ -7,7 +7,8 @@
 //Other
 // TODO PLATFORM must include only the platform here and let the platform 
 // decide I think. Deep deep future.
-#include "Windows.h"
+// TODO LINUX Care about the Loaded DLLs
+//#include "Windows.h"
 
 // STD
 #include <filesystem>
@@ -36,7 +37,7 @@ namespace ishak{
 		
 
 	private:
-		TArray<HMODULE> m_LoadedModules;
+		//TArray<HMODULE> m_LoadedModules;
 	};
 
 }// ishak
