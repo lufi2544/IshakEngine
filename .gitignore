@@ -5,6 +5,7 @@
 *.lo
 *.o
 *.exp
+.so
 
 # Compiled Dynamic libraries
 *.so
@@ -16,6 +17,7 @@
 *.la
 *.a
 *.lib
+*.d
 
 # Visual Studio Files
 Debug
