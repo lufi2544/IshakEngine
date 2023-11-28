@@ -11,8 +11,8 @@ namespace ishak
 
 		bool IsValid() const
 		{
-			constexpr Vector4 default{ 0, 0, 0, 0 };
-			return (color != default) || ((texturePath != nullptr));			
+			constexpr Vector4 defaultValue{ 0, 0, 0, 0 };
+			return (color != defaultValue) || ((texturePath != nullptr));			
 		}
 
 		String* texturePath{ nullptr };

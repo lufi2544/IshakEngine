@@ -11,6 +11,7 @@ endif
 ifeq ($(config),debug)
   IshakEngine_config = debug
   Core_config = debug
+  Renderer_config = debug
   DTEST_config = debug
   Ecs_config = debug
   Engine_config = debug
@@ -18,11 +19,11 @@ ifeq ($(config),debug)
   IMGUI_config = debug
   Launch_config = debug
   Platform_config = debug
-  Renderer_config = debug
 endif
 ifeq ($(config),release)
   IshakEngine_config = release
   Core_config = release
+  Renderer_config = release
   DTEST_config = release
   Ecs_config = release
   Engine_config = release
@@ -30,16 +31,15 @@ ifeq ($(config),release)
   IMGUI_config = release
   Launch_config = release
   Platform_config = release
-  Renderer_config = release
 endif
 
-PROJECTS := IshakEngine Core DTEST Ecs Engine Game IMGUI Launch Platform Renderer
+PROJECTS := IshakEngine Core Renderer DTEST Ecs Engine Game IMGUI Launch Platform
 
 .PHONY: all clean help $(PROJECTS) 
 
 all: $(PROJECTS)
 
-IshakEngine: Engine
+IshakEngine: Engine Core Renderer DTEST Ecs Launch IMGUI Platform Game
 ifneq (,$(IshakEngine_config))
 	@echo "==== Building IshakEngine ($(IshakEngine_config)) ===="
 	@${MAKE} --no-print-directory -C . -f IshakEngine.make config=$(IshakEngine_config)
@@ -51,6 +51,12 @@ ifneq (,$(Core_config))
 	@${MAKE} --no-print-directory -C Core -f Makefile config=$(Core_config)
 endif
 
+Renderer: Core Platform IMGUI Ecs
+ifneq (,$(Renderer_config))
+	@echo "==== Building Renderer ($(Renderer_config)) ===="
+	@${MAKE} --no-print-directory -C Renderer -f Makefile config=$(Renderer_config)
+endif
+
 DTEST: Core Ecs
 ifneq (,$(DTEST_config))
 	@echo "==== Building DTEST ($(DTEST_config)) ===="
@@ -60,7 +66,7 @@ endif
 Ecs: Core
 ifneq (,$(Ecs_config))
 	@echo "==== Building Ecs ($(Ecs_config)) ===="
-	@${MAKE} --no-print-directory -C ECS -f Makefile config=$(Ecs_config)
+	@${MAKE} --no-print-directory -C Ecs -f Makefile config=$(Ecs_config)
 endif
 
 Engine: Platform Core Renderer DTEST IMGUI Ecs
@@ -81,7 +87,7 @@ ifneq (,$(IMGUI_config))
 	@${MAKE} --no-print-directory -C IMGUI -f Makefile config=$(IMGUI_config)
 endif
 
-Launch: Core Engine Renderer
+Launch: Core Engine Renderer Ecs
 ifneq (,$(Launch_config))
 	@echo "==== Building Launch ($(Launch_config)) ===="
 	@${MAKE} --no-print-directory -C Launch -f Makefile config=$(Launch_config)
@@ -93,23 +99,17 @@ ifneq (,$(Platform_config))
 	@${MAKE} --no-print-directory -C Platform -f Makefile config=$(Platform_config)
 endif
 
-Renderer: Core Platform IMGUI Ecs
-ifneq (,$(Renderer_config))
-	@echo "==== Building Renderer ($(Renderer_config)) ===="
-	@${MAKE} --no-print-directory -C Renderer -f Makefile config=$(Renderer_config)
-endif
-
 clean:
 	@${MAKE} --no-print-directory -C . -f IshakEngine.make clean
 	@${MAKE} --no-print-directory -C Core -f Makefile clean
+	@${MAKE} --no-print-directory -C Renderer -f Makefile clean
 	@${MAKE} --no-print-directory -C DTEST -f Makefile clean
-	@${MAKE} --no-print-directory -C ECS -f Makefile clean
+	@${MAKE} --no-print-directory -C Ecs -f Makefile clean
 	@${MAKE} --no-print-directory -C Engine -f Makefile clean
 	@${MAKE} --no-print-directory -C Game -f Makefile clean
 	@${MAKE} --no-print-directory -C IMGUI -f Makefile clean
 	@${MAKE} --no-print-directory -C Launch -f Makefile clean
 	@${MAKE} --no-print-directory -C Platform -f Makefile clean
-	@${MAKE} --no-print-directory -C Renderer -f Makefile clean
 
 help:
 	@echo "Usage: make [config=name] [target]"
@@ -123,6 +123,7 @@ help:
 	@echo "   clean"
 	@echo "   IshakEngine"
 	@echo "   Core"
+	@echo "   Renderer"
 	@echo "   DTEST"
 	@echo "   Ecs"
 	@echo "   Engine"
@@ -130,6 +131,5 @@ help:
 	@echo "   IMGUI"
 	@echo "   Launch"
 	@echo "   Platform"
-	@echo "   Renderer"
 	@echo ""
 	@echo "For more information, see https://github.com/premake/premake-core/wiki"

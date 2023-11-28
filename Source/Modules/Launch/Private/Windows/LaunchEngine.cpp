@@ -10,8 +10,11 @@
 //int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 int main(int arg, char* argv[])
 {			
+
 	ishak::EngineLoop engineLoop;
 	engineLoop.Init();
+
+	return 0;
 
 	return engineLoop.TickEngine();	
 }

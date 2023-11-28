@@ -34,6 +34,8 @@ namespace ishak{
 		GEngine = new IshakEngine();	
 
 		GEngine->Init();
+
+		std::cout << "HELLOOO" << std::endl;
 	}
 
 	int EngineLoop::TickEngine()

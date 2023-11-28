@@ -1,14 +1,17 @@
-project "Launch"
+project "Ecs"
 	kind "SharedLib"
 	language "C++"
 	targetdir "../../../Binaries/%{cfg.buildcfg}"
 
+files { "Public/**.h", "Private/**.cpp" }
+
 local modulesDir = "../../Modules/"
 
+
 	includedirs{
-					 "Public",
-					modulesDir.. "Core/Public",
-					modulesDir .. "Ecs/Public",
+
+					"Public",
+					modulesDir.. "Launch/Public",
 				    modulesDir .. "Game/Public",
 					modulesDir .. "Platform/Public",
 					modulesDir .. "Renderer/Public",
@@ -20,11 +23,13 @@ local modulesDir = "../../Modules/"
 					modulesDir .. "ThirdParty/SolParser/Public"
  				}
 
-files {"Public/**.h", "Private/**.cpp"}
-
-links{"SDL", "SDL_image", "Core", "Engine", "Renderer", "Ecs"}
+ 				
 
 
-filter "configurations:Debug"
-	defines{ "DEBUG_ENGINE", "LINUX" }
-	symbols "On" 
+
+links { "Core" }
+
+    filter "configurations:Debug"
+        defines { "DEBUG_ENGINE", "LINUX" }
+    	symbols "On"
+

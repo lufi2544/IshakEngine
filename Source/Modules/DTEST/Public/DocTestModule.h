@@ -2,7 +2,7 @@
 #pragma once
 
 #include "Module/Module.h"
-#include "docTestConfig.h"
+#include "doctestConfig.h"
 
 namespace ishak
 {

@@ -21,6 +21,7 @@ namespace ishak {
 		const String& GetEngineDir();
 		const String& GetAssetsDir();
 		const String& GetModulesDir();
+		const String& GetBinariesDir();
 		
 	private:
 		FileSystem() = default;
@@ -31,6 +32,7 @@ namespace ishak {
 		String m_engineDir;
 		String m_engineModulesDir;
 		String m_assetsDir;
+		String m_binariesDir;
 		static FileSystem* m_singleton;
 	};
 

@@ -15,16 +15,16 @@ ifeq ($(config),debug)
   TARGETDIR = ../../../Binaries/Debug
   TARGET = $(TARGETDIR)/libDTEST.so
   OBJDIR = obj/Debug
-  DEFINES +=
-  INCLUDES +=
+  DEFINES += -DDEBUG_ENGINE -DLINUX
+  INCLUDES += -IPublic -I../Core/Public -I../Ecs/Public
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC
-  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC -g
+  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC -g
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   LIBS += ../../../Binaries/Debug/libCore.so ../../../Binaries/Debug/libEcs.so
   LDDEPS += ../../../Binaries/Debug/libCore.so ../../../Binaries/Debug/libEcs.so
-  ALL_LDFLAGS += $(LDFLAGS) -Wl,-rpath,'$$ORIGIN' -shared -Wl,-soname=libDTEST.so -s
+  ALL_LDFLAGS += $(LDFLAGS) -Wl,-rpath,'$$ORIGIN' -shared -Wl,-soname=libDTEST.so
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
@@ -43,7 +43,7 @@ ifeq ($(config),release)
   TARGET = $(TARGETDIR)/libDTEST.so
   OBJDIR = obj/Release
   DEFINES +=
-  INCLUDES +=
+  INCLUDES += -IPublic -I../Core/Public -I../Ecs/Public
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC

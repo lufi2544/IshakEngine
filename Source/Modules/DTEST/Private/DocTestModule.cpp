@@ -1,7 +1,10 @@
 #include "DocTestModule.h"
 #include "doctest.h"
 #include "CoreMinimal.h"
-#include <Windows.h>
+
+#ifndef LINUX // TODO change this for if with Windows
+	#include <Windows.h>
+#endif
 
 namespace ishak{
 

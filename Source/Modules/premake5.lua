@@ -17,11 +17,11 @@ project "IshakEngine"
     objdir "../../Intermediate/%{cfg.buildcfg}"
 
 
-    files{ "Launch/Public/**.h", "Launch/Private/**.cpp" }
+ --   files{ "Launch/Public/**.h", "Launch/Private/**.cpp" }
 	includedirs{
 					"Launch/Public",
 					"Core/Public", 
-					"ECS/Public",
+					"Ecs/Public",
 					"Game/Public",
 					"Platform/Public",
 					"Renderer/Public",
@@ -33,12 +33,18 @@ project "IshakEngine"
 					"ThirdParty/SolParser/Public"
  				}
 
-    buildoptions { "-std=c++17"}
-    links { "SDL2", "SDL2_image", "lua5.3", "Engine" }
+    buildoptions 
+	{
+		"-std=c++17",
+		"-g" -- adding debbug table for debbuging
+	}
+
+    links { "Engine", "Core", "Renderer", "DTEST", "Ecs", "Launch", "IMGUI", "Platform", "Game", "SDL", "SDL_image" }
 
     filter "configurations:Debug"
         defines { "DEBUG_ENGINE", "LINUX" }
     	symbols "On"
+		buildoptions{ "-g" }
 
 
     filter "configurations:Release"
@@ -48,21 +54,22 @@ project "IshakEngine"
 -- Include the Modules build scripts --
 
 include(modulesDir .. "Core/Core.lua")
+include(modulesDir .. "Renderer/Renderer.lua")
 include(modulesDir .. "DTEST/DTEST.lua")
-include(modulesDir .. "ECS/Ecs.lua")
+include(modulesDir .. "Ecs/Ecs.lua")
 include(modulesDir .. "Engine/Engine.lua")
 include(modulesDir .. "Game/Game.lua")
 include(modulesDir .. "IMGUI/IMGUI.lua")
 include(modulesDir .. "Launch/Launch.lua")
 include(modulesDir .. "Platform/Platform.lua")
-include(modulesDir .. "Renderer/Renderer.lua")
+
 
 -- Include the Third Party scripts --
 
 local thirdPartyDir = modulesDir .. "ThirdParty/"
 
-include(thirdPartyDir .. "SDL/SDL.lua")
-include(thirdPartyDir .. "SDLIMAGE/SDLIMAGE.lua")
+
+
 include(thirdPartyDir .. "SolParser/Sol.lua")
 
 

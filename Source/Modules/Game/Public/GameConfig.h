@@ -1,10 +1,12 @@
 #pragma once
+
+
 #if LINUX
 
 	#if GAME_LIB
 		#define GAME_API
 	#else 
-		#define GAME_API __attribute__(visibility("default"))
+		#define GAME_API __attribute__((visibility("default")))
 	#endif
 
 #else // WINDOWS

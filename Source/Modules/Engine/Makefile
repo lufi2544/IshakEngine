@@ -15,16 +15,16 @@ ifeq ($(config),debug)
   TARGETDIR = ../../../Binaries/Debug
   TARGET = $(TARGETDIR)/libEngine.so
   OBJDIR = obj/Debug
-  DEFINES +=
-  INCLUDES +=
+  DEFINES += -DDEBUG_ENGINE -DLINUX
+  INCLUDES += -IPublic -I../Core/Public -I../Launch/Public -I../Ecs/Public -I../Game/Public -I../Platform/Public -I../Renderer/Public -I../IMGUI/Public -I../ThirdParty/Lua/Public -I../ThirdParty/SDL/Public -I../ThirdParty/SDLIMAGE/Public -I../ThirdParty/SolParser/Public
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC
-  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC -g
+  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC -g
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += ../../../Binaries/Debug/libPlatform.so ../../../Binaries/Debug/libCore.so ../../../Binaries/Debug/libRenderer.so ../../../Binaries/Debug/libDTEST.so ../../../Binaries/Debug/libIMGUI.so ../../../Binaries/Debug/libEcs.so -lSDL -lSDLIMAGE
+  LIBS += ../../../Binaries/Debug/libPlatform.so ../../../Binaries/Debug/libCore.so ../../../Binaries/Debug/libRenderer.so ../../../Binaries/Debug/libDTEST.so ../../../Binaries/Debug/libIMGUI.so ../../../Binaries/Debug/libEcs.so
   LDDEPS += ../../../Binaries/Debug/libPlatform.so ../../../Binaries/Debug/libCore.so ../../../Binaries/Debug/libRenderer.so ../../../Binaries/Debug/libDTEST.so ../../../Binaries/Debug/libIMGUI.so ../../../Binaries/Debug/libEcs.so
-  ALL_LDFLAGS += $(LDFLAGS) -Wl,-rpath,'$$ORIGIN' -shared -Wl,-soname=libEngine.so -s
+  ALL_LDFLAGS += $(LDFLAGS) -Wl,-rpath,'$$ORIGIN' -shared -Wl,-soname=libEngine.so
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
@@ -43,13 +43,13 @@ ifeq ($(config),release)
   TARGET = $(TARGETDIR)/libEngine.so
   OBJDIR = obj/Release
   DEFINES +=
-  INCLUDES +=
+  INCLUDES += -IPublic -I../Core/Public -I../Launch/Public -I../Ecs/Public -I../Game/Public -I../Platform/Public -I../Renderer/Public -I../IMGUI/Public -I../ThirdParty/Lua/Public -I../ThirdParty/SDL/Public -I../ThirdParty/SDLIMAGE/Public -I../ThirdParty/SolParser/Public
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += ../../../Binaries/Release/libPlatform.so ../../../Binaries/Release/libCore.so ../../../Binaries/Release/libRenderer.so ../../../Binaries/Release/libDTEST.so ../../../Binaries/Release/libIMGUI.so ../../../Binaries/Release/libEcs.so -lSDL -lSDLIMAGE
+  LIBS += ../../../Binaries/Release/libPlatform.so ../../../Binaries/Release/libCore.so ../../../Binaries/Release/libRenderer.so ../../../Binaries/Release/libDTEST.so ../../../Binaries/Release/libIMGUI.so ../../../Binaries/Release/libEcs.so
   LDDEPS += ../../../Binaries/Release/libPlatform.so ../../../Binaries/Release/libCore.so ../../../Binaries/Release/libRenderer.so ../../../Binaries/Release/libDTEST.so ../../../Binaries/Release/libIMGUI.so ../../../Binaries/Release/libEcs.so
   ALL_LDFLAGS += $(LDFLAGS) -Wl,-rpath,'$$ORIGIN' -shared -Wl,-soname=libEngine.so -s
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)

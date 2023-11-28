@@ -36,6 +36,11 @@ namespace ishak {
 		return m_engineModulesDir;
 	}
 
+	const String& FileSystem::GetBinariesDir()
+	{
+		return m_binariesDir;
+	}
+
 	void FileSystem::InitCoreDirs()
 	{
 		namespace fs = std::filesystem;
@@ -43,7 +48,7 @@ namespace ishak {
 		fs::path currentDir{ fs::current_path() };
 		String currentDirString{ currentDir.string().c_str()};
 		fs::path engineRootDir;
-
+#ifndef LINUX
 		// Running from .exe
 		if (currentDirString.Find("Binaries"))
 		{
@@ -52,10 +57,30 @@ namespace ishak {
 		else
 		{
 			// Running from .vcxprj( VS project file ) located in the IntermediateFolder
-			m_engineDir = String(currentDir.parent_path().parent_path().string().c_str());
+			m_engineDir = String(currentDir.parent_path().parent_path().string().c_str() + "/");
 		}
 
-		m_engineModulesDir = String(std::string(std::string(m_engineDir.c_str()) + "\\" + "Source" + "\\" + "Modules" + "\\").c_str());
-		m_assetsDir = String(m_engineDir + "\\" + "Content" + "\\");
+#else 
+		if(currentDirString.Find("Binaries"))
+		{
+			m_engineDir =  String(currentDir.parent_path().parent_path().c_str()) + "/" ;
+		}
+	
+
+#endif // !LINUX
+	   
+		// See if windows accepts / in stead of double back slash
+	  
+		m_engineModulesDir = String(std::string(std::string(m_engineDir.c_str()) + "Source" + "/" + "Modules" + "/").c_str());
+		m_assetsDir = String(m_engineDir + "Content" + "/");
+
+#if DEBUG_ENGINE
+		m_binariesDir = String(m_engineDir + "Binaries/Debug/");
+#else
+		m_binariesDir = String(m_engineDir + "Binaries/");
+#endif  // DEBUG_ENGINE
+
+		std::cout << m_binariesDir.c_str() << std::endl;
+		std::cout << m_engineModulesDir.c_str() << std::endl;
 	}
 }// ishak

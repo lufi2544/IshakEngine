@@ -37,7 +37,16 @@ namespace ishak{
 		
 
 	private:
-		//TArray<HMODULE> m_LoadedModules;
+
+		
+#if LINUX
+
+	TArray<void*> m_LoadedModules;
+
+#else// WINDOWS
+		TArray<HMODULE> m_LoadedModules;
+#endif
+
 	};
 
 }// ishak

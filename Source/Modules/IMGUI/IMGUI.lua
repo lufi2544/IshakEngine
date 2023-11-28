@@ -12,7 +12,7 @@ includedirs{
 	moduesDir .. "ThirdParty/SDL/Public/include"
 }
 
-links {"SDL"}
+links {"SDL2", "SDL2_image"}
 
 filter"configurations:Debug" 
 	defines{ "LINUX" }

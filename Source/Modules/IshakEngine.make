@@ -16,14 +16,14 @@ ifeq ($(config),debug)
   TARGET = $(TARGETDIR)/IshakEngine
   OBJDIR = ../../Intermediate/Debug
   DEFINES += -DDEBUG_ENGINE -DLINUX
-  INCLUDES += -ILaunch/Public -ICore/Public -IECS/Public -IGame/Public -IPlatform/Public -IRenderer/Public -IEngine/Public -IIMGUI/Public -IThirdParty/Lua/Public -IThirdParty/SDL/Public -IThirdParty/SDLIMAGE/Public -IThirdParty/SolParser/Public
+  INCLUDES += -ILaunch/Public -ICore/Public -IEcs/Public -IGame/Public -IPlatform/Public -IRenderer/Public -IEngine/Public -IIMGUI/Public -IThirdParty/Lua/Public -IThirdParty/SDL/Public -IThirdParty/SDLIMAGE/Public -IThirdParty/SolParser/Public
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -std=c++17
-  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g -std=c++17
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -std=c++17 -g
+  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g -std=c++17 -g
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += ../../Binaries/Debug/libEngine.so -lSDL2 -lSDL2_image -llua5.3
-  LDDEPS += ../../Binaries/Debug/libEngine.so
+  LIBS += ../../Binaries/Debug/libEngine.so ../../Binaries/Debug/libCore.so ../../Binaries/Debug/libRenderer.so ../../Binaries/Debug/libDTEST.so ../../Binaries/Debug/libEcs.so ../../Binaries/Debug/libLaunch.so ../../Binaries/Debug/libIMGUI.so ../../Binaries/Debug/libPlatform.so ../../Binaries/Debug/libGame.so -lSDL -lSDL_image
+  LDDEPS += ../../Binaries/Debug/libEngine.so ../../Binaries/Debug/libCore.so ../../Binaries/Debug/libRenderer.so ../../Binaries/Debug/libDTEST.so ../../Binaries/Debug/libEcs.so ../../Binaries/Debug/libLaunch.so ../../Binaries/Debug/libIMGUI.so ../../Binaries/Debug/libPlatform.so ../../Binaries/Debug/libGame.so
   ALL_LDFLAGS += $(LDFLAGS) -Wl,-rpath,'$$ORIGIN'
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
@@ -43,14 +43,14 @@ ifeq ($(config),release)
   TARGET = $(TARGETDIR)/IshakEngine
   OBJDIR = ../../Intermediate/Release
   DEFINES += -DLINUX
-  INCLUDES += -ILaunch/Public -ICore/Public -IECS/Public -IGame/Public -IPlatform/Public -IRenderer/Public -IEngine/Public -IIMGUI/Public -IThirdParty/Lua/Public -IThirdParty/SDL/Public -IThirdParty/SDLIMAGE/Public -IThirdParty/SolParser/Public
+  INCLUDES += -ILaunch/Public -ICore/Public -IEcs/Public -IGame/Public -IPlatform/Public -IRenderer/Public -IEngine/Public -IIMGUI/Public -IThirdParty/Lua/Public -IThirdParty/SDL/Public -IThirdParty/SDLIMAGE/Public -IThirdParty/SolParser/Public
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++17
-  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++17
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++17 -g
+  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++17 -g
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += ../../Binaries/Release/libEngine.so -lSDL2 -lSDL2_image -llua5.3
-  LDDEPS += ../../Binaries/Release/libEngine.so
+  LIBS += ../../Binaries/Release/libEngine.so ../../Binaries/Release/libCore.so ../../Binaries/Release/libRenderer.so ../../Binaries/Release/libDTEST.so ../../Binaries/Release/libEcs.so ../../Binaries/Release/libLaunch.so ../../Binaries/Release/libIMGUI.so ../../Binaries/Release/libPlatform.so ../../Binaries/Release/libGame.so -lSDL -lSDL_image
+  LDDEPS += ../../Binaries/Release/libEngine.so ../../Binaries/Release/libCore.so ../../Binaries/Release/libRenderer.so ../../Binaries/Release/libDTEST.so ../../Binaries/Release/libEcs.so ../../Binaries/Release/libLaunch.so ../../Binaries/Release/libIMGUI.so ../../Binaries/Release/libPlatform.so ../../Binaries/Release/libGame.so
   ALL_LDFLAGS += $(LDFLAGS) -Wl,-rpath,'$$ORIGIN' -s
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
@@ -65,9 +65,6 @@ all: prebuild prelink $(TARGET)
 endif
 
 OBJECTS := \
-	$(OBJDIR)/EngineLoop.o \
-	$(OBJDIR)/LaunchModule.o \
-	$(OBJDIR)/LaunchEngine.o \
 
 RESOURCES := \
 
@@ -126,15 +123,6 @@ else
 $(OBJECTS): | $(OBJDIR)
 endif
 
-$(OBJDIR)/EngineLoop.o: Launch/Private/EngineLoop.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/LaunchModule.o: Launch/Private/LaunchModule.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/LaunchEngine.o: Launch/Private/Windows/LaunchEngine.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
 -include $(OBJECTS:%.o=%.d)
 ifneq (,$(PCH))

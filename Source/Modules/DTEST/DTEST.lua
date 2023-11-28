@@ -5,7 +5,22 @@ project "DTEST"
 
 files { "Public/**.h", "Private/**.cpp" }	
 
-links{
+
+local modulesDir = "../../Modules/"
+
+	includedirs{
+					 "Public",
+					modulesDir .. "Core/Public",
+					modulesDir .. "Ecs/Public"
+ 				}
+
+links
+{
+
 	"Core", "Ecs"
 
 }
+
+filter "configurations:Debug"
+	defines{ "DEBUG_ENGINE", "LINUX"  }
+	symbols "On"

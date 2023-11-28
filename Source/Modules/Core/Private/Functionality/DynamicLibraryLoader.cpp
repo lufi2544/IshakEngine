@@ -1,6 +1,10 @@
 
 // ISHAK
 #include "Functionality/DynamicLibraryLoader.h"
+#include "FileSystem/FileSystem.h"
+#if LINUX
+	#include <dlfcn.h>
+#endif // LINUX
 
 
 namespace ishak{
@@ -11,39 +15,34 @@ namespace ishak{
 	{			
 		// We assume the visual studio project file is ALWAYS gonna be at // Intemediate/ProjectFiles/IshakEngine.vcxproj
 
-		// Figure out if we are running the .exe or the VS project file.
-		fs::path currentDir{ fs::current_path() };
-		std::string currentDirString{ currentDir.string() };
-		fs::path engineRootDir;
+		std::cout << "--Loading Engine Module Dlls--" << std::endl;
 
-		// Running from .exe
-		if(currentDirString.find("Binaries") != std::string::npos)
-		{
-			engineRootDir = currentDir.parent_path();			
-		}
-		else 
-		{
-			// Loading from .vcxprj( VS project file ) located in the IntermediateFolder
-			engineRootDir = currentDir.parent_path().parent_path();
-		}		
-		
-		std::string modulesDir{ engineRootDir.string() + "\\" + "Source" + "\\" + "Modules" };
+		const String&  modulesDir  = FileSystem::Get().GetModulesDir();
 		
 		TArray<std::string> modulesToLoad;
-		ExploreModulesToLoad(modulesDir,  &modulesToLoad);
+		ExploreModulesToLoad(std::string{ modulesDir.c_str() },  &modulesToLoad);
 		LoadModulesDlls(modulesToLoad);				
 	}
 
 	void DllLoader::UnLoadEngineDlls()
 	{
-/*		for (const HMODULE& module : m_LoadedModules)
+#if LINUX
+		for(void* module : m_LoadedModules)
+		{
+			dlclose(module);
+		}
+	
+
+#else
+		for (const HMODULE& module : m_LoadedModules)
 		{
 			if (module)
 			{
 				FreeLibrary(module);
 			}
 		}
-*/
+#endif		
+
 	}
 
 	void DllLoader::ExploreModulesToLoad(const std::string& modulesDir, TArray<std::string>* out_ModulesToLoad)
@@ -51,11 +50,13 @@ namespace ishak{
 		// Save the Dll to load if any .cpp found and is not Third Party dir.				
 		for (const fs::directory_entry& moduleDir : fs::directory_iterator(modulesDir))
 		{
+
 			// Do not explore the ThirdParty dir.
-			if (moduleDir.path().filename().string().find("ThirdParty") != std::string::npos)
+			if (moduleDir.path().filename().string().find("ThirdParty") != std::string::npos || !moduleDir.is_directory())
 			{
 				continue;
 			}
+
 
 			// Single Module dir
 			for (const fs::directory_entry& moduleEntry : fs::directory_iterator(moduleDir.path().string()))
@@ -82,15 +83,46 @@ namespace ishak{
 
 	void DllLoader::LoadModulesDlls(const TArray<std::string>& modules)
 	{
-/*		for (const std::string& moduleName : modules)
+#if LINUX
+
+	TArray<std::string> modulesToLoad;
+	for(const std::string& moduleName : modules)
+	{
+		
+	    const std::string linuxModuleName = "lib" + moduleName + ".so";
+		modulesToLoad.Add(linuxModuleName);	
+		std::cout << linuxModuleName << std::endl;
+	}
+
+	const String& binariesDir = FileSystem::Get().GetBinariesDir();
+	for(const std::string& moduleName : modulesToLoad)
+	{
+		const String linuxModuleDllPath = binariesDir + moduleName.c_str();
+		void* loadedModule = dlopen(linuxModuleDllPath.c_str(), RTLD_NOW | RTLD_GLOBAL);
+		if(loadedModule)
 		{
-			HMODULE loadedModule = LoadLibrary(moduleName.c_str());
-			if (loadedModule)
-			{
-				m_LoadedModules.Add(loadedModule);
-			}
+			std::cout << "Loaded Module: " << moduleName << std::endl;			
+		}else
+		{
+			std::cerr << "Error handling module" << moduleName << ": " << dlerror() << std::endl;
 		}
-*/
+
+
+	}
+
+#else 
+
+	for (const std::string& moduleName : modules)
+	{
+		HMODULE loadedModule = LoadLibrary(moduleName.c_str());
+		if (loadedModule)
+		{
+			m_LoadedModules.Add(loadedModule);
+		}
+	}
+
+#endif // LINUX
+
 	}
 
 	bool DllLoader::HasAnyCpp(const fs::directory_entry& dir)
