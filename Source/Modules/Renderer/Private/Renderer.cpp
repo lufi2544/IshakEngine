@@ -23,6 +23,23 @@ namespace ishak {
 		return *singleton;
 	}
 
+	void Renderer::Init()
+	{
+		if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+		{
+			std::cerr << "Error initializing SDL." << std::endl;
+			// TODO ISHException
+			return;
+		}	
+
+
+		if((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG)
+		{
+			std::cerr << "Error initalizing SDL_IMAGE: " << IMG_GetError() << std::endl;
+		}
+
+	}
+
 	void Renderer::AddRenderingTarget(Window* window)
 	{
 		
@@ -200,6 +217,8 @@ namespace ishak {
 		ImGui::DestroyContext();
 	//=========================================================================
 
+		IMG_Quit();
+		SDL_Quit(); 
 	}
 
 }// ishak

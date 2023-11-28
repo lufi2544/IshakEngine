@@ -64,13 +64,11 @@ namespace ishak {
 
 	void IshakEngine::InitEngineCore()
 	{		
-		// Init Main Window and Rendering stuff.
-		if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
-		{
-			std::cerr << "Error initializing SDL." << std::endl;
-			return;
-		}
 
+		// Init the Renderer
+ 		Renderer::Get().Init();
+
+		// Init Main Window 
 		ishak::WindowCreationContext winCreationContext = WindowCreationContext
 		{
 			"IshakEngine",
@@ -79,6 +77,7 @@ namespace ishak {
 			WindowFlags::WINDOW_CENTRALIZED | WindowFlags::WINDOW_VSYNC | WindowFlags::WINDOW_FULLSCREEN_MATCH_MONITOR
 		};
 
+	
 		m_GameMainWindow = ishak::Window::MakeWindow(winCreationContext);
 		Renderer::Get().AddRenderingTarget(m_GameMainWindow.get());
 		

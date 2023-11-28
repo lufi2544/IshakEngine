@@ -33,8 +33,6 @@ namespace ishak
 		SDL_Texture* m_sdlTexture{ nullptr };
 		int m_width{ 0 };
 		int m_height{ 0 };
-
-		bool bTest{ false };
 	};
 
 

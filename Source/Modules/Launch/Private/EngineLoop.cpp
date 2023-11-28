@@ -32,10 +32,7 @@ namespace ishak{
 	{
 		// For now just create default Engine, I will include the Editor here.
 		GEngine = new IshakEngine();	
-
 		GEngine->Init();
-
-		std::cout << "HELLOOO" << std::endl;
 	}
 
 	int EngineLoop::TickEngine()
@@ -65,7 +62,6 @@ namespace ishak{
 
 			while(accumulatedTime >= FIXED_DELTA)
 			{				
-				std::cout << "Ticking" << std::endl;
 				GEngine->ProcessInput();
 				GEngine->Tick(FIXED_DELTA);
 
@@ -81,7 +77,7 @@ namespace ishak{
 #if LINUX 
 				sleep(toSleep);
 #else // WINDOWS
-				
+							std::cout << "Ticking" << std::endl;	
 				Sleep(toSleep);
 #endif // LINUX
 				

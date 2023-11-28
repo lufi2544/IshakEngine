@@ -26,6 +26,8 @@ namespace ishak {
 	public:		
 
 		static Renderer& Get();
+
+		void Init();
 		void AddRenderingTarget(Window* window);
 				
 		void Render();		
@@ -40,7 +42,8 @@ namespace ishak {
 		void QueueRenderCommand(const RendererCommand& command);		
 
 	private:
-		Renderer() = default;
+		Renderer() = default;	
+
 		void PreRender();
 		void SubmitRendererCommand(const RendererCommand& command);
 		void PostSetRenderingTarget(Window* window);
