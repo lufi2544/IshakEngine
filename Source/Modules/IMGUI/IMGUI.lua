@@ -17,3 +17,4 @@ links {"SDL2", "SDL2_image"}
 filter"configurations:Debug" 
 	defines{ "LINUX" }
 	symbols "On" 
+	buildoptions { "-g" }

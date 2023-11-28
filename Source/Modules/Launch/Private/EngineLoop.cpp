@@ -65,6 +65,7 @@ namespace ishak{
 
 			while(accumulatedTime >= FIXED_DELTA)
 			{				
+				std::cout << "Ticking" << std::endl;
 				GEngine->ProcessInput();
 				GEngine->Tick(FIXED_DELTA);
 

@@ -26,6 +26,7 @@ namespace ishak {
 	void Renderer::AddRenderingTarget(Window* window)
 	{
 		
+		std::cout << "Adding Rendering Target" << std::endl;
 		if(m_rendererWindowPair.first)
 		{
 			return;

@@ -73,6 +73,8 @@ namespace ishak {
 
 		if (!SDLWindow)
 		{
+			std::cout<<"SLD Error:" << SDL_GetError() << std::endl;
+			std::cout << "Error Creating the widow" << std::endl;
 			// TODO ERROR
 			return nullptr;
 		}

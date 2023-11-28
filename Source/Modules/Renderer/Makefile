@@ -22,7 +22,7 @@ ifeq ($(config),debug)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC -g
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC -g
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += ../../../Binaries/Debug/libCore.so ../../../Binaries/Debug/libPlatform.so ../../../Binaries/Debug/libIMGUI.so ../../../Binaries/Debug/libEcs.so -lSDL2_image
+  LIBS += ../../../Binaries/Debug/libCore.so ../../../Binaries/Debug/libPlatform.so ../../../Binaries/Debug/libIMGUI.so ../../../Binaries/Debug/libEcs.so -lSDL2_image -lSDL2
   LDDEPS += ../../../Binaries/Debug/libCore.so ../../../Binaries/Debug/libPlatform.so ../../../Binaries/Debug/libIMGUI.so ../../../Binaries/Debug/libEcs.so
   ALL_LDFLAGS += $(LDFLAGS) -Wl,-rpath,'$$ORIGIN' -shared -Wl,-soname=libRenderer.so
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
@@ -49,7 +49,7 @@ ifeq ($(config),release)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += ../../../Binaries/Release/libCore.so ../../../Binaries/Release/libPlatform.so ../../../Binaries/Release/libIMGUI.so ../../../Binaries/Release/libEcs.so -lSDL2_image
+  LIBS += ../../../Binaries/Release/libCore.so ../../../Binaries/Release/libPlatform.so ../../../Binaries/Release/libIMGUI.so ../../../Binaries/Release/libEcs.so -lSDL2_image -lSDL2
   LDDEPS += ../../../Binaries/Release/libCore.so ../../../Binaries/Release/libPlatform.so ../../../Binaries/Release/libIMGUI.so ../../../Binaries/Release/libEcs.so
   ALL_LDFLAGS += $(LDFLAGS) -Wl,-rpath,'$$ORIGIN' -shared -Wl,-soname=libRenderer.so -s
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)

@@ -16,11 +16,11 @@ ifeq ($(config),debug)
   TARGET = $(TARGETDIR)/libEngine.so
   OBJDIR = obj/Debug
   DEFINES += -DDEBUG_ENGINE -DLINUX
-  INCLUDES += -IPublic -I../Core/Public -I../Launch/Public -I../Ecs/Public -I../Game/Public -I../Platform/Public -I../Renderer/Public -I../IMGUI/Public -I../ThirdParty/Lua/Public -I../ThirdParty/SDL/Public -I../ThirdParty/SDLIMAGE/Public -I../ThirdParty/SolParser/Public
+  INCLUDES += -IPublic -I../Core/Public -I../Launch/Public -I../Ecs/Public -I../Game/Public -I../Platform/Public -I../Renderer/Public -I../IMGUI/Public -I../ThirdParty/Lua/Public -I../ThirdParty/SDL/Public/include -I../ThirdParty/SDLIMAGE/Public -I../ThirdParty/SolParser/Public
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC -g
-  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC -g
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC -g -g
+  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC -g -g
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   LIBS += ../../../Binaries/Debug/libPlatform.so ../../../Binaries/Debug/libCore.so ../../../Binaries/Debug/libRenderer.so ../../../Binaries/Debug/libDTEST.so ../../../Binaries/Debug/libIMGUI.so ../../../Binaries/Debug/libEcs.so
   LDDEPS += ../../../Binaries/Debug/libPlatform.so ../../../Binaries/Debug/libCore.so ../../../Binaries/Debug/libRenderer.so ../../../Binaries/Debug/libDTEST.so ../../../Binaries/Debug/libIMGUI.so ../../../Binaries/Debug/libEcs.so
@@ -43,7 +43,7 @@ ifeq ($(config),release)
   TARGET = $(TARGETDIR)/libEngine.so
   OBJDIR = obj/Release
   DEFINES +=
-  INCLUDES += -IPublic -I../Core/Public -I../Launch/Public -I../Ecs/Public -I../Game/Public -I../Platform/Public -I../Renderer/Public -I../IMGUI/Public -I../ThirdParty/Lua/Public -I../ThirdParty/SDL/Public -I../ThirdParty/SDLIMAGE/Public -I../ThirdParty/SolParser/Public
+  INCLUDES += -IPublic -I../Core/Public -I../Launch/Public -I../Ecs/Public -I../Game/Public -I../Platform/Public -I../Renderer/Public -I../IMGUI/Public -I../ThirdParty/Lua/Public -I../ThirdParty/SDL/Public/include -I../ThirdParty/SDLIMAGE/Public -I../ThirdParty/SolParser/Public
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC

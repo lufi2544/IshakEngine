@@ -15,16 +15,17 @@ local modulesDir = "../../Modules/"
 					modulesDir .. "Engine/Public",
 					modulesDir .. "IMGUI/Public",
 					modulesDir .. "ThirdParty/Lua/Public",
-					modulesDir .. "ThirdParty/SDL/Public",
+					modulesDir .. "ThirdParty/SDL/Public/include",
 					modulesDir .. "ThirdParty/SDLIMAGE/Public",
 					modulesDir .. "ThirdParty/SolParser/Public"
  				}
 
 files {"Public/**.h", "Private/**.cpp"}
 
-links{"SDL", "SDL_image", "Core", "Engine", "Renderer", "Ecs"}
+links{"SDL2", "SDL2_image", "Core", "Engine", "Renderer", "Ecs"}
 
 
 filter "configurations:Debug"
 	defines{ "DEBUG_ENGINE", "LINUX" }
 	symbols "On" 
+	buildoptions { "-g"}

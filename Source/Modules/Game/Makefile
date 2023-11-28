@@ -19,8 +19,8 @@ ifeq ($(config),debug)
   INCLUDES += -IPublic -I../Core/Public -I../Ecs/Public -I../Platform/Public -I../Renderer/Public -I../Engine/Public -I../IMGUI/Public -I../ThirdParty/Lua/Public -I../ThirdParty/SDL/Public/include -I../ThirdParty/SDLIMAGE/Public -I../ThirdParty/SolParser/Public
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC -g
-  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC -g
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC -g -g
+  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC -g -g
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   LIBS += ../../../Binaries/Debug/libCore.so ../../../Binaries/Debug/libEngine.so ../../../Binaries/Debug/libEcs.so
   LDDEPS += ../../../Binaries/Debug/libCore.so ../../../Binaries/Debug/libEngine.so ../../../Binaries/Debug/libEcs.so

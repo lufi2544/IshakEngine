@@ -22,6 +22,22 @@ namespace ishak
 
 	SharedPtr<Asset> Texture::Load()
 	{
+		if(!bTest)
+		{		
+			if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG) 
+			{
+			    // Handle SDL_image initialization failure
+			
+
+				bTest = true;
+			}else
+			{
+				std::cout <<  "Success Init SDL IMAGE" << std::endl;
+
+			}
+
+		}
+
 		SDL_Surface* image = IMG_Load(m_path.c_str());
 		if (image)
 		{

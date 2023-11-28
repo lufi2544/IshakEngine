@@ -13,8 +13,5 @@ int main(int arg, char* argv[])
 
 	ishak::EngineLoop engineLoop;
 	engineLoop.Init();
-
-	return 0;
-
 	return engineLoop.TickEngine();	
 }

@@ -34,3 +34,5 @@ links { "Core" }
         defines { "DEBUG_ENGINE", "LINUX" }
     	symbols "On"
 
+	buildoptions { "-g" }
+

@@ -27,3 +27,5 @@ links{"Core", "Engine", "Ecs"}
 filter "configurations:Debug"
 	defines{ "DEBUG_ENGINE", "LINUX"  }
 	symbols "On"
+
+	buildoptions { "-g" }

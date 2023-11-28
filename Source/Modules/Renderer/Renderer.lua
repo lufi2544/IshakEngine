@@ -22,7 +22,7 @@ local modulesDir = "../../Modules/"
 					modulesDir .. "ThirdParty/SolParser/Public"
  				}
 
-links{"Core", "Platform", "IMGUI", "Ecs","SDL2_image" }
+links{"Core", "Platform", "IMGUI", "Ecs","SDL2_image", "SDL2" }
 
 
 filter "configurations:Debug"
