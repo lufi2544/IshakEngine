@@ -15,7 +15,7 @@ ifeq ($(config),debug)
   TARGETDIR = ../Binaries/Tests/Debug
   TARGET = $(TARGETDIR)/IshakEngineTests
   OBJDIR = ../Intermediate/Tests/Debug
-  DEFINES += -DDEBUG_ENGINE -DLINUX -DWITH_TESTS
+  DEFINES += -DLINUX -DDEBUG_ENGINE
   INCLUDES += -Idtest -I../Source/Modules/Core/Public -I../Source/Modules/Ecs/Public -I../Source/Modules/IMGUI/Public
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)

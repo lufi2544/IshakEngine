@@ -36,11 +36,18 @@ project "IshakEngineTests"
 
 	links { "Core", "Ecs", "IMGUI" }
 
+	filter "system:linux"
+		print("Defining TESTS for LINUX")
+		defines{ "LINUX" }
+
+	filter "system:windows"
+		print("Defining TESTS for WINDOWS")
+		defines{ "WINDOWS" }
 
 	filter "configurations:Debug"
-		defines { "DEBUG_ENGINE", "LINUX", "WITH_TESTS" }
+		defines { "DEBUG_ENGINE"}
 		symbols "On"
-		buildoptions {"-g"}
+		buildoptions {"-g"} -- includes the symbols in the executable for debugging
 
 	include(modulesDir .. "Core/Core.lua")
 	include(modulesDir .. "Ecs/Ecs.lua")
