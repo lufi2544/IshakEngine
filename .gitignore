@@ -34,6 +34,8 @@ ipch
 *.exp
 
 # Generic
+
+MakeFile
 Intermediate/
 .vs/
 .git/
