@@ -2,6 +2,8 @@
 # gitignore for C++
 # Vim Extensions
 *.swp
+*.swo
+
 
 # Compiled Object files
 *.slo
@@ -35,7 +37,8 @@ ipch
 
 # Generic
 
-MakeFile
+*.make
+Makefile
 Intermediate/
 .vs/
 .git/
