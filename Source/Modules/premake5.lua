@@ -7,6 +7,7 @@ local modulesDir = "../Modules/"
 
 workspace "IshakEngine"
 	configurations { "Debug", "Release" }
+	architecture "x86_64"
 
 
 project "IshakEngine"
@@ -41,16 +42,32 @@ project "IshakEngine"
 
     links { "Engine", "Core", "Renderer", "Ecs", "Launch", "IMGUI", "Platform", "Game"}
 
+	filter "system:linux"
+		print("Applying parallel compilation for Linux.")
+		buildoptions { "-j$(nproc)" }
+		defines{ "LINUX" }
+
+	filter { "system:windows" }		
+		print("Applying parallel compilation for Windows.")
+		defines{"WINDOWS"}
+
+
+	filter { "toolset:gcc" }
+		buildoptions {"-j$(nproc)"}
+
+-- CONFIGURATIONS --
+
     filter "configurations:Debug"
-        defines { "DEBUG_ENGINE", "LINUX" }
+        defines { "DEBUG_ENGINE"}
     	symbols "On"
 		buildoptions{ "-g" }
 
-
-    filter "configurations:Release"
-		defines {"LINUX"}
+    filter "configurations:Release"	
     	optimize "On"
-   
+
+
+-- OS Filter --
+
 -- Include the Modules build scripts --
 
 include(modulesDir .. "Core/Core.lua")
