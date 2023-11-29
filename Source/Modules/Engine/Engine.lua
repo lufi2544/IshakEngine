@@ -1,7 +1,8 @@
 project "Engine"
 	kind "SharedLib"
 	language "C++"
-	targetdir "../../../Binaries/%{cfg.buildcfg}"
+	targetdir "../../../Binaries/Engine/%{cfg.buildcfg}"
+    objdir "../../../Intermediate/Engine"
 
 files { "Public/**.h", "Private/**.cpp" }
 
@@ -24,7 +25,7 @@ local modulesDir = "../../Modules/"
 
 
 
-links{"Platform", "Core", "Renderer", "DTEST", "IMGUI", "Ecs"  }
+links{"Platform", "Core", "Renderer", "IMGUI", "Ecs"  }
 
 
 filter "configurations:Debug"

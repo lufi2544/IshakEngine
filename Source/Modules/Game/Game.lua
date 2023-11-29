@@ -1,7 +1,8 @@
 project "Game"
 	kind "SharedLib"
 	language "C++"
-	targetdir "../../../Binaries/%{cfg.buildcfg}"
+	targetdir "../../../Binaries/Engine/%{cfg.buildcfg}"
+    objdir "../../../Intermediate/Engine"
 
 files { "Public/**.h", "Private/**.cpp" }
 

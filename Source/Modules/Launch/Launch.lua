@@ -1,7 +1,8 @@
 project "Launch"
 	kind "SharedLib"
 	language "C++"
-	targetdir "../../../Binaries/%{cfg.buildcfg}"
+	targetdir "../../../Binaries/Engine/%{cfg.buildcfg}"
+    objdir "../../../Intermediate/Engine"
 
 local modulesDir = "../../Modules/"
 

@@ -12,9 +12,9 @@ endif
 
 ifeq ($(config),debug)
   RESCOMP = windres
-  TARGETDIR = ../../../Binaries/Debug
+  TARGETDIR = ../../../Binaries/Engine/Debug
   TARGET = $(TARGETDIR)/libPlatform.so
-  OBJDIR = obj/Debug
+  OBJDIR = ../../../Intermediate/Engine/Debug/Platform
   DEFINES += -DDEBUG_ENGINE -DLINUX
   INCLUDES += -IPublic -I../Launch/Public -I../Core/Public -I../ECS/Public -I../Game/Public -I../Renderer/Public -I../Engine/Public -I../IMGUI/Public -I../ThirdParty/Lua/Public -I../ThirdParty/SDL/Public/include -I../ThirdParty/SDLIMAGE/Public -I../ThirdParty/SolParser/Public
   FORCE_INCLUDE +=
@@ -22,8 +22,8 @@ ifeq ($(config),debug)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC -g
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC -g
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += ../../../Binaries/Debug/libCore.so -lSDL2 -lSDL2_image
-  LDDEPS += ../../../Binaries/Debug/libCore.so
+  LIBS += ../../../Binaries/Engine/Debug/libCore.so -lSDL2 -lSDL2_image
+  LDDEPS += ../../../Binaries/Engine/Debug/libCore.so
   ALL_LDFLAGS += $(LDFLAGS) -Wl,-rpath,'$$ORIGIN' -shared -Wl,-soname=libPlatform.so
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
@@ -39,9 +39,9 @@ endif
 
 ifeq ($(config),release)
   RESCOMP = windres
-  TARGETDIR = ../../../Binaries/Release
+  TARGETDIR = ../../../Binaries/Engine/Release
   TARGET = $(TARGETDIR)/libPlatform.so
-  OBJDIR = obj/Release
+  OBJDIR = ../../../Intermediate/Engine/Release/Platform
   DEFINES +=
   INCLUDES += -IPublic -I../Launch/Public -I../Core/Public -I../ECS/Public -I../Game/Public -I../Renderer/Public -I../Engine/Public -I../IMGUI/Public -I../ThirdParty/Lua/Public -I../ThirdParty/SDL/Public/include -I../ThirdParty/SDLIMAGE/Public -I../ThirdParty/SolParser/Public
   FORCE_INCLUDE +=
@@ -49,8 +49,8 @@ ifeq ($(config),release)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += ../../../Binaries/Release/libCore.so -lSDL2 -lSDL2_image
-  LDDEPS += ../../../Binaries/Release/libCore.so
+  LIBS += ../../../Binaries/Engine/Release/libCore.so -lSDL2 -lSDL2_image
+  LDDEPS += ../../../Binaries/Engine/Release/libCore.so
   ALL_LDFLAGS += $(LDFLAGS) -Wl,-rpath,'$$ORIGIN' -shared -Wl,-soname=libPlatform.so -s
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS

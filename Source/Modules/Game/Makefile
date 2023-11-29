@@ -12,9 +12,9 @@ endif
 
 ifeq ($(config),debug)
   RESCOMP = windres
-  TARGETDIR = ../../../Binaries/Debug
+  TARGETDIR = ../../../Binaries/Engine/Debug
   TARGET = $(TARGETDIR)/libGame.so
-  OBJDIR = obj/Debug
+  OBJDIR = ../../../Intermediate/Engine/Debug/Game
   DEFINES += -DDEBUG_ENGINE -DLINUX
   INCLUDES += -IPublic -I../Core/Public -I../Ecs/Public -I../Platform/Public -I../Renderer/Public -I../Engine/Public -I../IMGUI/Public -I../ThirdParty/Lua/Public -I../ThirdParty/SDL/Public/include -I../ThirdParty/SDLIMAGE/Public -I../ThirdParty/SolParser/Public
   FORCE_INCLUDE +=
@@ -22,8 +22,8 @@ ifeq ($(config),debug)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC -g -g
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC -g -g
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += ../../../Binaries/Debug/libCore.so ../../../Binaries/Debug/libEngine.so ../../../Binaries/Debug/libEcs.so
-  LDDEPS += ../../../Binaries/Debug/libCore.so ../../../Binaries/Debug/libEngine.so ../../../Binaries/Debug/libEcs.so
+  LIBS += ../../../Binaries/Engine/Debug/libCore.so ../../../Binaries/Engine/Debug/libEngine.so ../../../Binaries/Engine/Debug/libEcs.so
+  LDDEPS += ../../../Binaries/Engine/Debug/libCore.so ../../../Binaries/Engine/Debug/libEngine.so ../../../Binaries/Engine/Debug/libEcs.so
   ALL_LDFLAGS += $(LDFLAGS) -Wl,-rpath,'$$ORIGIN' -shared -Wl,-soname=libGame.so
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
@@ -39,9 +39,9 @@ endif
 
 ifeq ($(config),release)
   RESCOMP = windres
-  TARGETDIR = ../../../Binaries/Release
+  TARGETDIR = ../../../Binaries/Engine/Release
   TARGET = $(TARGETDIR)/libGame.so
-  OBJDIR = obj/Release
+  OBJDIR = ../../../Intermediate/Engine/Release/Game
   DEFINES +=
   INCLUDES += -IPublic -I../Core/Public -I../Ecs/Public -I../Platform/Public -I../Renderer/Public -I../Engine/Public -I../IMGUI/Public -I../ThirdParty/Lua/Public -I../ThirdParty/SDL/Public/include -I../ThirdParty/SDLIMAGE/Public -I../ThirdParty/SolParser/Public
   FORCE_INCLUDE +=
@@ -49,8 +49,8 @@ ifeq ($(config),release)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += ../../../Binaries/Release/libCore.so ../../../Binaries/Release/libEngine.so ../../../Binaries/Release/libEcs.so
-  LDDEPS += ../../../Binaries/Release/libCore.so ../../../Binaries/Release/libEngine.so ../../../Binaries/Release/libEcs.so
+  LIBS += ../../../Binaries/Engine/Release/libCore.so ../../../Binaries/Engine/Release/libEngine.so ../../../Binaries/Engine/Release/libEcs.so
+  LDDEPS += ../../../Binaries/Engine/Release/libCore.so ../../../Binaries/Engine/Release/libEngine.so ../../../Binaries/Engine/Release/libEcs.so
   ALL_LDFLAGS += $(LDFLAGS) -Wl,-rpath,'$$ORIGIN' -shared -Wl,-soname=libGame.so -s
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS

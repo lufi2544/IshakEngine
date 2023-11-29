@@ -13,8 +13,8 @@ project "IshakEngine"
     kind "ConsoleApp"
     language "C++"
 
-    targetdir "../../Binaries/%{cfg.buildcfg}"
-    objdir "../../Intermediate/%{cfg.buildcfg}"
+    targetdir "../../Binaries/Engine/%{cfg.buildcfg}"
+    objdir "../../Intermediate/Engine/%{cfg.buildcfg}"
 
 
  --   files{ "Launch/Public/**.h", "Launch/Private/**.cpp" }
@@ -39,7 +39,7 @@ project "IshakEngine"
 		"-g" -- adding debbug table for debbuging
 	}
 
-    links { "Engine", "Core", "Renderer", "DTEST", "Ecs", "Launch", "IMGUI", "Platform", "Game", "SDL", "SDL_image" }
+    links { "Engine", "Core", "Renderer", "Ecs", "Launch", "IMGUI", "Platform", "Game"}
 
     filter "configurations:Debug"
         defines { "DEBUG_ENGINE", "LINUX" }
@@ -55,7 +55,6 @@ project "IshakEngine"
 
 include(modulesDir .. "Core/Core.lua")
 include(modulesDir .. "Renderer/Renderer.lua")
-include(modulesDir .. "DTEST/DTEST.lua")
 include(modulesDir .. "Ecs/Ecs.lua")
 include(modulesDir .. "Engine/Engine.lua")
 include(modulesDir .. "Game/Game.lua")
@@ -67,11 +66,4 @@ include(modulesDir .. "Platform/Platform.lua")
 -- Include the Third Party scripts --
 
 local thirdPartyDir = modulesDir .. "ThirdParty/"
-
-
-
 include(thirdPartyDir .. "SolParser/Sol.lua")
-
-
-
-

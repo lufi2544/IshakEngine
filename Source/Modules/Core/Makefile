@@ -12,9 +12,9 @@ endif
 
 ifeq ($(config),debug)
   RESCOMP = windres
-  TARGETDIR = ../../../Binaries/Debug
+  TARGETDIR = ../../../Binaries/Engine/Debug
   TARGET = $(TARGETDIR)/libCore.so
-  OBJDIR = obj/Debug
+  OBJDIR = ../../../Intermediate/Engine/Debug/Core
   DEFINES += -DDEBUG_ENGINE -DLINUX
   INCLUDES += -IPublic -I../Launch/Public -I../ECS/Public -I../Game/Public -I../Platform/Public -I../Renderer/Public -I../Engine/Public -I../IMGUI/Public -I../ThirdParty/Lua/Public -I../ThirdParty/SDL/Public -I../ThirdParty/SDLIMAGE/Public -I../ThirdParty/SolParser/Public
   FORCE_INCLUDE +=
@@ -39,9 +39,9 @@ endif
 
 ifeq ($(config),release)
   RESCOMP = windres
-  TARGETDIR = ../../../Binaries/Release
+  TARGETDIR = ../../../Binaries/Engine/Release
   TARGET = $(TARGETDIR)/libCore.so
-  OBJDIR = obj/Release
+  OBJDIR = ../../../Intermediate/Engine/Release/Core
   DEFINES +=
   INCLUDES += -IPublic -I../Launch/Public -I../ECS/Public -I../Game/Public -I../Platform/Public -I../Renderer/Public -I../Engine/Public -I../IMGUI/Public -I../ThirdParty/Lua/Public -I../ThirdParty/SDL/Public -I../ThirdParty/SDLIMAGE/Public -I../ThirdParty/SolParser/Public
   FORCE_INCLUDE +=

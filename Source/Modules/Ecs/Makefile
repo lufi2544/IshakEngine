@@ -12,9 +12,9 @@ endif
 
 ifeq ($(config),debug)
   RESCOMP = windres
-  TARGETDIR = ../../../Binaries/Debug
+  TARGETDIR = ../../../Binaries/Engine/Debug
   TARGET = $(TARGETDIR)/libEcs.so
-  OBJDIR = obj/Debug
+  OBJDIR = ../../../Intermediate/Engine/Debug/Ecs
   DEFINES += -DDEBUG_ENGINE -DLINUX
   INCLUDES += -IPublic -I../Core/Public -I../Launch/Public -I../Game/Public -I../Platform/Public -I../Renderer/Public -I../Engine/Public -I../IMGUI/Public -I../ThirdParty/Lua/Public -I../ThirdParty/SDL/Public -I../ThirdParty/SDLIMAGE/Public -I../ThirdParty/SolParser/Public
   FORCE_INCLUDE +=
@@ -22,8 +22,8 @@ ifeq ($(config),debug)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC -g -g
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC -g -g
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += ../../../Binaries/Debug/libCore.so
-  LDDEPS += ../../../Binaries/Debug/libCore.so
+  LIBS += ../../../Binaries/Engine/Debug/libCore.so
+  LDDEPS += ../../../Binaries/Engine/Debug/libCore.so
   ALL_LDFLAGS += $(LDFLAGS) -Wl,-rpath,'$$ORIGIN' -shared -Wl,-soname=libEcs.so
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
@@ -39,9 +39,9 @@ endif
 
 ifeq ($(config),release)
   RESCOMP = windres
-  TARGETDIR = ../../../Binaries/Release
+  TARGETDIR = ../../../Binaries/Engine/Release
   TARGET = $(TARGETDIR)/libEcs.so
-  OBJDIR = obj/Release
+  OBJDIR = ../../../Intermediate/Engine/Release/Ecs
   DEFINES +=
   INCLUDES += -IPublic -I../Core/Public -I../Launch/Public -I../Game/Public -I../Platform/Public -I../Renderer/Public -I../Engine/Public -I../IMGUI/Public -I../ThirdParty/Lua/Public -I../ThirdParty/SDL/Public -I../ThirdParty/SDLIMAGE/Public -I../ThirdParty/SolParser/Public
   FORCE_INCLUDE +=
@@ -49,8 +49,8 @@ ifeq ($(config),release)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += ../../../Binaries/Release/libCore.so
-  LDDEPS += ../../../Binaries/Release/libCore.so
+  LIBS += ../../../Binaries/Engine/Release/libCore.so
+  LDDEPS += ../../../Binaries/Engine/Release/libCore.so
   ALL_LDFLAGS += $(LDFLAGS) -Wl,-rpath,'$$ORIGIN' -shared -Wl,-soname=libEcs.so -s
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS

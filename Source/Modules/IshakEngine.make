@@ -12,9 +12,9 @@ endif
 
 ifeq ($(config),debug)
   RESCOMP = windres
-  TARGETDIR = ../../Binaries/Debug
+  TARGETDIR = ../../Binaries/Engine/Debug
   TARGET = $(TARGETDIR)/IshakEngine
-  OBJDIR = ../../Intermediate/Debug
+  OBJDIR = ../../Intermediate/Engine/Debug/Debug
   DEFINES += -DDEBUG_ENGINE -DLINUX
   INCLUDES += -ILaunch/Public -ICore/Public -IEcs/Public -IGame/Public -IPlatform/Public -IRenderer/Public -IEngine/Public -IIMGUI/Public -IThirdParty/Lua/Public -IThirdParty/SDL/Public -IThirdParty/SDLIMAGE/Public -IThirdParty/SolParser/Public
   FORCE_INCLUDE +=
@@ -22,8 +22,8 @@ ifeq ($(config),debug)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -std=c++17 -g
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g -std=c++17 -g
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += ../../Binaries/Debug/libEngine.so ../../Binaries/Debug/libCore.so ../../Binaries/Debug/libRenderer.so ../../Binaries/Debug/libDTEST.so ../../Binaries/Debug/libEcs.so ../../Binaries/Debug/libLaunch.so ../../Binaries/Debug/libIMGUI.so ../../Binaries/Debug/libPlatform.so ../../Binaries/Debug/libGame.so -lSDL -lSDL_image
-  LDDEPS += ../../Binaries/Debug/libEngine.so ../../Binaries/Debug/libCore.so ../../Binaries/Debug/libRenderer.so ../../Binaries/Debug/libDTEST.so ../../Binaries/Debug/libEcs.so ../../Binaries/Debug/libLaunch.so ../../Binaries/Debug/libIMGUI.so ../../Binaries/Debug/libPlatform.so ../../Binaries/Debug/libGame.so
+  LIBS += ../../Binaries/Engine/Debug/libEngine.so ../../Binaries/Engine/Debug/libCore.so ../../Binaries/Engine/Debug/libRenderer.so ../../Binaries/Engine/Debug/libEcs.so ../../Binaries/Engine/Debug/libLaunch.so ../../Binaries/Engine/Debug/libIMGUI.so ../../Binaries/Engine/Debug/libPlatform.so ../../Binaries/Engine/Debug/libGame.so
+  LDDEPS += ../../Binaries/Engine/Debug/libEngine.so ../../Binaries/Engine/Debug/libCore.so ../../Binaries/Engine/Debug/libRenderer.so ../../Binaries/Engine/Debug/libEcs.so ../../Binaries/Engine/Debug/libLaunch.so ../../Binaries/Engine/Debug/libIMGUI.so ../../Binaries/Engine/Debug/libPlatform.so ../../Binaries/Engine/Debug/libGame.so
   ALL_LDFLAGS += $(LDFLAGS) -Wl,-rpath,'$$ORIGIN'
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
@@ -39,9 +39,9 @@ endif
 
 ifeq ($(config),release)
   RESCOMP = windres
-  TARGETDIR = ../../Binaries/Release
+  TARGETDIR = ../../Binaries/Engine/Release
   TARGET = $(TARGETDIR)/IshakEngine
-  OBJDIR = ../../Intermediate/Release
+  OBJDIR = ../../Intermediate/Engine/Release/Release
   DEFINES += -DLINUX
   INCLUDES += -ILaunch/Public -ICore/Public -IEcs/Public -IGame/Public -IPlatform/Public -IRenderer/Public -IEngine/Public -IIMGUI/Public -IThirdParty/Lua/Public -IThirdParty/SDL/Public -IThirdParty/SDLIMAGE/Public -IThirdParty/SolParser/Public
   FORCE_INCLUDE +=
@@ -49,8 +49,8 @@ ifeq ($(config),release)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++17 -g
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++17 -g
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += ../../Binaries/Release/libEngine.so ../../Binaries/Release/libCore.so ../../Binaries/Release/libRenderer.so ../../Binaries/Release/libDTEST.so ../../Binaries/Release/libEcs.so ../../Binaries/Release/libLaunch.so ../../Binaries/Release/libIMGUI.so ../../Binaries/Release/libPlatform.so ../../Binaries/Release/libGame.so -lSDL -lSDL_image
-  LDDEPS += ../../Binaries/Release/libEngine.so ../../Binaries/Release/libCore.so ../../Binaries/Release/libRenderer.so ../../Binaries/Release/libDTEST.so ../../Binaries/Release/libEcs.so ../../Binaries/Release/libLaunch.so ../../Binaries/Release/libIMGUI.so ../../Binaries/Release/libPlatform.so ../../Binaries/Release/libGame.so
+  LIBS += ../../Binaries/Engine/Release/libEngine.so ../../Binaries/Engine/Release/libCore.so ../../Binaries/Engine/Release/libRenderer.so ../../Binaries/Engine/Release/libEcs.so ../../Binaries/Engine/Release/libLaunch.so ../../Binaries/Engine/Release/libIMGUI.so ../../Binaries/Engine/Release/libPlatform.so ../../Binaries/Engine/Release/libGame.so
+  LDDEPS += ../../Binaries/Engine/Release/libEngine.so ../../Binaries/Engine/Release/libCore.so ../../Binaries/Engine/Release/libRenderer.so ../../Binaries/Engine/Release/libEcs.so ../../Binaries/Engine/Release/libLaunch.so ../../Binaries/Engine/Release/libIMGUI.so ../../Binaries/Engine/Release/libPlatform.so ../../Binaries/Engine/Release/libGame.so
   ALL_LDFLAGS += $(LDFLAGS) -Wl,-rpath,'$$ORIGIN' -s
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS

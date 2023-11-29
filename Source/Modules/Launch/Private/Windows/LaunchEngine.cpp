@@ -7,8 +7,11 @@
 #include "EngineLoop.h"
 #include "Log/Logger.h"
 
-//int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
-int main(int arg, char* argv[])
+#if LINUX
+	int main(int arg, char* argv[])
+#else // WINDOWS
+	int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+#endif // LINUX
 {			
 
 	ishak::EngineLoop engineLoop;

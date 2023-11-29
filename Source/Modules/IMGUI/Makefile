@@ -12,9 +12,9 @@ endif
 
 ifeq ($(config),debug)
   RESCOMP = windres
-  TARGETDIR = ../../../Binaries/Debug
+  TARGETDIR = ../../../Binaries/Engine/Debug
   TARGET = $(TARGETDIR)/libIMGUI.so
-  OBJDIR = obj/Debug
+  OBJDIR = ../../../Intermediate/Engine/Debug/IMGUI
   DEFINES += -DLINUX
   INCLUDES += -IPublic -I../ThirdParty/SDL/Public/include
   FORCE_INCLUDE +=
@@ -39,9 +39,9 @@ endif
 
 ifeq ($(config),release)
   RESCOMP = windres
-  TARGETDIR = ../../../Binaries/Release
+  TARGETDIR = ../../../Binaries/Engine/Release
   TARGET = $(TARGETDIR)/libIMGUI.so
-  OBJDIR = obj/Release
+  OBJDIR = ../../../Intermediate/Engine/Release/IMGUI
   DEFINES +=
   INCLUDES += -IPublic -I../ThirdParty/SDL/Public/include
   FORCE_INCLUDE +=

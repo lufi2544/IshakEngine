@@ -48,7 +48,8 @@ namespace ishak {
 		fs::path currentDir{ fs::current_path() };
 		String currentDirString{ currentDir.string().c_str()};
 		fs::path engineRootDir;
-#ifndef LINUX
+
+#ifndef LINUX // WINDOWS
 		// Running from .exe
 		if (currentDirString.Find("Binaries"))
 		{
@@ -57,13 +58,13 @@ namespace ishak {
 		else
 		{
 			// Running from .vcxprj( VS project file ) located in the IntermediateFolder
-			m_engineDir = String(currentDir.parent_path().parent_path().string().c_str() + "/");
+			m_engineDir = String(currentDir.parent_path().parent_path().parent_path().string().c_str() + "/");
 		}
 
-#else 
+#else  // LINUX
 		if(currentDirString.Find("Binaries"))
 		{
-			m_engineDir =  String(currentDir.parent_path().parent_path().c_str()) + "/" ;
+			m_engineDir =  String(currentDir.parent_path().parent_path().parent_path().c_str()) + "/" ;
 		}
 	
 
@@ -75,9 +76,9 @@ namespace ishak {
 		m_assetsDir = String(m_engineDir + "Content" + "/");
 
 #if DEBUG_ENGINE
-		m_binariesDir = String(m_engineDir + "Binaries/Debug/");
+		m_binariesDir = String(m_engineDir + "Binaries/Engine/Debug/");
 #else
-		m_binariesDir = String(m_engineDir + "Binaries/");
+		m_binariesDir = String(m_engineDir + "Binaries/Engine/Release/");
 #endif  // DEBUG_ENGINE
 
 		std::cout << m_binariesDir.c_str() << std::endl;

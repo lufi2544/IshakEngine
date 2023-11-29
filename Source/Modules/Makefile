@@ -12,7 +12,6 @@ ifeq ($(config),debug)
   IshakEngine_config = debug
   Core_config = debug
   Renderer_config = debug
-  DTEST_config = debug
   Ecs_config = debug
   Engine_config = debug
   Game_config = debug
@@ -24,7 +23,6 @@ ifeq ($(config),release)
   IshakEngine_config = release
   Core_config = release
   Renderer_config = release
-  DTEST_config = release
   Ecs_config = release
   Engine_config = release
   Game_config = release
@@ -33,13 +31,13 @@ ifeq ($(config),release)
   Platform_config = release
 endif
 
-PROJECTS := IshakEngine Core Renderer DTEST Ecs Engine Game IMGUI Launch Platform
+PROJECTS := IshakEngine Core Renderer Ecs Engine Game IMGUI Launch Platform
 
 .PHONY: all clean help $(PROJECTS) 
 
 all: $(PROJECTS)
 
-IshakEngine: Engine Core Renderer DTEST Ecs Launch IMGUI Platform Game
+IshakEngine: Engine Core Renderer Ecs Launch IMGUI Platform Game
 ifneq (,$(IshakEngine_config))
 	@echo "==== Building IshakEngine ($(IshakEngine_config)) ===="
 	@${MAKE} --no-print-directory -C . -f IshakEngine.make config=$(IshakEngine_config)
@@ -57,19 +55,13 @@ ifneq (,$(Renderer_config))
 	@${MAKE} --no-print-directory -C Renderer -f Makefile config=$(Renderer_config)
 endif
 
-DTEST: Core Ecs
-ifneq (,$(DTEST_config))
-	@echo "==== Building DTEST ($(DTEST_config)) ===="
-	@${MAKE} --no-print-directory -C DTEST -f Makefile config=$(DTEST_config)
-endif
-
 Ecs: Core
 ifneq (,$(Ecs_config))
 	@echo "==== Building Ecs ($(Ecs_config)) ===="
 	@${MAKE} --no-print-directory -C Ecs -f Makefile config=$(Ecs_config)
 endif
 
-Engine: Platform Core Renderer DTEST IMGUI Ecs
+Engine: Platform Core Renderer IMGUI Ecs
 ifneq (,$(Engine_config))
 	@echo "==== Building Engine ($(Engine_config)) ===="
 	@${MAKE} --no-print-directory -C Engine -f Makefile config=$(Engine_config)
@@ -103,7 +95,6 @@ clean:
 	@${MAKE} --no-print-directory -C . -f IshakEngine.make clean
 	@${MAKE} --no-print-directory -C Core -f Makefile clean
 	@${MAKE} --no-print-directory -C Renderer -f Makefile clean
-	@${MAKE} --no-print-directory -C DTEST -f Makefile clean
 	@${MAKE} --no-print-directory -C Ecs -f Makefile clean
 	@${MAKE} --no-print-directory -C Engine -f Makefile clean
 	@${MAKE} --no-print-directory -C Game -f Makefile clean
@@ -124,7 +115,6 @@ help:
 	@echo "   IshakEngine"
 	@echo "   Core"
 	@echo "   Renderer"
-	@echo "   DTEST"
 	@echo "   Ecs"
 	@echo "   Engine"
 	@echo "   Game"
