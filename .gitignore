@@ -1,5 +1,8 @@
 
 # gitignore for C++
+# Vim Extensions
+*.swp
+
 # Compiled Object files
 *.slo
 *.lo
