@@ -33,7 +33,7 @@ namespace ishak{
 		}
 	
 
-#else
+#else // WINDOWS
 		for (const HMODULE& module : m_LoadedModules)
 		{
 			if (module)
@@ -91,7 +91,6 @@ namespace ishak{
 		
 	    const std::string linuxModuleName = "lib" + moduleName + ".so";
 		modulesToLoad.Add(linuxModuleName);	
-		std::cout << linuxModuleName << std::endl;
 	}
 
 	const String& binariesDir = FileSystem::Get().GetBinariesDir();

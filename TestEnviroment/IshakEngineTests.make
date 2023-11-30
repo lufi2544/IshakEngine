@@ -40,8 +40,11 @@ endif
 OBJECTS := \
 	$(OBJDIR)/ArrayTests.o \
 	$(OBJDIR)/ECSTests.o \
+	$(OBJDIR)/PairTests.o \
 	$(OBJDIR)/RunTests.o \
 	$(OBJDIR)/StringTests.o \
+	$(OBJDIR)/TListTests.o \
+	$(OBJDIR)/TMapTests.o \
 	$(OBJDIR)/doctest.o \
 
 RESOURCES := \
@@ -107,10 +110,19 @@ $(OBJDIR)/ArrayTests.o: Tests/ArrayTests.cpp
 $(OBJDIR)/ECSTests.o: Tests/ECSTests.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/PairTests.o: Tests/PairTests.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/RunTests.o: Tests/RunTests.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/StringTests.o: Tests/StringTests.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/TListTests.o: Tests/TListTests.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/TMapTests.o: Tests/TMapTests.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/doctest.o: Tests/doctest.cpp

@@ -2,6 +2,7 @@
 #include "CoreMinimal.h"
 
 namespace ishak {
+
 	TEST_CASE("Array Resizes, need reallocation for more elements, new size is OK and Capacity is OK")
 	{
 		ishak::TArray<int> array{ 1, 1, 1 };

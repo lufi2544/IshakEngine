@@ -20,6 +20,57 @@ namespace ishak {
 
 		static size_t constexpr DEFAULT_CAPACITY = 2;
 		static size_t constexpr MIN_SIZE_DELTA_TO_NEWALLOC_WHEN_RESIZED = 5;
+
+	public:
+		struct Iterator
+		{
+			Iterator(DataT* ptr, size_t idxParam = 0)
+				: dataPtr{ ptr  }
+				, idx{ idxParam } 
+			{
+
+			}
+
+			Iterator& operator ++()
+			{
+				//dataPtr++;
+
+				++idx;
+				return *this;
+			}
+
+			Iterator operator ++(int)
+			{
+				Iterator temp = *this;
+				++(*this);
+				return temp;
+			}
+
+
+			DataT& operator * () 
+			{
+				return dataPtr[idx];
+			}
+
+			const DataT& operator* () const
+			{
+				return dataPtr[idx];	
+			}
+
+			bool operator == (Iterator const& other ) const
+			{
+				return idx == other.idx;
+			}
+
+			bool operator != (Iterator const& other) const
+			{
+				return !(*this == other);
+			}
+
+			DataT* dataPtr { nullptr };
+			size_t idx{ 0 };
+		};
+
 	public:
 
 		TArray() 
@@ -74,25 +125,52 @@ namespace ishak {
 		}
 
 		//---- Iterator Functions ----
-		DataT* begin()
+		//
+		//
+		
+
+		Iterator begin()
 		{
-			return m_data;
+			return Iterator(m_data);
 		}
 
-		const DataT* begin() const
+		Iterator begin() const
 		{
-			return m_data;
+			return Iterator(m_data);
+		}
+
+		Iterator end() const
+		{
+			return Iterator(m_data, m_size);		
+		}
+
+		Iterator end()
+		{
+			return Iterator(m_data,  m_size);
+		}
+		/*
+		DataT* begin()
+		{
+			return m_data;	
 		}
 
 		DataT* end()
 		{
-			return std::addressof(m_data[m_size]);
+			return std::addressof( m_data[m_size]);
 		}
 
-		const DataT* end() const
+		DataT* begin() const
+		{
+			return m_data;
+		}
+
+		DataT* end() const
 		{
 			return std::addressof(m_data[m_size]);
 		}
+
+*/
+
 		//----  ----
 
 
