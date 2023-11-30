@@ -79,6 +79,11 @@ namespace ishak{
 			}
 		}
 
+		size_t Size() const
+		{
+			return m_size;
+		}
+
 		bool IsValid() const
 		{
 			return m_head != nullptr;
