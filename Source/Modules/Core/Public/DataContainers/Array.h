@@ -31,14 +31,15 @@ namespace ishak {
 
 			}
 
+
+			/** This is the definition for the ++iterattor. */
 			Iterator& operator ++()
 			{
-				//dataPtr++;
-
 				++idx;
 				return *this;
 			}
 
+			/** This is a definition for the iterator++.*/
 			Iterator operator ++(int)
 			{
 				Iterator temp = *this;

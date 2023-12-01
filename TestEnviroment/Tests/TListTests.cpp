@@ -42,7 +42,7 @@ namespace ishak{ namespace Tests{
 		}
 
 		CHECK(list.Size() == elemetsToAdd.Size());
-	}
+	}	
 
 
 	TEST_CASE("Remove Element, Size, Not contained, OK")
@@ -53,6 +53,22 @@ namespace ishak{ namespace Tests{
 	TEST_CASE("Getting an element, modifying it, then accessing it. OK")
 	{
 
+	}
+
+	TEST_CASE("Copying a list, OK")
+	{
+		TList<int> list1;
+
+		list1.Add(1);
+		list1.Add(2);
+		list1.Add(3);
+		list1.Add(4);
+		list1.Add(5);
+		list1.Add(6);
+
+		TList<int> list2 = { list1 };
+
+		CHECK(list2 == list1);	
 	}
 
 }}// ishak::Tests
