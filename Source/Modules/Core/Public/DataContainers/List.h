@@ -1,5 +1,6 @@
 #pragma once
 #include "CoreMinimal.h"
+#include "CoreConfig.h"
 
 namespace ishak{
 
@@ -17,7 +18,7 @@ namespace ishak{
 	 * */
 
 	template<typename T>
-	class TList
+	class CORE_API TList
 	{
 		struct Node
 		{
@@ -38,7 +39,7 @@ namespace ishak{
 		};
 
 	public:
-		struct Iterator
+		struct CORE_API Iterator
 		{
 			Iterator(Node* node)
 				: current{ node }
@@ -99,14 +100,7 @@ namespace ishak{
 
 		~TList()
 		{
-			Node* currentNode = m_head;
-			while(currentNode != nullptr)
-			{	
-				Node* nodeToDelete = currentNode;
-				currentNode = currentNode->next;
-
-				delete nodeToDelete;
-			}
+			Clear();	
 		}
 
 
@@ -279,6 +273,44 @@ namespace ishak{
 				--m_size;
 			}
 
+		}
+
+		size_t Find(T const& toFind)
+		{
+			size_t idx = 0;
+			for(T& it : *this)
+			{
+				if(it  == toFind)
+				{
+					return idx;
+				}
+
+				++idx;
+			}
+
+			return -1;
+		}
+
+		void Clear()
+		{
+			if(m_size == 0)
+			{
+				return;
+			}
+
+			Node* currentNode = m_head;
+			while(currentNode != nullptr)
+			{
+				
+				Node* nodeToDelete = currentNode;
+				currentNode = currentNode->next;				
+
+				delete nodeToDelete;
+				
+			}
+
+			m_head = nullptr;
+			m_size = 0;
 		}
 
 	private:			

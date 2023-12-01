@@ -5,6 +5,22 @@
 
 namespace ishak{ namespace Tests{
 
+
+	/** Returns the first element of th elist that is equal to the passed value. */
+	template<typename T>
+	bool ListContains(TList<T> const& list, T const& val)
+	{
+		for(T& element : list)
+		{
+			if(element == val)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	TEST_CASE("Add an element, OK")
 	{
 		TList<int> list;
@@ -47,11 +63,75 @@ namespace ishak{ namespace Tests{
 
 	TEST_CASE("Remove Element, Size, Not contained, OK")
 	{
+		TList<int> list;
+		list.Add(1);
+		list.Add(2);
+		list.Add(3);
+		list.Add(4);
+		list.Add(5);
 
+		int idxToRemove{ 3 };
+		list.Remove(idxToRemove);
+	
+		bool bContains{ false };
+		for(auto& element : list)
+		{
+			if(element == 4)
+			{
+				bContains = true;
+				break;
+			}	
+		}
+
+		CHECK(bContains == false);
+
+	}
+
+	TEST_CASE("2 lists empty are equal, OK")
+	{
+		TList<int> list;
+		TList<int> list1;
+
+		CHECK(list == list1);
+	}
+
+	TEST_CASE("Getting element idx, then removing it. OK")
+	{
+		TList<int> list;
+		list.Add(0);
+		list.Add(1);
+		list.Add(2);
+		list.Add(3);
+		size_t foundIdx{ list.Find(3) };
+		list.Remove(foundIdx);
+
+		bool const bContains = ListContains(list, 3);
+		CHECK(bContains == false); 
 	}
 
 	TEST_CASE("Getting an element, modifying it, then accessing it. OK")
 	{
+
+		TList<int> list;
+		list.Add(0);
+		list.Add(1);
+		list.Add(2);
+		list.Add(3);
+		list.Add(4);
+		list.Add(5);
+
+		for(int& element : list)
+		{
+			if(element == 0)
+			{
+				element = 100;
+			}
+		}
+
+		bool const bContainsNumber = { ListContains(list, 100) };
+		bool const bNotContainingOldNumber = { !ListContains(list, 0) };
+		CHECK(bContainsNumber == true);
+		CHECK(bNotContainingOldNumber == true);
 
 	}
 
