@@ -40,6 +40,7 @@ endif
 OBJECTS := \
 	$(OBJDIR)/ArrayTests.o \
 	$(OBJDIR)/ECSTests.o \
+	$(OBJDIR)/HashMapTests.o \
 	$(OBJDIR)/PairTests.o \
 	$(OBJDIR)/RunTests.o \
 	$(OBJDIR)/StringTests.o \
@@ -108,6 +109,9 @@ $(OBJDIR)/ArrayTests.o: Tests/ArrayTests.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ECSTests.o: Tests/ECSTests.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/HashMapTests.o: Tests/HashMapTests.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/PairTests.o: Tests/PairTests.cpp

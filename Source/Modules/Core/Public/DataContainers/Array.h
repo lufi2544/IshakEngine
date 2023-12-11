@@ -149,29 +149,6 @@ namespace ishak {
 		{
 			return Iterator(m_data,  m_size);
 		}
-		/*
-		DataT* begin()
-		{
-			return m_data;	
-		}
-
-		DataT* end()
-		{
-			return std::addressof( m_data[m_size]);
-		}
-
-		DataT* begin() const
-		{
-			return m_data;
-		}
-
-		DataT* end() const
-		{
-			return std::addressof(m_data[m_size]);
-		}
-
-*/
-
 		//----  ----
 
 
