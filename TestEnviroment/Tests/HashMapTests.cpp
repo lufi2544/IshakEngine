@@ -7,6 +7,29 @@ namespace ishak{namespace Tests{
 
 	typedef THashMap<String, int> THMap;
 
+	template<class K, class V>
+	void PrintHashMapStats(THashMap<K, V> const& map )
+	{
+		std::cout << "Num of buckets: "<< map.GetBucketsNum() << " Size: " << map.Size() << std::endl;
+	}
+
+
+	template<class K, class V>
+	void PrintBuckets(THashMap<K, V> map)
+	{
+		size_t idx = 0;
+		for(TList<TPair<K, V>> const& bucketElement : map.GetBuckets())
+		{
+			std::cout << "Bucket: " << idx << " Size: " << bucketElement.Size() << std::endl; 
+			for(TPair<K, V> const& bucketPair : bucketElement)
+			{
+				std::cout << bucketPair.key << std::endl; 	 		
+			}
+
+			++idx;
+		}
+	}
+
 	TEST_CASE("Created Map, OK")
 	{
 		THMap hmap;
@@ -62,22 +85,31 @@ namespace ishak{namespace Tests{
 
 		int newValue = { 220 };
 		hmap.Add(MakePair<String, int>("Hello", newValue));
+		hmap.Add(MakePair<String, int>("Hello", newValue));
+		hmap.Add(MakePair<String, int>("Hello", newValue));
+		hmap.Add(MakePair<String, int>("Hello", newValue));
+		hmap.Add(MakePair<String, int>("Hello", newValue));
+		hmap.Add(MakePair<String, int>("Hello", newValue));
+		hmap.Add(MakePair<String, int>("Hello", newValue));
+		hmap.Add(MakePair<String, int>("Hello", newValue));
+		hmap.Add(MakePair<String, int>("Hello", newValue));
 
 		auto& gotValue{ hmap[key] };
 		CHECK(gotValue == newValue);
-	}
-
-
-	TEST_CASE("Added pair, the growth ratio is greater than expected, we rehash and add after OK, Size, OK, Buckets. OK")
-	{
-
+		CHECK(hmap.Size() == 1);
 	}
 
 
 	TEST_CASE("Delete a key, then the size, Ok and not contained, OK ")
 	{
+		THMap map;
+		map.Add(MakePair<String, int>("Hello", 2));
+		map.Remove("Hello");
 
+		CHECK(map.Contains("Hello") == false);
 	}
+
+
 
 	TEST_CASE("Added the Doubly linked list, OK!")
 	{

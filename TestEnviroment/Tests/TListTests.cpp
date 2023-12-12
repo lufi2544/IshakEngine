@@ -21,6 +21,24 @@ namespace ishak{ namespace Tests{
 		return false;
 	}
 
+	TEST_CASE("Added 2 elements, first one deleted(head), the second one should be the head now")
+	{
+		TList<int> list;
+
+		list.Add(0);
+		list.Add(1);
+
+		list.Remove(0);
+
+
+		for(int& element : list)
+		{
+			CHECK(element == 1);
+		}
+		
+	}
+
+
 	TEST_CASE("Add an element, OK")
 	{
 		TList<int> list;

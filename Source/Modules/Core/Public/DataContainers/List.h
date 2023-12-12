@@ -252,6 +252,7 @@ namespace ishak{
 				if(indexToRemove == 0 && idx == 0)
 				{
 					nodeToRemove = currentNode;
+					m_head = currentNode->next;
 					break;
 				}
 
