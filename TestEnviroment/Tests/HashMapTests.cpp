@@ -30,6 +30,27 @@ namespace ishak{namespace Tests{
 		}
 	}
 
+	TEST_CASE("Iterated through Map, changed value, OK")
+	{
+		THMap map;
+		const String key = { "Hello" };
+		int oldValue = { 1 };
+		int newValue = { 11 };
+		map.Add(MakePair<String, int>(key, oldValue));
+
+		for(TPair<String, int>& mapPair : map)
+		{
+			if(mapPair.key == "Hello")
+			{
+				mapPair.value = newValue;
+			}
+		}
+
+		int& gotValue = { map[key] };
+
+		CHECK(gotValue == newValue);
+	}
+
 	TEST_CASE("Created Map, OK")
 	{
 		THMap hmap;

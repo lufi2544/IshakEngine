@@ -30,6 +30,99 @@ namespace ishak
 		static constexpr size_t REHASHING_COEFFICIENT = 2;
 
 
+		class Iterator
+		{
+			public:
+				Iterator(BucketCollectionT* ptr, size_t idx)
+					: bucketCollection{ ptr }
+					, currentBucketCollectionIdx{ idx }
+				{
+
+					// Find the first available bucket to iterate through
+					
+					if(ptr == nullptr)
+					{
+						return;
+					}
+
+					size_t availableIdx = 0;
+					for(BucketT& bucket : *bucketCollection)
+					{
+						if(bucket.Size() > 0)
+						{
+							currentBucketCollectionIdx = availableIdx;
+							break;
+						}		
+
+						++availableIdx;
+					}
+				}
+
+				Iterator& operator++()
+				{
+
+					bool bFoundAvailabeBucket{ false };
+					++currentBucketElementIdx;
+
+					while(!bFoundAvailabeBucket && ( currentBucketCollectionIdx < bucketCollection->Size() ))
+					{
+
+						if((*(bucketCollection)).CheckSizeAt(currentBucketCollectionIdx))
+						{
+							BucketT& bucket = { (*(bucketCollection))[currentBucketCollectionIdx] };						
+							if(bucket.CheckSizeAt(currentBucketElementIdx))
+							{
+								bFoundAvailabeBucket = true;
+
+							}else
+							{
+								// If we can not iterate more in this bucket, this means
+								// the bucket has ended and we change to the next one.
+								currentBucketCollectionIdx++;																																		
+								currentBucketElementIdx = 0;
+							}
+					  	}
+					}
+
+					return *this;
+				}
+
+				TPair<K, V>& operator*()
+				{
+
+					BucketT& bucket = { (*bucketCollection)[currentBucketCollectionIdx] };				
+					
+					size_t idx = 0;
+					for(TPair<K, V>& pair : bucket)
+					{
+						if(idx == currentBucketElementIdx)
+						{
+							return pair;
+						}
+
+						idx++;
+					}
+				}
+
+				bool operator == (Iterator const& other)
+				{
+					return currentBucketCollectionIdx == other.currentBucketCollectionIdx;
+				}
+
+				bool operator != (Iterator const& other)
+				{
+					return currentBucketCollectionIdx != other.currentBucketCollectionIdx;
+				}
+
+			private:
+				/** Array of Lists. */
+				BucketCollectionT* bucketCollection{ nullptr };
+
+				/** List Idx. */
+				size_t currentBucketCollectionIdx{ 0 };
+				size_t currentBucketElementIdx{ 0 };				
+		};
+
 		THashMap()			
 		{
 			m_bucketsCollection.AddDefaulted(INITIAL_BUCKETS);	
@@ -142,6 +235,16 @@ namespace ishak
 
 
 			assert(false);
+		}
+
+		Iterator begin()
+		{
+			return Iterator(&m_bucketsCollection, 0);
+		}
+
+		Iterator end()
+		{
+			return Iterator(nullptr, m_bucketsCollection.Size());
 		}
 
 	private:
