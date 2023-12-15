@@ -105,7 +105,7 @@ namespace ishak{
 
 		bool CheckSizeAt(size_t idx)
 		{
-			return m_size < idx;
+			return m_size > idx;
 		}
 
 		size_t Size() const

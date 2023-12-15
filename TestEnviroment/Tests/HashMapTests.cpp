@@ -29,6 +29,19 @@ namespace ishak{namespace Tests{
 			++idx;
 		}
 	}
+	TEST_CASE("Iterated through emtpty HashMap, OK")
+	{
+		THMap map;
+		int iteratedTimes = 0;
+
+		for(auto pair : map)
+		{
+			++iteratedTimes;
+		}
+
+		CHECK(iteratedTimes == 0);
+	}
+
 
 	TEST_CASE("Iterated through Map, changed value, OK")
 	{
@@ -37,18 +50,33 @@ namespace ishak{namespace Tests{
 		int oldValue = { 1 };
 		int newValue = { 11 };
 		map.Add(MakePair<String, int>(key, oldValue));
+		map.Add(MakePair<String, int>("ouuu", 22));
+		map.Add(MakePair<String, int>("ouuuu", 22));
+		map.Add(MakePair<String, int>("ouuuuu", 22));
+		map.Add(MakePair<String, int>("ouuuuuu", 22));
+		map.Add(MakePair<String, int>("ouuuuuuu", 22));
+
+		size_t timesIterated{ 0 };
 
 		for(TPair<String, int>& mapPair : map)
 		{
+			timesIterated++;
 			if(mapPair.key == "Hello")
 			{
 				mapPair.value = newValue;
+
+			}else if(mapPair.key == "ouuuuu")
+			{
+				mapPair.value = 20000;
 			}
+			
 		}
 
 		int& gotValue = { map[key] };
 
 		CHECK(gotValue == newValue);
+		CHECK(map["ouuuuu"] == 20000);
+		CHECK(timesIterated == 6);
 	}
 
 	TEST_CASE("Created Map, OK")

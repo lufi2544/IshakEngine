@@ -33,7 +33,7 @@ namespace ishak
 		class Iterator
 		{
 			public:
-				Iterator(BucketCollectionT* ptr, size_t idx)
+				Iterator(BucketCollectionT* ptr, size_t idx = 0)
 					: bucketCollection{ ptr }
 					, currentBucketCollectionIdx{ idx }
 				{
@@ -62,27 +62,25 @@ namespace ishak
 				{
 
 					bool bFoundAvailabeBucket{ false };
-					++currentBucketElementIdx;
+					currentBucketElementIdx++;
 
 					while(!bFoundAvailabeBucket && ( currentBucketCollectionIdx < bucketCollection->Size() ))
 					{
-
-						if((*(bucketCollection)).CheckSizeAt(currentBucketCollectionIdx))
+						
+						BucketT& bucket = { (*bucketCollection)[currentBucketCollectionIdx] };						
+						if(bucket.CheckSizeAt(currentBucketElementIdx))
 						{
-							BucketT& bucket = { (*(bucketCollection))[currentBucketCollectionIdx] };						
-							if(bucket.CheckSizeAt(currentBucketElementIdx))
-							{
-								bFoundAvailabeBucket = true;
+							bFoundAvailabeBucket = true;
 
-							}else
-							{
-								// If we can not iterate more in this bucket, this means
-								// the bucket has ended and we change to the next one.
-								currentBucketCollectionIdx++;																																		
-								currentBucketElementIdx = 0;
-							}
-					  	}
+						}else
+						{
+							// If we can not iterate more in this bucket, this means
+							// the bucket has ended and we change to the next one.
+							currentBucketCollectionIdx++;																																	
+							currentBucketElementIdx = 0;
+						}
 					}
+				
 
 					return *this;
 				}
@@ -102,14 +100,17 @@ namespace ishak
 
 						idx++;
 					}
+
+					static TPair<K, V> defaultPair;
+					return defaultPair;
 				}
 
-				bool operator == (Iterator const& other)
+				bool operator == (Iterator const& other) const
 				{
 					return currentBucketCollectionIdx == other.currentBucketCollectionIdx;
 				}
 
-				bool operator != (Iterator const& other)
+				bool operator != (Iterator const& other) const
 				{
 					return currentBucketCollectionIdx != other.currentBucketCollectionIdx;
 				}
@@ -239,11 +240,23 @@ namespace ishak
 
 		Iterator begin()
 		{
-			return Iterator(&m_bucketsCollection, 0);
+			if(m_size == 0)
+			{
+				return Iterator(nullptr);
+			}
+
+			// This iterator is the one pointing to the start of the Buckets.
+			return Iterator(&m_bucketsCollection);
 		}
 
 		Iterator end()
 		{
+			if(m_size == 0)
+			{
+				return Iterator(nullptr);
+			}
+
+			//Basically the Iterator will iterate all the way until reaching to the last bucket.
 			return Iterator(nullptr, m_bucketsCollection.Size());
 		}
 
