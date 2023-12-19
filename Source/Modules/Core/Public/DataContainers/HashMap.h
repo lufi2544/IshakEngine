@@ -129,6 +129,30 @@ namespace ishak
 			m_bucketsCollection.AddDefaulted(INITIAL_BUCKETS);	
 		}
 
+		THashMap(THashMap<K, V> const& other)
+		{
+			m_bucketsCollection = other.m_bucketsCollection;
+			m_size = other.m_size;
+		}
+
+		THashMap(THashMap<K, V>&& other)
+		{
+			// TODO ISHMOVE
+			m_bucketsCollection = std::move(other.m_bucketsCollection);
+			m_size = other.m_size;
+
+			other.m_size = 0;
+		}
+
+		THashMap<K, V>& operator = (THashMap<K, V> const& other )
+		{
+			m_bucketsCollection = other.m_bucketsCollection;
+			m_size = other.m_size;
+
+			return *this;
+		}
+
+
 		size_t Size() const
 		{	
 			return m_size;
@@ -204,6 +228,12 @@ namespace ishak
 		{
 			ishak::Hash<K> hasher;
 			const size_t hashVal{ hasher(key) };
+
+			// Maybe using this moving constructor in a recently moved HashMap;
+			if(m_bucketsCollection.IsEmpty())
+			{
+				AllocateDefaultBuckets();
+			}
 			const size_t moduledHash { hashVal % m_bucketsCollection.Size() };
 			m_bucketsCollection.CheckAssertSizeAt(moduledHash);
 				
@@ -224,6 +254,7 @@ namespace ishak
 				// TODO Add doubly linked list
 
 			bucket.Add(MakePair<K, V>(key, V{}));
+			m_size++;
 
 				// By having a doubly linked list we would avoid iterating all the ptrs by iterating from the tail
 			for(TPair<K, V>& bucketPair : bucket)
@@ -261,6 +292,10 @@ namespace ishak
 		}
 
 	private:
+		void AllocateDefaultBuckets()
+		{
+			m_bucketsCollection.AddDefaulted(INITIAL_BUCKETS);
+		}
 		bool IsElementAlreadyInBucket(BucketT const& bucket, K const& keyToCheck) const
 		{
 			for(BucketElementT const& bucketPair : bucket)

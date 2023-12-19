@@ -97,10 +97,84 @@ namespace ishak{
 		
 		}
 
+		TList(TList&& other)
+		{
+			m_head = other.m_head;
+			m_size = other.m_size;
+
+			other.Invalidate();
+		}
+
 
 		~TList()
 		{
 			Clear();	
+		}
+
+
+		TList& operator = (TList&& other)
+		{
+			m_head = other.m_head;
+			m_size = other.m_size;
+
+			other.Invalidate();
+		}
+
+		TList& operator = (TList const& other)
+		{
+
+			// if copied, we have to reallocate all the memory again
+			if(other.m_head)
+			{
+				m_head = new Node(other.m_head->data);
+
+			}else
+			{
+				return *this;
+			}
+
+			m_size = other.m_size;
+
+			Node* otherCurrentNode = { other.m_head->next };
+			Node* itNode = { m_head };
+
+			while(otherCurrentNode != nullptr)
+			{
+				Node* addedNode = new Node(otherCurrentNode->data);
+				itNode->next = addedNode;
+				itNode = addedNode; 
+				
+				 otherCurrentNode = otherCurrentNode->next;	
+			}
+
+			return *this;		
+		}
+
+
+		friend bool operator == (TList const& lhs, TList const& rhs)
+		{	
+
+			if(rhs.m_size != lhs.m_size)
+			{
+				return false;
+			}
+
+			Node* lhsCurrent = lhs.m_head;
+			Node* rhsCurrent = rhs.m_head;
+
+			while(lhsCurrent != nullptr)
+			{
+
+				if(lhsCurrent->data != rhsCurrent->data)
+				{
+					return false;
+				}
+					
+				rhsCurrent = rhsCurrent->next;	
+				lhsCurrent = lhsCurrent->next;
+			}
+
+			return true;				
 		}
 
 		bool CheckSizeAt(size_t idx)
@@ -251,73 +325,13 @@ namespace ishak{
 			m_size = 0;
 		}
 
-		TList& operator = (TList&& other)
+	
+	private:
+		void Invalidate()
 		{
-			m_head = other.m_head;
-			m_size = other.m_size;
-
-			other.m_head = nullptr;
-			other.m_size = 0;
-
+			m_size = 0;
+			m_head = nullptr;
 		}
-
-		TList& operator = (TList const& other)
-		{
-
-			// if copied, we have to reallocate all the memory again
-			if(other.m_head)
-			{
-				m_head = new Node(other.m_head->data);
-
-			}else
-			{
-				return *this;
-			}
-
-			m_size = other.m_size;
-
-			Node* otherCurrentNode = { other.m_head->next };
-			Node* itNode = { m_head };
-
-			while(otherCurrentNode != nullptr)
-			{
-				Node* addedNode = new Node(otherCurrentNode->data);
-				itNode->next = addedNode;
-				itNode = addedNode; 
-				
-				 otherCurrentNode = otherCurrentNode->next;	
-			}
-
-			return *this;		
-		}
-
-
-		friend bool operator == (TList const& lhs, TList const& rhs)
-		{	
-
-			if(rhs.m_size != lhs.m_size)
-			{
-				return false;
-			}
-
-			Node* lhsCurrent = lhs.m_head;
-			Node* rhsCurrent = rhs.m_head;
-
-			while(lhsCurrent != nullptr)
-			{
-
-				if(lhsCurrent->data != rhsCurrent->data)
-				{
-					return false;
-				}
-					
-				rhsCurrent = rhsCurrent->next;	
-				lhsCurrent = lhsCurrent->next;
-			}
-
-			return true;				
-		}
-
 
 
 	private:			

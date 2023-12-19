@@ -29,6 +29,63 @@ namespace ishak{namespace Tests{
 			++idx;
 		}
 	}
+	
+
+	TEST_CASE("Copy constructor, OK")
+	{
+		THMap map;
+		map["Hello"] = 4;
+
+		map["Helloo"] = 5;
+		map["Hellooo"] = 6;
+
+		THMap newMap{ std::move(map) };
+
+		CHECK(newMap["Hello"] == 4);
+		CHECK(newMap["Helloo"] == 5);
+		CHECK(newMap["Hellooo"] == 6);
+
+		CHECK(map["Hello"] == 0);
+		CHECK(map["Helloo"] == 0);
+	}
+
+	TEST_CASE("Move Constructor, OK")
+	{
+
+		THMap map;
+		map["Hello"] = 4;
+		map["Helloo"] = 5;
+		map["Hellooo"] = 6;
+
+		THMap newMap{ std::move(map) };
+
+		CHECK(newMap["Hello"] == 4);
+		CHECK(newMap["Helloo"] == 5);
+		CHECK(newMap["Hellooo"] == 6);
+
+		CHECK(map.Contains("Hello") == false);
+		CHECK(map.Contains("Helloo") == false);
+		CHECK(map.Size() == 0);
+	}
+
+	TEST_CASE("Operator =, OK")
+	{
+		THMap map;
+		map["Hello"] = 4;
+		map["Helloo"] = 5;
+		map["Hellooo"] = 6;
+
+		THMap newMap;
+		newMap = map;
+
+		CHECK(newMap["Hello"] == 4);
+		CHECK(newMap["Helloo"] == 5);
+		CHECK(newMap["Hellooo"] == 6);
+
+		CHECK(map["Hello"] == 4);
+		CHECK(map["Helloo"] == 5);
+		CHECK(map["Hellooo"] == 6);
+	}
 	TEST_CASE("Iterated through emtpty HashMap, OK")
 	{
 		THMap map;
@@ -119,6 +176,7 @@ namespace ishak{namespace Tests{
 
 		const String value { hmap[keyToAdd] };
 		CHECK(value == "");
+		CHECK(hmap.Size() == 1);
 
 	}
 

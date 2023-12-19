@@ -3,6 +3,38 @@
 
 namespace ishak {
 
+	TEST_CASE("Move Operator, OK")
+	{
+		ishak::TArray<int> array{ 1, 2 };
+		size_t previus = array.Size();
+
+		ishak::TArray<int> other;
+		other = std::move(array);
+
+		CHECK(array.Size() == 0);
+		CHECK(array.Contains(1) == 0);
+		CHECK(array.Contains(2) == 0);
+
+		CHECK(other.Size() == previus);
+		CHECK(other.Contains(1) == true);
+		CHECK(other.Contains(2) == true);
+	}
+
+	TEST_CASE("Move Constructor, OK")
+	{
+		ishak::TArray<int> array{ 1, 2 };
+		size_t previus = array.Size();
+
+		ishak::TArray<int> other{ std::move(array) };
+
+		CHECK(array.Size() == 0);
+		CHECK(array.Contains(1) == 0);
+		CHECK(array.Contains(2) == 0);
+
+		CHECK(other.Size() == previus);
+		CHECK(other.Contains(1) == true);
+	}
+
 	TEST_CASE("Array Resizes, need reallocation for more elements, new size is OK and Capacity is OK")
 	{
 		ishak::TArray<int> array{ 1, 1, 1 };

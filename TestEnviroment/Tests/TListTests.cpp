@@ -21,6 +21,34 @@ namespace ishak{ namespace Tests{
 		return false;
 	}
 
+	TEST_CASE("Move Constructor, OK")
+	{
+		TList<int> list;
+		list.Add(0);
+		list.Add(1);
+		list.Add(2);
+
+		TList<int> other{ std::move(list) };
+
+		CHECK(list.Find(0) == -1);
+		CHECK(other.Find(0) != -1);
+	}
+
+	TEST_CASE("Move operator, OK")
+	{
+		TList<int> list;
+		list.Add(0);
+		list.Add(1);
+		list.Add(2);
+
+
+		TList<int> list2{ std::move(list) };
+
+		CHECK(list.Find(0) == -1);
+		CHECK(list2.Find(0) != -1);
+
+	}
+
 	TEST_CASE("Added 2 elements, first one deleted(head), the second one should be the head now")
 	{
 		TList<int> list;

@@ -114,22 +114,13 @@ namespace ishak {
 		{
 			m_capacity = other.m_capacity;
 			m_size = other.m_size;
-			AllocateCapacity();
-
-			for (int32 idx = 0; idx < m_size; ++idx)
-			{
-				m_data[idx] = std::move(other.m_data[idx]);
-			}
+			m_data = other.m_data;
 
 			// Invalidates the other container once we have moved all the data.
 			other.Invalidate();
 		}
 
 		//---- Iterator Functions ----
-		//
-		//
-		
-
 		Iterator begin()
 		{
 			return Iterator(m_data);
@@ -184,6 +175,22 @@ namespace ishak {
 			{
 				m_data[idx] = other.m_data[idx];
 			}
+
+			return *this;
+		}
+
+		TArray<DataT>& operator = (TArray<DataT>&& other)
+		{
+			if (m_data)
+			{
+				delete[] m_data;
+			}
+
+			m_capacity = other.m_capacity;
+			m_size = other.m_size;
+			m_data = other.m_data;
+
+			other.Invalidate();
 
 			return *this;
 		}
