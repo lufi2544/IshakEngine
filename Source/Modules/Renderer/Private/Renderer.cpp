@@ -7,7 +7,9 @@
 #include "imgui_impl_sdlrenderer2.h"
 
 #include "Log/Logger.h"
-
+#include "Debug/DebugWindow.h"
+#include "Memory/MemoryManager.h"
+#include <string>
 
 namespace ishak {
 
@@ -94,9 +96,10 @@ namespace ishak {
 		ImGui_ImplSDLRenderer2_NewFrame();
 		ImGui_ImplSDL2_NewFrame();
 		ImGui::NewFrame();		
-		//ImGui::ShowDemoWindow();
+    	//	ImGui::ShowDemoWindow();
 	  //=========================================================================
-	  
+
+	 dWindow.Render(); 
 	}
 
 	void Renderer::Render()
@@ -117,18 +120,19 @@ namespace ishak {
 
 		GLog->Draw();
 
+	   //=========================================================================
+	   // IMGUI
+	   //=========================================================================
+		ImGui::Render();
+		ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
+	   //=========================================================================
+
 		PostRender();
 		
 	}
 
 	void Renderer::PostRender()
 	{
-	 //=========================================================================
-	 // IMGUI
-	 //=========================================================================
-		ImGui::Render();
-		ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
-	 //=========================================================================
 	}
 
 	void Renderer::PostSetRenderingTarget(Window* window)

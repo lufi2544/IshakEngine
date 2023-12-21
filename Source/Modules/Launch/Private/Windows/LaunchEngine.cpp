@@ -14,6 +14,8 @@
 #endif // LINUX
 {			
 
+	int* ptr = new int(4);
+	delete ptr;
 	ishak::EngineLoop engineLoop;
 	engineLoop.Init();
 	return engineLoop.TickEngine();	

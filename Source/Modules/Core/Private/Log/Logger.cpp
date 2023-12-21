@@ -11,17 +11,6 @@ namespace ishak {
 		String finalLog;
 
 		// TODO Add struct for logs with color and stuff.
-		if(verb == ELoggerVerbosity::Warning)
-		{
-
-		}else if(verb == ELoggerVerbosity::Error)
-		{
-
-		}
-		else 
-		{
-
-		}
 		if(m_allLogs.Size() > 5000)
 		{
 			return;
@@ -39,13 +28,12 @@ namespace ishak {
 		}
 
 		// Main window
-		/*
-		if (ImGui::Button("Options"))
-			ImGui::OpenPopup("Options");
-		ImGui::SameLine();
+		
 		bool clear = ImGui::Button("Clear");
-		ImGui::SameLine();
-		bool copy = ImGui::Button("Copy");*/
+		if(clear)
+		{
+			m_allLogs.Clear();
+		}
 		/*
 			ImGui::SameLine();
 			Filter.Draw("Filter", -100.0f);

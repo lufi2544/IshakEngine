@@ -72,7 +72,7 @@ namespace ishak
 								const uint32 numberToAdd{ number * (uint32)(std::pow(10, ((mapFileTileId.Size()) - (idx + 1)))) };
 								toAddNumbers.Add(numberToAdd);
 							}
-						}
+				}
 
 						uint32 finalNumber{ 0 };
 						for (uint32 number : toAddNumbers)
@@ -138,7 +138,6 @@ namespace ishak
 			}
 		}
 
-
 		// Create the map tiles
 		TArray<uint32> miscellaneous{ *creationMap.GetTileMiscellaneous() };
 		const Vector2& mapDimensions{ creationMap.GetDimensions() };
@@ -172,5 +171,6 @@ namespace ishak
 				m_renderingTiles.Add(std::move(renderingTile));
 			}			
 		}
+
 	}	
 }//ishak

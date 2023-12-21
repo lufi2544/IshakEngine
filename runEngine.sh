@@ -1,7 +1,6 @@
 #Runs the Engine
 
-
-. build.sh
+. compileEngine.sh
 cd Binaries/Engine/Debug
 
 ./IshakEngine

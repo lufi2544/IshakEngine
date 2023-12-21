@@ -20,7 +20,7 @@ namespace ishak{
 	template<typename T>
 	class CORE_API TList
 	{
-		struct Node
+		struct CORE_API Node
 		{
 			Node(T&& dataParam)
 				: data(std::move(dataParam))
@@ -50,7 +50,6 @@ namespace ishak{
 			Iterator& operator ++()
 			{
 				current = current->next;
-
 				return *this;
 			}
 
@@ -68,7 +67,6 @@ namespace ishak{
 		};
 
 		TList() = default;
-
 		TList (TList const& other)
 		{
 			// if copied, we have to reallocate all the memory again
@@ -105,12 +103,10 @@ namespace ishak{
 			other.Invalidate();
 		}
 
-
 		~TList()
 		{
 			Clear();	
 		}
-
 
 		TList& operator = (TList&& other)
 		{

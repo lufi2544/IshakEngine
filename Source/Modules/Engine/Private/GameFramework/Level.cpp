@@ -44,5 +44,6 @@ namespace ishak
 			levelTexture,
 			Vector2{ 32, 32 }, 
 			creationMap);
+			
 	}
 }//ishak

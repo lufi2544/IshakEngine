@@ -7,6 +7,8 @@
 
 #include "EntityId.h"
 
+#include "Debug/DebugWindow.h"
+
 namespace ishak {
 
 	class Window;
@@ -44,12 +46,15 @@ namespace ishak {
 	private:
 		Renderer() = default;	
 
+		
+
 		void PreRender();
 		void SubmitRendererCommand(const RendererCommand& command);
 		void PostSetRenderingTarget(Window* window);
 		void ClearFrameRendererCommands();
 		void PostRender();
 
+		DebugWindow dWindow;
 			
 	private:
 		static Renderer* singleton;

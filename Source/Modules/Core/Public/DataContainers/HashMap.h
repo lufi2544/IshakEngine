@@ -30,7 +30,7 @@ namespace ishak
 		static constexpr size_t REHASHING_COEFFICIENT = 2;
 
 
-		class Iterator
+		class CORE_API Iterator
 		{
 			public:
 				Iterator(BucketCollectionT* ptr, size_t idx = 0)
@@ -124,6 +124,7 @@ namespace ishak
 				size_t currentBucketElementIdx{ 0 };				
 		};
 
+
 		THashMap()			
 		{
 			m_bucketsCollection.AddDefaulted(INITIAL_BUCKETS);	
@@ -141,7 +142,7 @@ namespace ishak
 			m_bucketsCollection = std::move(other.m_bucketsCollection);
 			m_size = other.m_size;
 
-			other.m_size = 0;
+			other.Invalidate();
 		}
 
 		THashMap<K, V>& operator = (THashMap<K, V> const& other )
@@ -292,6 +293,12 @@ namespace ishak
 		}
 
 	private:
+
+		void Invalidate()
+		{
+			m_size = 0;			
+		}
+
 		void AllocateDefaultBuckets()
 		{
 			m_bucketsCollection.AddDefaulted(INITIAL_BUCKETS);

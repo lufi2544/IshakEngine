@@ -22,7 +22,7 @@ namespace ishak {
 		static size_t constexpr MIN_SIZE_DELTA_TO_NEWALLOC_WHEN_RESIZED = 5;
 
 	public:
-		struct Iterator
+		struct CORE_API Iterator
 		{
 			Iterator(DataT* ptr, size_t idxParam = 0)
 				: dataPtr{ ptr  }
