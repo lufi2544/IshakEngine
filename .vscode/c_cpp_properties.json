@@ -1,0 +1,20 @@
+{
+    "configurations": [
+      {
+        "name": "LinuxDebug",
+        "includePath": [
+          "${workspaceFolder}/**"
+        ],
+        "defines": [
+          "LINUX",
+          "DEBUG_ENGINE"
+        ],
+        "compilerPath": "/usr/bin/gcc",
+        "cStandard": "c11",
+        "cppStandard": "c++17",
+        "intelliSenseMode": "linux-gcc-x64"
+      }
+    ],
+    "version": 4
+  }
+  

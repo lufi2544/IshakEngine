@@ -38,6 +38,7 @@ all: prebuild prelink $(TARGET)
 endif
 
 OBJECTS := \
+	$(OBJDIR)/AllocatorTests.o \
 	$(OBJDIR)/ArrayTests.o \
 	$(OBJDIR)/ECSTests.o \
 	$(OBJDIR)/HashMapTests.o \
@@ -105,6 +106,9 @@ else
 $(OBJECTS): | $(OBJDIR)
 endif
 
+$(OBJDIR)/AllocatorTests.o: Tests/AllocatorTests.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ArrayTests.o: Tests/ArrayTests.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
