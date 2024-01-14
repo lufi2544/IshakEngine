@@ -5,4 +5,9 @@ project "SDL"
 
 files { "Public/*.h" }
 
-
+filter "system:windows"
+	files 
+	{
+		"../../../../Binaries/SDL2.dll",
+		"../../../../Binaries/SDL2.lib"
+	}

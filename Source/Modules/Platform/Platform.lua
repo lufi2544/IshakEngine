@@ -28,8 +28,15 @@ local modulesDir = "../../Modules/"
 links{"SDL2", "SDL2_image", "Core"  }
 
     filter "configurations:Debug"
-        defines { "DEBUG_ENGINE", "LINUX" }
+        defines { "DEBUG_ENGINE"}
+	cppdialect "C++17"
     	symbols "On"
+
+    filter { "system:linux" }
+        defines { "LINUX" }
+
+    filter { "system:windows" }
+        defines { "WINDOWS" }
 
 
 

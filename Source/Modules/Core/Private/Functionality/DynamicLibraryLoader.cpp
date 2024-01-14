@@ -6,6 +6,10 @@
 	#include <dlfcn.h>
 #endif // LINUX
 
+#if WINDOWS
+#include <libloaderapi.h>
+#endif //WINDOWS
+
 
 namespace ishak{
 	
@@ -109,18 +113,18 @@ namespace ishak{
 
 	}
 
-#else // WINDOWS
+#elif WINDOWS // WINDOWS
 
 	for (const std::string& moduleName : modules)
 	{
-		HMODULE loadedModule = LoadLibrary(moduleName.c_str());
+		HMODULE loadedModule = LoadLibrary((LPCWSTR)(moduleName.c_str()));
 		if (loadedModule)
 		{
 			m_LoadedModules.Add(loadedModule);
 		}
 	}
 
-#endif // LINUX
+#endif
 
 	}
 

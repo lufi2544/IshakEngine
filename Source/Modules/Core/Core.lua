@@ -26,8 +26,14 @@ local modulesDir = "../../Modules/"
 
 
     filter "configurations:Debug"
-        defines { "DEBUG_ENGINE", "LINUX" }
+        defines { "DEBUG_ENGINE" }
     	symbols "On"
+	cppdialect "C++17"
 
-	buildoptions { "-g" }
+       filter { "system:linux" }
+            buildoptions { "-g", "-std=c++17" }
+
+        filter { "system:windows" }
+            defines { "WINDOWS" }
+            buildoptions { "/std:c++17" } 
 

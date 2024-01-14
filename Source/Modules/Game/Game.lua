@@ -26,7 +26,13 @@ links{"Core", "Engine", "Ecs"}
 
 
 filter "configurations:Debug"
-	defines{ "DEBUG_ENGINE", "LINUX"  }
+	defines{ "LINUX"  }
 	symbols "On"
-
+	cppdialect "C++17"
 	buildoptions { "-g" }
+
+    filter { "system:linux" }
+        defines { "LINUX" }
+
+    filter { "system:windows" }
+        defines { "WINDOWS" }

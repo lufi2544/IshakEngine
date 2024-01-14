@@ -4,3 +4,9 @@ project "SDLIMAGE"
 
 
 files { "Public/SDL/*.h" }
+
+filter "system:windows"
+	files 
+	{
+		"../../../../Binaries/SDL2_image.dll"
+	}

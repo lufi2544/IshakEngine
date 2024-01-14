@@ -21,8 +21,9 @@ namespace ishak { namespace Memory{
 		metadata->size = size;
 
 		// this could be static_cast<void*>(metadata + 1)
-		void* ptr = static_cast<void*>(metadata);
-		return static_cast<void*>(ptr + sizeof(AllocationInfo));
+		//void* ptr = static_cast<void*>(metadata);
+		//return static_cast<void*>(ptr + sizeof(AllocationInfo));
+		return static_cast<void*>(metadata + 1);
 	}
 
 	void MemoryManager::Free(void* ptr, size_t size)
@@ -31,7 +32,11 @@ namespace ishak { namespace Memory{
 		// then we have to check in the memory address with 1 byte less.
 		// This could be static_cast<AllocationInfo*>(ptr) - 1. Which 1 means ptrMemAdrres - (sizeof(AllocationInfo) * 1), but 
 		// I like more the approach that we have right now, which is more readable;
-		AllocationInfo* metadata = static_cast<AllocationInfo*>(ptr - sizeof(AllocationInfo));
+		
+		// This approach here for me is more readable but in windows it has compile errors due to the fact 
+		// that the compiler (MSVS) does not like using the ptr that has no type for operations.
+		//AllocationInfo* metadata = static_cast<AllocationInfo*>(ptr - sizeof(AllocationInfo)); 
+		AllocationInfo* metadata = static_cast<AllocationInfo*>(ptr) - 1;
 		m_allocatedMemory -= metadata->size;
 
 		// freeing the metadata, as it is the memory address for the metadata and the ptr to free.

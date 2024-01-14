@@ -3,4 +3,3 @@ project "Sol"
 	language "C++"
 
 files { "include/sol/**hpp" }
-

@@ -13,9 +13,16 @@ includedirs{
 	moduesDir .. "ThirdParty/SDL/Public/include"
 }
 
-links {"SDL2", "SDL2_image"}
+links {"SDL", "SDL2_image"}
 
 filter"configurations:Debug" 
-	defines{ "LINUX" }
+	defines{ "DEBUG_ENGINE" }
+	cppdialect "C++17"
 	symbols "On" 
 	buildoptions { "-g" }
+
+    filter { "system:linux" }
+        defines { "LINUX" }
+
+    filter { "system:windows" }
+        defines { "WINDOWS" }

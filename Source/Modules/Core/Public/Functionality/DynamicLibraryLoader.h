@@ -13,6 +13,10 @@
 // STD
 #include <filesystem>
 
+#if WINDOWS // TODO 
+	#include <windows.h>
+#endif // WINDOWS
+
 namespace ishak{
 	
 
@@ -39,13 +43,13 @@ namespace ishak{
 	private:
 
 		
-#if LINUX
-
+#ifdef LINUX
 	TArray<void*> m_LoadedModules;
+#endif // LINUX
 
-#else// WINDOWS
-		TArray<HMODULE> m_LoadedModules;
-#endif
+#ifdef WINDOWS
+	TArray<HMODULE> m_LoadedModules;
+#endif// WINDOWS
 
 	};
 

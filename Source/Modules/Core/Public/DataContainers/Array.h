@@ -104,7 +104,7 @@ namespace ishak {
 			m_capacity = other.m_capacity;
 			m_size = other.m_size;
 			AllocateCapacity();			
-			for(int32 idx = 0; idx < m_size; ++idx)
+			for(uint32 idx = 0; idx < m_size; ++idx)
 			{
 				m_data[idx] = other.m_data[idx];
 			}			
@@ -171,7 +171,7 @@ namespace ishak {
 			m_capacity = other.m_capacity;
 			m_size = other.m_size;
 			AllocateCapacity();
-			for (int32 idx = 0; idx < m_size; ++idx)
+			for (uint32 idx = 0; idx < m_size; ++idx)
 			{
 				m_data[idx] = other.m_data[idx];
 			}
@@ -393,7 +393,7 @@ namespace ishak {
 
 		bool Contains(const DataT& toCompare) const
 		{			
-			for(int32 idx = 0; idx < m_size; ++idx)
+			for(uint32 idx = 0; idx < m_size; ++idx)
 			{
 				if(m_data[idx] == toCompare)
 				{
@@ -437,7 +437,7 @@ namespace ishak {
 			DataT* newDataPtr{ new DataT[m_capacity] };
 
 			// copy all the data from the current dinamic ptr to the new one.
-			for (int idx = 0; idx < m_size; ++idx)
+			for (uint32 idx = 0; idx < m_size; ++idx)
 			{
 				auto old{ newDataPtr[idx] };
 				auto neww{ m_data[idx] };				 
