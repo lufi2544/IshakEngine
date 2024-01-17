@@ -64,7 +64,7 @@ namespace ishak {
 			return { };
 		}
 
-	private:
+	
 		std::map<std::type_index, FactoryData> m_builderMap;
 	};
 	

@@ -13,6 +13,11 @@
 
 
 namespace ishak {
+	Entity::~Entity()
+	{
+		int a = 0;
+		auto aa = m_World;
+	}
 
 	Entity::Entity(World* world)
 		: m_World(world)
@@ -21,19 +26,35 @@ namespace ishak {
 	}
 
 	Entity::Entity(World* world, Vector2 position, float rotation, float scale)
-		: m_World(world)
-		, m_position(position)
-		, m_rotation(rotation)
-		, m_scale(scale)
+		: m_position(position)
+		  , m_rotation(rotation)
+		  , m_scale(scale)
+		  , m_World(world)
 	{
 
 	}
 
-	Entity::~Entity()
+	Entity::Entity(Entity const& other)
 	{
-
+		m_position = other.m_position;
+		m_renderContext = other.m_renderContext;
+		m_rotation = other.m_rotation;
+		m_scale = other.m_scale;
+		m_World = other.m_World;
 
 	}
+
+	Entity& Entity::operator=(Entity const& other) noexcept
+	{
+		m_position = other.m_position;
+		m_renderContext = other.m_renderContext;
+		m_rotation = other.m_rotation;
+		m_scale = other.m_scale;
+		m_World = other.m_World;
+
+		return *this;
+	}
+
 	void Entity::BeginPlay()
 	{		
 		Ecs::EcsContext* ecsContext{ m_World->GetGameInstance().lock()->GetEcsContext(Ecs::ContextID::RENDERER) };

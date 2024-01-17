@@ -7,7 +7,8 @@ namespace ishak {
 	World::World(WeakPtr<GameInstance> GameInstanceParam)
 		: m_GameInstance(GameInstanceParam)
 	{
-
+		int a = 0;
+		int f = m_WorldEntities.Size();
 	}
 
 	void World::Init()

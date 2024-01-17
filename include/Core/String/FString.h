@@ -1,7 +1,11 @@
 #pragma once
 
-#include "Core/CoreMinimal.h"
+#include <cstring>
+
 #include "Core/CoreConfig.h"
+
+#include <functional>
+#include "Core/Memory/Memory.h"
 
 #ifdef LINUX
 	#include <cstring>
@@ -72,7 +76,7 @@ namespace std
 	template<>
 	struct hash<ishak::String>
 	{
-		size_t operator()(const ishak::String& str) const
+		size_t operator()(const ishak::String& str) const noexcept
 		{
 			size_t hash = FNV_OFFSET_BASIS;
 			const char* data = str.c_str();

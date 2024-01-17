@@ -31,24 +31,22 @@ namespace ishak{
 		DllLoader() = default;
 		~DllLoader() = default;
 		
-		void LoadEngineDlls();
-		void UnLoadEngineDlls();
+		void LoadEngineDll();
+		void UnLoadEngineDll();
 	
 	private:
 		bool HasAnyCpp(const std::filesystem::directory_entry& dir);
-		void ExploreModulesToLoad(const std::string& modulesDir, TArray<std::string>* out_ModulesToLoad);
-		void LoadModulesDlls(const TArray<std::string>& modules);
 		
 
 	private:
 
 		
 #ifdef LINUX
-	TArray<void*> m_LoadedModules;
+		void* m_engineDll;
 #endif // LINUX
 
 #ifdef WINDOWS
-	TArray<HMODULE> m_LoadedModules;
+	HMODULE m_engineDll;
 #endif// WINDOWS
 
 	};

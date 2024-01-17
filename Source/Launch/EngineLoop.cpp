@@ -31,7 +31,7 @@ namespace ishak{
 
 	void EngineLoop::Init() 
 	{
-		 Memory::MemoryManager::Get().AllocateInitialMemory();
+		 //Memory::MemoryManager::Get().AllocateInitialMemory();
 		// For now just create default Engine, I will include the Editor here.
 		GEngine = new IshakEngine();	
 		GEngine->Init();

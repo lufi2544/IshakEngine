@@ -13,11 +13,15 @@ namespace ishak
 	class CORE_API Entity 
 	{
 	public:
+
 		Entity() = default;
+		virtual ~Entity();
+
 		// TODO Create the Actor Class
 		Entity(World* world);	
 		Entity(World* world, Vector2 position, float rotation = 0.0f, float scale = 0.0f);
-		~Entity();
+		Entity(Entity const& other);
+		Entity& operator = (Entity const& other) noexcept;
 
 		void BeginPlay();
 		void Tick(float deltaTime);

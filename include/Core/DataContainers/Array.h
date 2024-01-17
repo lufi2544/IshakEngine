@@ -440,8 +440,6 @@ namespace ishak {
 			// copy all the data from the current dinamic ptr to the new one.
 			for (uint32 idx = 0; idx < m_size; ++idx)
 			{
-				auto old{ newDataPtr[idx] };
-				auto neww{ m_data[idx] };				 
 				newDataPtr[idx] = m_data[idx];
 			}
 

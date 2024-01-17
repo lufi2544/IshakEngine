@@ -1,7 +1,7 @@
 #include "Core/Memory/Memory.h"
 #include "Core/Memory/MemoryManager.h"
 
-/*
+#ifdef CUSTOM_MEMORY_ALLOC
 void* operator new (ishak::size_t size)
 {
 	return ishak::Memory::MemoryManager::Get().Allocate(size); 
@@ -29,4 +29,6 @@ void operator delete[](void* ptr)
 	}
 	ishak::Memory::MemoryManager::Get().Free(ptr, 0);	
 }
-*/
+
+#endif
+

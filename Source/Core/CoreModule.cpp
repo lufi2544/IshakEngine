@@ -9,7 +9,6 @@ namespace ishak {
 
 	void CoreModule::DoInitModule(Factory& factory)
 	{
-		int a = 0;
 	}
 
 

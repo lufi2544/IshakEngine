@@ -36,17 +36,17 @@ namespace ishak {
 
 	void ModuleManager::LoadModules()
 	{
-		m_dllLoader.LoadEngineDlls();
+		m_dllLoader.LoadEngineDll();
 	}
 
 	void ModuleManager::UnloadModules()
 	{
-		m_dllLoader.UnLoadEngineDlls();
+		m_dllLoader.UnLoadEngineDll();
 	}
 
 	void ModuleManager::InitModules(Factory* factory)
 	{
-		for (auto&& module : m_modules)
+		for (auto module : m_modules)
 		{
 			if(!module)
 			{

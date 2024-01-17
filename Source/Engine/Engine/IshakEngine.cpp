@@ -47,9 +47,8 @@ namespace ishak {
 
 		InitEngineCore();	
 
-		// Create GameInstance
+		 //Create GameInstance
 		m_gameFramework.gameInstance = factory.GetOrBuild<GameInstance>();
-
 
 		m_gameFramework.gameInstance->SetEcsContext(m_ecsContextContainer.get());
 		RegisterEcsRenderingContainers(m_ecsContextContainer->GetEcsContext(Ecs::ContextID::CUSTOM)->GetComponentManipulator());
@@ -74,7 +73,7 @@ namespace ishak {
 			"IshakEngine",
 			0, 0,// where
 			800, 600, // dimensions
-			WindowFlags::WINDOW_CENTRALIZED | WindowFlags::WINDOW_VSYNC | WindowFlags::WINDOW_FULLSCREEN_MATCH_MONITOR
+			WindowFlags::WINDOW_CENTRALIZED | WindowFlags::WINDOW_VSYNC | WindowFlags::WINDOW_FULLSCREEN_MATCH_MONITOR 
 		};
 
 	
@@ -86,10 +85,7 @@ namespace ishak {
 
 	void IshakEngine::HandleModules(Factory* factory)
 	{					
-		// Load the Modules into memory and the init them.
-		// The modules have been loaded because as the Engine is a Dll and contains the Entry point of the
-		// program, when it first load up, all the global variables(Modueles) start as they are allocated in the static memory
-		// same thing happens with the game, as it is already loaded in the executable.
+		ishak::ModuleManager::Get().LoadModules();
 		ishak::ModuleManager::Get().InitModules(factory);		
 	}
 

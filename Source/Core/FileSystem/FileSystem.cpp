@@ -58,7 +58,7 @@ namespace ishak {
 		else
 		{
 			// Running from .vcxprj( VS project file ) located in the IntermediateFolder			
-			m_engineDir = String(currentDir.parent_path().parent_path().string().c_str()) + "/";
+			m_engineDir = String(currentDir.parent_path().parent_path().string().c_str()) + "/Engine/";
 		}
 #endif // WINDOWS
 
@@ -69,16 +69,10 @@ namespace ishak {
 		}
 #endif// LINUX
 
-	   
+	   // TODO Solve the problem with the back slash vs the forward slash.
 		// See if windows accepts / in stead of double back slash	 
-		m_engineModulesDir = String(std::string(std::string(m_engineDir.c_str()) + "Source" + "/" + "Modules" + "/").c_str());
 		m_assetsDir = String(m_engineDir + "Content" + "/");
-
-#if DEBUG_ENGINE
-		m_binariesDir = String(m_engineDir + "Binaries/Engine/Debug/");
-#else
-		m_binariesDir = String(m_engineDir + "Binaries/Engine/Release/");
-#endif  // DEBUG_ENGINE
+		m_binariesDir = String(m_engineDir + "Binaries/");
 
 		std::cout << m_binariesDir.c_str() << std::endl;
 		std::cout << m_engineModulesDir.c_str() << std::endl;

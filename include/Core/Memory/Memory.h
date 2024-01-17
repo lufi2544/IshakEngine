@@ -26,15 +26,15 @@ struct CORE_API EngineMemory
 
 }}// ishak::Memory
 
-/*
+#define CUSTOM_MEMORY_ALLOC
+
+#ifdef CUSTOM_MEMORY_ALLOC
+
  void* operator new (size_t size);
  void operator delete (void* ptr);
 
 
 void* operator new [] (size_t size);
 void operator delete[](void* ptr);
-*/
 
-
-
-
+#endif

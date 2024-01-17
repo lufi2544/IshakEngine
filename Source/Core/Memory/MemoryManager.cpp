@@ -52,12 +52,19 @@ namespace ishak { namespace Memory{
 			size_t size)
 	{
 		AllocationInfo* metadata = static_cast<AllocationInfo*>(malloc(size + sizeof(AllocationInfo)));
-		if(metadata == nullptr)
+		if(metadata == nullptr || size > SIZE_MAX - sizeof(AllocationInfo))
 		{
 			// TODO MEMORY Exception
+
+			int a = 0;
 		}
 		m_allocatedMemory += size;
 		metadata->size = size;
+
+		if (metadata->size > 100000)
+		{
+			int a = 0;
+		}
 
 		// this could be static_cast<void*>(metadata + 1)
 		//void* ptr = static_cast<void*>(metadata);
@@ -80,6 +87,11 @@ namespace ishak { namespace Memory{
 		//AllocationInfo* metadata = static_cast<AllocationInfo*>(ptr - sizeof(AllocationInfo)); 
 		AllocationInfo* metadata = static_cast<AllocationInfo*>(ptr) - 1;
 		m_allocatedMemory -= metadata->size;
+
+		if(metadata->size > 100000)
+		{
+			int a = 0;
+		}
 
 		// freeing the metadata, as it is the memory address for the metadata and the ptr to free.
 		free(metadata);

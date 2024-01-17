@@ -9,8 +9,8 @@
 #include "DataContainers/Array.h"
 #include "Memory/MemoryTypes.h"
 #include "Memory/Allocator.h"
-#include "String/FString.h"
 
+#include "String/FString.h"
 #include <iostream>
 #include <memory>
 #include <string>
