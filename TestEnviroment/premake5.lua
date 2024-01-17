@@ -6,15 +6,14 @@ local modulesDir = "../Source/Modules/"
 
 workspace "IshakEngineTests"
 	configurations { "Debug" }
-
-
+	architecture "x86_64"
 
 project "IshakEngineTests"
 	kind "ConsoleApp"
 	language "C++"
 
 
-	targetdir "../Binaries/Tests/%{cfg.buildcfg}"
+	targetdir "../Binaries"
 	objdir "../Intermediate/Tests/%{cfg.buildcfg}"
 
 	files {"dtest/**.h", "Tests/**.cpp"}
@@ -34,7 +33,12 @@ project "IshakEngineTests"
 		"-g"
 	}
 
-	links { "Core", "Ecs", "IMGUI" }
+
+libdirs{
+ "../Binaries" }
+
+	links { "Core", "Ecs", "IMGUI", "Core.lib", "Ecs.lib", "IMGUI.lib" }
+
 
 	filter "system:linux"
 		print("Defining TESTS for LINUX")
@@ -43,6 +47,7 @@ project "IshakEngineTests"
 	filter "system:windows"
 		print("Defining TESTS for WINDOWS")
 		defines{ "WINDOWS" }
+		cppdialect "C++17"
 
 	filter "configurations:Debug"
 		defines { "DEBUG_ENGINE"}

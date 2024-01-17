@@ -1,0 +1,230 @@
+#include <iostream>
+#include "Renderer/Renderer.h"
+#include "Platform/Window/Window.h"
+
+#include "IMGUI/imgui.h"
+#include "IMGUI/imgui_impl_sdl2.h"
+#include "IMGUI/imgui_impl_sdlrenderer2.h"
+
+#include "Core/Log/Logger.h"
+#include "ThirdParty/SDL/SDL.h"
+#include "ThirdParty/SDLIMAGE/SDL_image.h"
+
+namespace ishak {
+
+	Renderer* Renderer::singleton = nullptr;
+
+	Renderer& Renderer::Get()
+	{		
+		if(!singleton)
+		{
+			singleton = new Renderer();
+		}
+
+		return *singleton;
+	}
+
+	void Renderer::Init()
+	{
+		if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+		{
+			std::cerr << "Error initializing SDL." << std::endl;
+			// TODO ISHException
+			return;
+		}	
+
+
+		if((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG)
+		{
+			std::cerr << "Error initalizing SDL_IMAGE: " << IMG_GetError() << std::endl;
+		}
+		
+	}
+
+	void Renderer::AddRenderingTarget(Window* window)
+	{
+		
+		std::cout << "Adding Rendering Target" << std::endl;
+		if(m_rendererWindowPair.first)
+		{
+			return;
+		}
+
+
+		// Create new Renderer and window associated.
+
+		Uint32 extraRendererFlags = 0;
+		if ((window->GetCreationContext().flags & WindowFlags::WINDOW_VSYNC) != 0)
+		{
+			extraRendererFlags |= SDL_RENDERER_ACCELERATED;
+			extraRendererFlags |= SDL_RENDERER_PRESENTVSYNC;
+		}
+
+		SDL_version ver;
+		SDL_GetVersion(&ver);
+		SDL_Window* win = window->GetSDLWindow();
+		SDL_Renderer* createdRenderer{ SDL_CreateRenderer(win, -1, 0) };
+
+		if(!createdRenderer)
+		{
+			// TODO Add exception.
+			return;
+		}
+
+		window->SetOnDestroyedDelegate([createdRenderer]()
+		{
+			// The renderer should always exist as long as the Window.
+			if (createdRenderer)
+			{
+				SDL_DestroyRenderer(createdRenderer);
+			}
+		});
+
+
+		m_rendererWindowPair = std::make_pair(window, createdRenderer);
+		PostSetRenderingTarget(window);
+	}
+
+
+	void Renderer::PreRender()
+	{			
+
+		SDL_SetRenderDrawColor(m_rendererWindowPair.second, 21, 21, 21, 255);
+		SDL_RenderClear(m_rendererWindowPair.second);			
+
+	  //=========================================================================
+	  // IMGUI
+	  //=========================================================================
+		ImGui_ImplSDLRenderer2_NewFrame();
+		ImGui_ImplSDL2_NewFrame();
+		ImGui::NewFrame();		
+    	//	ImGui::ShowDemoWindow();
+	  //=========================================================================
+
+	 //dWindow.Render(); 
+	}
+
+	void Renderer::Render()
+	{	
+		PreRender();
+
+		if(m_frameCommandsQueue.size() == 0)
+		{
+			ISHAK_LOG(Error, "RendererCommandsEmpty")
+		}
+
+		for (auto& [entity, renderingCommandPair] : m_frameCommandsQueue)
+		{
+			SubmitRendererCommand(renderingCommandPair.second);			
+		}
+
+		ClearFrameRendererCommands();
+
+		GLog->Draw();
+
+	   //=========================================================================
+	   // IMGUI
+	   //=========================================================================
+		ImGui::Render();
+		ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
+	   //=========================================================================
+
+		PostRender();
+		
+	}
+
+	void Renderer::PostRender()
+	{
+	}
+
+	void Renderer::PostSetRenderingTarget(Window* window)
+	{
+
+		//=========================================================================
+		// IMGUI
+		//=========================================================================	  
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO();
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls		
+
+		SDL_Renderer* renderer{ m_rendererWindowPair.second };
+
+		ImGui::StyleColorsDark();
+		ImGui_ImplSDL2_InitForSDLRenderer(window->GetSDLWindow(), renderer);
+		ImGui_ImplSDLRenderer2_Init(renderer);
+		//=========================================================================
+
+			
+	}
+
+	void Renderer::QueueRenderCommand(const RendererCommand& command)
+	{		
+		// TODO Create a data structure for the Z Order;
+		if(commandedEntities.Contains(command.entityId))
+		{
+			// entity already registered
+			return;
+		}
+		
+		m_frameCommandsQueue.insert(std::make_pair(command.zOrder, std::make_pair(command.entityId, command)));
+		commandedEntities.Add(command.entityId);
+	}	
+
+	void Renderer::ClearFrameRendererCommands()
+	{
+		m_frameCommandsQueue.clear();
+		commandedEntities.Clear();
+	}
+
+	void Renderer::SubmitRendererCommand(const RendererCommand& command)
+	{
+		if(command.entityId == Ecs::kNullId)
+		{
+			return;
+		}
+											
+		if (command.texture)
+		{	
+			bool bShouldRenderFromCoordinates{ false };
+			SDL_Rect srcRectangle;
+			// Check wether we should render the texture from a certain coordinate.
+			if(command.renderingCoordinates.x != -1 || command.renderingCoordinates.y != -1)
+			{				
+				srcRectangle = SDL_Rect{ (int)command.renderingCoordinates.x, (int)command.renderingCoordinates.y, command.scaledW, command.scaledH };
+				bShouldRenderFromCoordinates = true;
+			}
+
+			SDL_Rect destRect{ (int)command.position.x, (int)command.position.y, command.scaledW, command.scaledH };
+			SDL_RenderCopyEx(
+				GetSDLRenderer(),
+				command.texture->GetSDLTexture(),
+				bShouldRenderFromCoordinates ? &srcRectangle :  NULL,
+				&destRect,
+				command.rotation,
+				NULL, SDL_FLIP_NONE);
+		}
+		
+	}
+
+	void Renderer::EndFrame()
+	{	
+		SDL_RenderPresent(m_rendererWindowPair.second);
+	}
+
+	void Renderer::ShutDown()
+	{
+	//=========================================================================
+	// IMGUI
+	//=========================================================================
+		ImGui_ImplSDLRenderer2_Shutdown();
+		ImGui_ImplSDL2_Shutdown();
+		ImGui::DestroyContext();
+	//=========================================================================
+
+		IMG_Quit();
+		SDL_Quit(); 
+	}
+
+}// ishak

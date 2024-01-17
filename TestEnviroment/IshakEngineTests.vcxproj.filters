@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Tests">
+      <UniqueIdentifier>{5865280E-C479-50BF-8DFB-F31EF9CE4CF0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtest">
+      <UniqueIdentifier>{69EB510F-D5FF-79C0-9E81-1D200A5576F1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtest\extensions">
+      <UniqueIdentifier>{083942D9-F431-612B-1D64-46B009BC4037}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dtest\doctest.h">
+      <Filter>dtest</Filter>
+    </ClInclude>
+    <ClInclude Include="dtest\doctest_fwd.h">
+      <Filter>dtest</Filter>
+    </ClInclude>
+    <ClInclude Include="dtest\extensions\doctest_mpi.h">
+      <Filter>dtest\extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="dtest\extensions\doctest_util.h">
+      <Filter>dtest\extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="dtest\extensions\mpi_reporter.h">
+      <Filter>dtest\extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="dtest\extensions\mpi_sub_comm.h">
+      <Filter>dtest\extensions</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Tests\AllocatorTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\ArrayTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\ECSTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\HashMapTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\PairTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\RunTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\StringTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\TListTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\TMapTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\doctest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
