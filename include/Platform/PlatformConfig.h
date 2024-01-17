@@ -1,5 +1,5 @@
 #pragma once
-#if LINUX
+#ifdef LINUX
 
 	#if PLATFORM_LIB
 		#define PLATFORM_API
@@ -12,14 +12,12 @@
 	#ifdef PLATFORM_LIB
 	    #define PLATFORM_API __declspec(dllimport)
 	#else 
-#ifdef ENGINE_EXPORTS
-#define PLATFORM_API _declspec(dllexport)
-#endif
+		#ifdef ENGINE_EXPORTS
+			#define PLATFORM_API _declspec(dllexport)
+		#endif
 	#endif // PLATFORM_LIB
-
+#endif  // PLATFORMS
 
 #ifndef PLATFORM_API
-#define PLATFORM_API
+	#define PLATFORM_API
 #endif
-
-#endif  // LINUX
