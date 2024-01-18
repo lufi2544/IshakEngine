@@ -1,6 +1,8 @@
 #pragma once
 
 #include <memory>
+#include "Core/Memory/Memory.h"
+
 
 namespace ishak
 {
@@ -13,3 +15,17 @@ namespace ishak
 	template <typename T>
 	using UniquePtr = std::unique_ptr<T>;
 }
+
+
+struct CORE_API FMemory
+{
+	static void* SystemMalloc(size_t size)
+	{
+		return ::malloc(size);
+	}
+
+	static void SystemFree(void* ptr)
+	{
+		::free(ptr);
+	}
+};

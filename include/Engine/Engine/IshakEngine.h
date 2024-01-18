@@ -35,6 +35,7 @@ namespace ishak {
 		void HandleModules(Factory* factory);
 		void InitEngineCore();
 
+		void InitEngineMemory();
 		void InitEcs();
 		void CreateSharedComponentsContainers();
 		void RegisterSharedContainersInComponentManipulator(Ecs::ComponentManipulator* compManipulator);

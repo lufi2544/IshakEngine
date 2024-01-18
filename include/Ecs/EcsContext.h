@@ -65,10 +65,8 @@ namespace ishak{ namespace Ecs{
 
 		EcsContext* GetEcsContext(ContextID contextId)
 		{
-			if(contextCollection.Size() < contextId)
+			if(!contextCollection.CheckSizeAt(contextId))
 			{
-				// TODO Exception
-				assert(false);
 				return nullptr;
 			}
 

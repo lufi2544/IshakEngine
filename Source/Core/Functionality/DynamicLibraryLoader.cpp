@@ -54,7 +54,7 @@ namespace ishak{
 	}
 
 #elif WINDOWS // WINDOWS
-
+		/*
 		std::cout << "Loading Engine Dll..." << std::endl;
 		HMODULE loadedDll = LoadLibraryA("IshakEngine.dll");
 		if (!loadedDll)
@@ -67,7 +67,7 @@ namespace ishak{
 			m_engineDll = loadedDll;
 		}
 
-
+		*/
 #endif
 
 	}

@@ -2,33 +2,38 @@
 #include "Core/Memory/MemoryManager.h"
 
 #ifdef CUSTOM_MEMORY_ALLOC
-void* operator new (ishak::size_t size)
+
+CORE_API FMalloc* GAlloc = nullptr;
+
+#endif
+
+
+void* FUseSystemMallocForNew::operator new (size_t size)
 {
-	return ishak::Memory::MemoryManager::Get().Allocate(size); 
+	return FMemory::SystemMalloc(size);
 }
 
-void* operator new[](ishak::size_t size)
+void FUseSystemMallocForNew::operator delete(void* ptr)
+{
+	FMemory::SystemFree(ptr);
+}
+
+void* FUseSystemMallocForNew::operator new[](size_t size)
+{
+	return FMemory::SystemMalloc(size);
+}
+
+void FUseSystemMallocForNew::operator delete [](void* ptr)
+{
+	FMemory::SystemFree(ptr);
+}
+
+void* FEngineMalloc::Malloc(size_t size)
 {
 	return ishak::Memory::MemoryManager::Get().Allocate(size);
 }
 
-void operator delete(void* ptr)
+void FEngineMalloc::Free(void* ptr)
 {
-	if(ptr == nullptr)
-	{
-		return;
-	}
 	ishak::Memory::MemoryManager::Get().Free(ptr, 0);
 }
-
-void operator delete[](void* ptr)
-{
-	if (ptr == nullptr) 
-	{
-		return;
-	}
-	ishak::Memory::MemoryManager::Get().Free(ptr, 0);	
-}
-
-#endif
-

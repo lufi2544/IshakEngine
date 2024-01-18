@@ -25,6 +25,9 @@ struct AllocationInfo
 			MemoryManager& operator = (MemoryManager&& other) = delete;
 
 			~MemoryManager();
+
+			FMalloc* GetEngineAllocator() { return m_engineAllocator; }
+			void SetEngineAllocator(FMalloc* allocator) { m_engineAllocator = allocator; }
 			size_t GetMemoryUsage() const { return m_allocatedMemory; }
 			EngineMemory const* GetMemory() const { return &m_engineMemory; }
 
@@ -41,6 +44,7 @@ struct AllocationInfo
 	private:
 			size_t m_allocatedMemory{ 0 };
 			EngineMemory m_engineMemory;
+			FMalloc* m_engineAllocator{ nullptr };
 	};
 
 }} // ishak::Memory

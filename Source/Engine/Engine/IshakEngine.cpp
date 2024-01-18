@@ -27,6 +27,7 @@
 #include "Engine/Ecs/Components/LevelComponent.h"
 #include "Engine/Ecs/Systems/GameFramework/LevelSystem.h"
 #include "Core/Ecs/Components/TransformComponent.h"
+#include "Core/Memory/MemoryManager.h"
 #include "Renderer/Ecs/Components/TextureComponent.h"
 
 
@@ -50,19 +51,23 @@ namespace ishak {
 		 //Create GameInstance
 		m_gameFramework.gameInstance = factory.GetOrBuild<GameInstance>();
 
-		m_gameFramework.gameInstance->SetEcsContext(m_ecsContextContainer.get());
-		RegisterEcsRenderingContainers(m_ecsContextContainer->GetEcsContext(Ecs::ContextID::CUSTOM)->GetComponentManipulator());
+		if(m_gameFramework.gameInstance)
+		{
+			m_gameFramework.gameInstance->SetEcsContext(m_ecsContextContainer.get());
+			RegisterEcsRenderingContainers(m_ecsContextContainer->GetEcsContext(Ecs::ContextID::CUSTOM)->GetComponentManipulator());
 
-		// Create World
-		ISHAK_LOG(Temp, "Creating World Context" )
-		m_gameFramework.world = std::make_unique<World>(m_gameFramework.gameInstance);
-		m_gameFramework.gameInstance->SetWorld(m_gameFramework.world.get());
+			// Create World
+			ISHAK_LOG(Temp, "Creating World Context")
+				m_gameFramework.world = std::make_unique<World>(m_gameFramework.gameInstance);
+			m_gameFramework.gameInstance->SetWorld(m_gameFramework.world.get());
 
-		m_gameFramework.gameInstance->Init();
+			m_gameFramework.gameInstance->Init();
+		}
 	}
 
 	void IshakEngine::InitEngineCore()
 	{		
+		InitEngineMemory();
 
 		// Init the Renderer
  		Renderer::Get().Init();
@@ -73,7 +78,7 @@ namespace ishak {
 			"IshakEngine",
 			0, 0,// where
 			800, 600, // dimensions
-			WindowFlags::WINDOW_CENTRALIZED | WindowFlags::WINDOW_VSYNC | WindowFlags::WINDOW_FULLSCREEN_MATCH_MONITOR 
+			WindowFlags::WINDOW_CENTRALIZED | WindowFlags::WINDOW_VSYNC 
 		};
 
 	
@@ -81,6 +86,15 @@ namespace ishak {
 		Renderer::Get().AddRenderingTarget(m_GameMainWindow.get());
 		
 		InitEcs();
+	}
+
+	void IshakEngine::InitEngineMemory()
+	{
+		// Init Memory Allocator
+		// We could retreive memory from the preallocated mememory here, so we would call malloc once and then get everything
+		// from there.
+		GAlloc = new FEngineMalloc();
+		Memory::MemoryManager::Get().SetEngineAllocator(GAlloc);
 	}
 
 	void IshakEngine::HandleModules(Factory* factory)
@@ -207,18 +221,34 @@ namespace ishak {
 		UpdateCoreEngineEcs(deltaTime);
 		UpdateCustomEcs(deltaTime);
 
+		std::cout << "Engine Memory: " << ((float)Memory::MemoryManager::Get().GetMemoryUsage()) <<std::endl;
+
 		// TODO Remove this
 		m_gameFramework.world->Update(deltaTime);
 	}
 
 	void IshakEngine::UpdateCoreEngineEcs(float dt)
 	{
-		m_ecsContextContainer->GetEcsContext(Ecs::ContextID::ENGINE)->UpdateContext(dt);
+		if(m_ecsContextContainer)
+		{
+			Ecs::EcsContext* engineEcsContext = { m_ecsContextContainer->GetEcsContext(Ecs::ContextID::ENGINE) };
+			if(engineEcsContext)
+			{
+				engineEcsContext->UpdateContext(dt);
+			}
+		}
 	}
 
 	void IshakEngine::UpdateCustomEcs(float dt)
 	{
-		m_ecsContextContainer->GetEcsContext(Ecs::ContextID::CUSTOM)->UpdateContext(dt);
+		if(m_ecsContextContainer)
+		{
+			Ecs::EcsContext* ecsCustomContext = { m_ecsContextContainer->GetEcsContext(Ecs::ContextID::CUSTOM) };
+			if(ecsCustomContext)
+			{
+				ecsCustomContext->UpdateContext(dt);
+			}
+		}
 	}
 
 
@@ -238,11 +268,17 @@ namespace ishak {
 	{			
 		m_gameFramework.ShutDown();
 		Renderer::Get().ShutDown();
+		delete GAlloc;
+		// TODO ISHMEMORY maybe just let the alloator reside in the MemoryManager.
+
 	}
 
 	void IshakEngine::GameFramework::ShutDown()
 	{
-		gameInstance->ShutDown();
+		if(gameInstance)
+		{
+			gameInstance->ShutDown();
+		}
 	}
 
 }// ishak

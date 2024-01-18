@@ -1,6 +1,6 @@
 #include "Core/Memory/MemoryManager.h"
 #if WINDOWS
-#include "WIndows.h"
+#include "Windows.h"
 	#include "memoryapi.h"
 #endif
 
@@ -77,6 +77,10 @@ namespace ishak { namespace Memory{
 		void* ptr,
 		size_t size)
 	{
+		if(ptr == NULL)
+		{
+			return;
+		}
 		// Retreiving the size of the allocation, as we allocated the memory block 1 byte further, to allocate the metadata
 		// then we have to check in the memory address with 1 byte less.
 		// This could be static_cast<AllocationInfo*>(ptr) - 1. Which 1 means ptrMemAdrres - (sizeof(AllocationInfo) * 1), but 

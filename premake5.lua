@@ -10,7 +10,7 @@ workspace "IshakEngine"
     platforms { "Linux", "Windows" }
 
 project "IshakEngine"
-    kind "SharedLib"
+    kind "ConsoleApp"
     language "C++"
     location "Intermediate/Engine"
 

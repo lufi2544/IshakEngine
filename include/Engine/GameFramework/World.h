@@ -26,8 +26,7 @@ namespace ishak {
 		WeakPtr<T> SpawnEntity(Args&&... args)
 		{
 			// TODO TEMPLATE Make sure the class is a type of Entity
-
-			SharedPtr<T> createdEntity = std::make_shared<T>(std::forward<Args>(args)...);
+			SharedPtr<T> createdEntity = std::shared_ptr<T>(new T(std::forward<Args>(args)...));
 			createdEntity->BeginPlay();
 
 			m_WorldEntities.Add(createdEntity);

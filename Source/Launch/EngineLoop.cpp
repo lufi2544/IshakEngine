@@ -76,10 +76,9 @@ namespace ishak{
 				float toSleep{ FIXED_DELTA - accumulatedTime };
 				// TODO Add a refactor for the platforms here
 				
-#if LINUX 
+#ifdef LINUX 
 				sleep(toSleep);
 #else // WINDOWS
-							std::cout << "Ticking" << std::endl;	
 				Sleep(toSleep);
 #endif // LINUX
 				

@@ -124,6 +124,12 @@ namespace ishak {
 		//---- Iterator Functions ----
 		Iterator begin()
 		{
+			// TODO Add TEST
+			if(this == nullptr)
+			{
+				return Iterator(nullptr);
+			}
+
 			return Iterator(m_data);
 		}
 
@@ -139,6 +145,11 @@ namespace ishak {
 
 		Iterator end()
 		{
+			if(this == nullptr)
+			{
+				return Iterator(nullptr);
+			}
+
 			return Iterator(m_data,  m_size);
 		}
 		//----  ----
