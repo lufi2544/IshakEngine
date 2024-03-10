@@ -289,6 +289,13 @@ namespace ishak::memory{
 
 	/** 
 	* Single Allocated Block of memory. Can run out of memory.
+	* 
+	* **NOTE**:
+	*	Maybe in the future would be nice to explore a solution where we allocate memory in memory addresses with the module of the given address:
+	* 
+	* 2 -- addresses with module 2
+	* 3 -- adddresses with modue 3 
+	* so on...
 	*/
 	template<typename ElementT, size_t kElementsNum, size_t kAlingment = 8>
 	class CORE_API InlineAllocator
@@ -298,8 +305,9 @@ namespace ishak::memory{
 		InlineAllocator(FMemoryChunk const& memoryChunk)
 			: m_memoryChunk{ memoryChunk }
 		{
+			
 			const size_t t_objAlignedSize = (sizeof(ElementT) + kAlingment - 1) & ~(kAlingment - 1);
-			const size_t t_allocatorBlockSize = t_objAlignedSize + kElementsNum;
+			const size_t t_allocatorBlockSize = t_objAlignedSize * kElementsNum;
 
 			const size_t t_blockSize = sizeof(Block) - sizeof(std::declval<Block>().data);
 			const size_t t_toAllocateSize = t_blockSize + t_allocatorBlockSize;
@@ -315,6 +323,22 @@ namespace ishak::memory{
 		}
 
 		~InlineAllocator() = default;
+
+		uint32 GetCapacity()
+		{
+			return kElementsNum;
+		}
+
+		static constexpr size_t GetNeededMemory()
+		{
+			constexpr size_t t_objAlignedSize = (sizeof(ElementT) + kAlingment - 1) & ~(kAlingment - 1);
+			constexpr size_t t_allocatorBlockSize = t_objAlignedSize * kElementsNum;
+
+			constexpr size_t t_blockSize = sizeof(Block) - sizeof(std::declval<Block>().data);
+			constexpr size_t t_toAllocateSize = t_blockSize + t_allocatorBlockSize;
+
+			return t_toAllocateSize;
+		}
 
 		void* Allocate(size_t size)
 		{
@@ -341,6 +365,7 @@ namespace ishak::memory{
 	* list, so when it is freed again, is put at the top of the list, this is less cache friendlier than having 
 	* all the blocks linked together, but we exchange cache friendliness for iteration complexity, because 
 	* throguth this way, we only iterate through the free chunks.
+	* 
 	*/
 	class CORE_API BestFitFreeAllocator 
 	{
@@ -362,6 +387,11 @@ namespace ishak::memory{
 
 
 		~BestFitFreeAllocator();
+
+		uint32 GetCapacity()
+		{
+			return 0;
+		}
 
 
 		void SetFlag(Block_Free* b, EMemoryBlockFlags flag, const bool bValue)
@@ -440,6 +470,10 @@ namespace ishak::memory{
 
 		void* Allocate(size_t size);
 		void Free(void* ptr);
+		uint32 GetCapacity()
+		{
+			return 0;
+		}
 	};
 
 	template<class T>

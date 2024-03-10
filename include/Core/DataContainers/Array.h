@@ -23,7 +23,11 @@ namespace ishak {
 		static size_t constexpr DEFAULT_CAPACITY = 2;
 		static size_t constexpr MIN_SIZE_DELTA_TO_NEWALLOC_WHEN_RESIZED = 5;
 
+
 	public:
+
+		typedef AllocatorT AllocatorType;
+
 		struct CORE_API Iterator
 		{
 			Iterator(DataT* ptr, size_t idxParam = 0)
@@ -75,22 +79,17 @@ namespace ishak {
 		};
 
 	public:
-		TArray(uint32_t capacity, AllocatorT const& allocator) 
-			: m_capacity{ capacity }
-			, m_allocator{ allocator }
-		{
-			
-		}
-
 		TArray(AllocatorT const& alloc)
 			: m_allocator{ alloc }
 		{
-			m_capacity = DEFAULT_CAPACITY;
+			const size_t allocCapacity = m_allocator.GetCapacity();
+			m_capacity = allocCapacity > 0 ? allocCapacity : DEFAULT_CAPACITY;
 		}
 
 		TArray() 
 		{
-			m_capacity = DEFAULT_CAPACITY;
+			const size_t allocCapacity = m_allocator.GetCapacity();
+			m_capacity = allocCapacity > 0 ? allocCapacity : DEFAULT_CAPACITY;
 		}
 
 		TArray(std::initializer_list<DataT>&& initList)
@@ -117,6 +116,7 @@ namespace ishak {
 		{
 			m_capacity = other.m_capacity;
 			m_size = other.m_size;
+			m_allocator = other.m_allocator;
 			AllocateCapacity();			
 			for(uint32 idx = 0; idx < m_size; ++idx)
 			{
@@ -129,6 +129,7 @@ namespace ishak {
 			m_capacity = other.m_capacity;
 			m_size = other.m_size;
 			m_data = other.m_data;
+			m_allocator = other.m_allocator;
 
 			// Invalidates the other container once we have moved all the data.
 			other.Invalidate();
@@ -205,6 +206,7 @@ namespace ishak {
 
 			m_capacity = other.m_capacity;
 			m_size = other.m_size;
+			m_allocator = other.m_allocator;
 			AllocateCapacity();
 			InitializeArrayElements();
 			// TODO Add Test;
@@ -226,6 +228,7 @@ namespace ishak {
 			m_capacity = other.m_capacity;
 			m_size = other.m_size;
 			m_data = other.m_data;
+			m_allocator = other.m_allocator;
 
 			other.Invalidate();
 

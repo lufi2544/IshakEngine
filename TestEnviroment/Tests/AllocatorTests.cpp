@@ -16,6 +16,24 @@ namespace ishak::tests {
 	}
 
 
+
+	TEST_CASE("BestFitAllocator, NO memory leak, OK")
+	{
+		memory::MemoryManager manager{ Byte(1000) };
+		memory::MemoryManager::SandBox* sandBox = manager.GetMemorySandBox(memory::EMemoryHirarchy::PERSISTENT, memory::EMemorySandBoxType::CORE);
+		const size_t systemMemory = Byte(100);
+		void* rawMemory = sandBox->Allocate(systemMemory);
+
+		memory::BestFitFreeAllocator alloc{ memory::FMemoryChunk{ rawMemory, systemMemory } };
+		auto memory1 = alloc.Allocate(8);
+		auto memory2 = alloc.Allocate(8);
+		alloc.Free(memory1);
+		alloc.Free(memory2);
+
+		CHECK(alloc.GetLeaks() == 0);
+	}
+
+
 	TEST_CASE("BestFitAllocator, memory leak, OK")
 	{
 		memory::MemoryManager manager{ Byte(1000) };
@@ -40,13 +58,16 @@ namespace ishak::tests {
 			char letter;
 		};
 
+		typedef TArray<Foo, memory::InlineAllocator<Foo, 5, 4>> IdsT;
+		IdsT ids;
 
 		memory::MemoryManager alloc{ Byte(1000) };
 		memory::MemoryManager::SandBox* sandBox = alloc.GetMemorySandBox(memory::EMemoryHirarchy::PERSISTENT, memory::EMemorySandBoxType::CORE);
-		const size_t systemMemory = Byte(112);
-		void* rawMemory = sandBox->Allocate(systemMemory);
-		memory::InlineAllocator<Foo, 4, 4> allocator{ memory::FMemoryChunk{ rawMemory, systemMemory} };
-		TArray<Foo, memory::InlineAllocator<Foo, 4, 4>> ids{ 4, allocator };
+		const size_t systemMemory{ (IdsT::AllocatorType::GetNeededMemory()) };
+		void* rawMemory = sandBox->Allocate(IdsT::AllocatorType::GetNeededMemory());
+		IdsT::AllocatorType inlineAlloc{ memory::FMemoryChunk{ rawMemory, systemMemory} };
+
+		ids = IdsT(inlineAlloc);
 
 		ids.Add(Foo{1, 1, '1'});
 		ids.Add(Foo{2, 2, '2'});
@@ -65,7 +86,7 @@ namespace ishak::tests {
 		const size_t systemMemory = Byte(112);
 		void* rawMemory = sandBox->Allocate(systemMemory);
 		memory::InlineAllocator<int, 4, 4> allocator{ memory::FMemoryChunk{ rawMemory, systemMemory} };
-		TArray<int, memory::InlineAllocator<int, 4, 4>> ids{4, allocator};
+		TArray<int, memory::InlineAllocator<int, 4, 4>> ids{allocator};
 
 		ids.Add(1);
 		ids.Add(2);
@@ -91,7 +112,7 @@ namespace ishak::tests {
 		const size_t systemMemory = Byte(112);
 		void* rawMemory = sandBox->Allocate(systemMemory);
 		memory::InlineAllocator<int, 4> allocator{ memory::FMemoryChunk{ rawMemory, systemMemory} };
-		TArray<int, memory::InlineAllocator<int, 4>> ids{ 4, allocator };
+		TArray<int, memory::InlineAllocator<int, 4>> ids{allocator };
 
 		ids.Add(1);
 		ids.Add(2);

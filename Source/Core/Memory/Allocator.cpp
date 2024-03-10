@@ -519,18 +519,16 @@ namespace ishak::memory{
 
 
 	BestFitFreeAllocator::Block_Free* BestFitFreeAllocator::CreateBlock(size_t size)
-	{
-		const size_t alignedSize{ align(size) };
-		
+	{	
 		void* memoryToUse{ nullptr };
 
 		if(m_memoryChunk.m_buffer)
 		{
-			if(auto tempMemoryAddress = m_allocatedMemory + alignedSize; tempMemoryAddress < m_memoryChunk.m_bufferSize)
+			if(auto tempMemoryAddress = m_allocatedMemory + size; tempMemoryAddress < m_memoryChunk.m_bufferSize)
 			{
 				char* buffer = static_cast<char*>(m_memoryChunk.m_buffer);
 				buffer += tempMemoryAddress;
-				m_allocatedMemory += alignedSize;
+				m_allocatedMemory += size;
 
 				memoryToUse = buffer;
 			}
@@ -545,7 +543,7 @@ namespace ishak::memory{
 		{
 			memoryToUse = VirtualAlloc(
 				NULL,
-				alignedSize,
+				size,
 				MEM_COMMIT | MEM_RESERVE,
 				PAGE_READWRITE);
 		}
@@ -563,6 +561,7 @@ namespace ishak::memory{
 	{
 		Block_Free* block = getHeader((word_t*)ptr);
 		SetFlag(block, EMemoryBlockFlags::MEM_InUse, false);
+		m_freedAllocations++;
 
 		if (!m_lastFreeBlock) 
 		{
@@ -574,7 +573,6 @@ namespace ishak::memory{
 		// Link the free block with the last Free Block and viceversa
 		block->next = m_lastFreeBlock;
 		m_lastFreeBlock = block;
-		m_freedAllocations++;
 	}
 	// ~ BEST FIT ~
 
@@ -632,13 +630,13 @@ namespace ishak::memory{
 
 		/* We have the SandBoxes, so now the SandBoxes are going to have space Available for the different systems,
 		* so what I spect the final prupose of the SandBox is, is to deliver some memory Space that the systems can Take
-		* for creating Allocators, and this allocators are going to be passes to the Systems Arrays or ptrs creation.
+		* for creating Allocators, and this allocators are going to be passed to the Systems Arrays or ptrs creation.
 		*
 		* If we want to create a Turret System, we will have to reslove at compile time, the size of the requested space to the 
 		* SandBox Allocator.
 		*/
 
-		// Every Sandbox will have a best fill allocator for handling memory, once a sistem requests a memory block, this system
+		// Every Sandbox will have a BestFitFreeAllocator for handling memory, once a system requests a memory block, this system
 		// can create an allocator with this memory.	
 
 		
