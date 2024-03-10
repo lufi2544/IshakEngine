@@ -1,7 +1,24 @@
 #include "doctest.h"
-#include "CoreMinimal.h"
+#include "Core/CoreMinimal.h"
 
 namespace ishak {
+
+	TEST_CASE("Operator == , OK")
+	{
+		TArray<int> a{ 1, 2, 3, 4 };
+		TArray<int> b{ 1, 2 };
+
+		CHECK(!(a == b) == true);
+		CHECK((a != b) == true);
+
+
+		TArray<int> c{ 1, 2, 3, 4 };
+		TArray<int> d{ 1, 2, 3, 4 };
+
+		CHECK(c == d);
+		CHECK(!(c != d));
+
+	}
 
 	TEST_CASE("Move Operator, OK")
 	{
@@ -94,8 +111,11 @@ namespace ishak {
 			Element() = default;
 
 			int data{ 4 };
-			ishak::String name;
 		};
+
+		memory::DefaultAllocator alloc;
+		auto ptr = (Element*)alloc.Allocate(sizeof(Element));
+
 
 		ishak::TArray<Element> container;
 		container.AddDefaulted(5);
@@ -110,7 +130,7 @@ namespace ishak {
 			Element() = default;
 
 			int data{ 4 };
-			ishak::String name;
+			ishak::String name{ "Hello"};
 		};
 
 		Element e1{ 4, "Entity" };
@@ -121,10 +141,12 @@ namespace ishak {
 		container.Add(e2);
 		uint32 oldSize{ container.Size() };
 
-		uint32 dataToAdd{ 5 };
+		uint32 dataToAdd{ 2 };
 		container.AddDefaulted(dataToAdd);
 
 		CHECK(container.Size() == oldSize + dataToAdd);
+		auto c = container[3].name = "Ishak";
+		CHECK(container[3].name == "Ishak");
 	}
 
 }// ishak

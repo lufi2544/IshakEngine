@@ -15,12 +15,18 @@ namespace ishak {
 
 	struct CORE_API String
 	{			
-		const char nullChar = '\0';
+		typedef memory::DefaultAllocator Alloc;
+
+		static constexpr char nullChar = '\0';
 		String();
 		String(const char* word);
 
 		String(String&& other) noexcept;
 		String(const String& other) noexcept;
+		inline TArray<char>* GetBuffer()
+		{
+			return &m_buffer;
+		}
 
 		String& operator = (const String& other) noexcept ;
 		String& operator = (String&& other) noexcept;
@@ -44,7 +50,7 @@ namespace ishak {
 
 		friend bool operator == (const String& lhs, const String& rhs)
 		{
-			return strcmp(lhs.m_buffer, rhs.m_buffer) == 0;
+			return lhs.m_buffer == rhs.m_buffer;
 		}
 		void operator += (const String& other) noexcept;
 
@@ -53,11 +59,22 @@ namespace ishak {
 		const char* c_str();		
 		const char* c_str() const; 
 		bool IsEmpty() const;
+
+		size_t Size() const
+		{
+			return m_size;
+		}
+
 		bool Find(const char* toFind);
+		void Clear();
+
+
+	private:
+		void AllocateNullChar();
 
 	private:
 		/* Character buffer.*/
-		char* m_buffer{ nullptr };
+		TArray<char> m_buffer;
 
 		/* String size. */
 		size_t m_size{ 0 };

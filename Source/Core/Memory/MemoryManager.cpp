@@ -2,6 +2,7 @@
 #if WINDOWS
 #include "Windows.h"
 	#include "memoryapi.h"
+#include "stdlib.h"
 #endif
 
 namespace ishak { namespace Memory{
@@ -15,6 +16,11 @@ namespace ishak { namespace Memory{
 	MemoryManager::~MemoryManager()
 	{
 		FreeEngineMemory();
+
+		// Free Allocator
+
+		delete m_engineAllocator;
+		m_engineAllocator = nullptr;
 	}
 
 	void MemoryManager::FreeEngineMemory()
@@ -24,18 +30,29 @@ namespace ishak { namespace Memory{
 	}
 
 	void
-	MemoryManager::AllocateInitialMemory()
+	MemoryManager::AllocateInitialEngineMemory()
 	{
+		size_t permanentMemoryToAllocate = 0;
+		size_t transientMemoryToAllocate = 0;
+
+#ifdef WITH_TESTS
+		permanentMemoryToAllocate = Megabytes(100);
+		transientMemoryToAllocate = Megabytes(100);
+#else
+		permanentMemoryToAllocate = Megabytes(64);
+		transientMemoryToAllocate = Gigabytes(4);
+#endif // WITH_TESTS
+
 #if WINDOWS
 
-		m_engineMemory.PermanentMemorySize = Megabytes(64);	
+		m_engineMemory.PermanentMemorySize = permanentMemoryToAllocate;
 		m_engineMemory.PermanentMemory = VirtualAlloc(
 			0,
 			m_engineMemory.PermanentMemorySize,
 			MEM_RESERVE|MEM_COMMIT,
-			PAGE_READWRITE);
+			PAGE_EXECUTE_READWRITE);
 
-		m_engineMemory.TransientMemorySize = Gigabytes(4);
+		m_engineMemory.TransientMemorySize = transientMemoryToAllocate;
 		m_engineMemory.TransientMemory = VirtualAlloc(
 			0,
 			m_engineMemory.TransientMemorySize,
@@ -51,6 +68,7 @@ namespace ishak { namespace Memory{
 	MemoryManager::Allocate(
 			size_t size)
 	{
+			
 		AllocationInfo* metadata = static_cast<AllocationInfo*>(malloc(size + sizeof(AllocationInfo)));
 		if(metadata == nullptr || size > SIZE_MAX - sizeof(AllocationInfo))
 		{

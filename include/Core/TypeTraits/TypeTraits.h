@@ -16,5 +16,6 @@ namespace ishak{
 	using uint32 = std::uint32_t;
 	using uint64 = std::uint64_t;
 	using size_t = std::size_t;
+	using word_t = std::intptr_t;
 
 }// ishak

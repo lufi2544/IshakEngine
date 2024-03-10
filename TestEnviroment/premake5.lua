@@ -1,59 +1,80 @@
--- This is the File that will build the project Test Enviroment
+--- Main build script for the RPG --
 
-
-local modulesDir = "../Source/Modules/"
-
+-- Main Project Configuration --
 
 workspace "IshakEngineTests"
-	configurations { "Debug" }
-	architecture "x86_64"
+    configurations { "Debug", "DebugTests", "Release" }
+    architecture "x86_64"
+    platforms { "Linux", "Windows" }
 
 project "IshakEngineTests"
-	kind "ConsoleApp"
-	language "C++"
+    kind "ConsoleApp"
+    language "C++"
+    location "../Intermediate/Tests"
+
+filter { "platforms:Linux" }
+	system "linux"
+
+filter { "platforms:Windows" }
+	system "windows"
 
 
-	targetdir "../Binaries"
-	objdir "../Intermediate/Tests/%{cfg.buildcfg}"
+-- In the future I want to add per platform and config folder, but as it has to be added in the modules too, I willhave to think about it.
+    targetdir "../Binaries"
+    objdir "../Intermediate/Tests/%{cfg.buildcfg}/%{cfg.platform}"
 
-	files {"dtest/**.h", "Tests/**.cpp"}
+    includedirs { "dtest", "../include" }
+    files { "dtest/**.h", "Tests/**.cpp"}
 
+    libdirs{ "../Binaries" }
+    links { "IshakEngine.lib" }
 
-	includedirs
-	{
-		"dtest",
-		modulesDir .. "Core/Public", 
-		modulesDir .. "Ecs/Public",
-		modulesDir .. "IMGUI/Public"
- 	}
+    filter "system:linux"
+        print("Applying settings for Linux.")
+        buildoptions { "-j$(nproc)" }
+        defines { "LINUX" }
+        buildoptions {
+            "-std=c++17", -- for GCC or Clang
+            "-g" -- adding debug information for debugging on Linux
+        }
 
-	buildoptions 
-	{
-		"-std=c++17",
-		"-g"
-	}
+    filter "system:windows"
+        print("Applying settings for Windows.")
+        defines { "WINDOWS" }
+	cppdialect "C++17"
+        buildoptions {
+            "/std:c++17", -- for MSVC compiler
+            "/DEBUG" -- adding debug information for debugging on Windows
+        }
 
+    filter { "system:windows", "action:vs*" }
+        print("Applying settings for Visual Studio on Windows.")
+        systemversion "latest"  -- Set the project's platform toolset to the latest available
+        buildoptions { "/std:c++17" }  -- Set C++17 standard for compilation
+        flags { "MultiProcessorCompile" } -- Enable multi-processor compilation
 
-libdirs{
- "../Binaries" }
+    filter { "toolset:gcc" }
+        buildoptions { "-j$(nproc)" }
 
-	links { "Core", "Ecs", "IMGUI", "Core.lib", "Ecs.lib", "IMGUI.lib" }
+    -- CONFIGURATIONS --
 
+    filter {"configurations:DebugTests"}
+        defines { "DEBUG_ENGINE", "WITH_TESTS" }
+        symbols "On"
+	cppdialect "C++17"
 
-	filter "system:linux"
-		print("Defining TESTS for LINUX")
-		defines{ "LINUX" }
+    filter {"configurations:Debug", "system:windows"}
+        defines { "DEBUG_ENGINE" }
+        symbols "On"
+	cppdialect "C++17"
 
-	filter "system:windows"
-		print("Defining TESTS for WINDOWS")
-		defines{ "WINDOWS" }
-		cppdialect "C++17"
+    filter {"configurations:Debug", "system:linux"}
+        defines { "DEBUG_ENGINE" }
+        symbols "On"
+	cppdialect "C++17"
 
-	filter "configurations:Debug"
-		defines { "DEBUG_ENGINE"}
-		symbols "On"
-		buildoptions {"-g"} -- includes the symbols in the executable for debugging
+    filter "configurations:Release"
+        optimize "On"
+	symbols "Off"
 
-	include(modulesDir .. "Core/Core.lua")
-	include(modulesDir .. "Ecs/Ecs.lua")
-	include(modulesDir .. "IMGUI/IMGUI.lua")
+include("../Engine.lua")

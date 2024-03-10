@@ -2,8 +2,10 @@
 
 #include <initializer_list>
 
-#include "Core/CoreMinimal.h"
 #include "Core/CoreConfig.h"
+#include "Core/Memory/Allocator.h"
+#include "Core/TypeTraits/TypeTraits.h"
+#include <assert.h>
 
 namespace ishak {
 
@@ -15,10 +17,9 @@ namespace ishak {
 
 	// TODO ARRAY for now the array capacity grows with a coefficient of x2 every time an 
 	// addition fails due to capacity problems.
-	template<typename DataT> 
+	template<typename DataT, typename AllocatorT = memory::DefaultAllocator> 
 	class CORE_API TArray 
 	{	
-
 		static size_t constexpr DEFAULT_CAPACITY = 2;
 		static size_t constexpr MIN_SIZE_DELTA_TO_NEWALLOC_WHEN_RESIZED = 5;
 
@@ -74,11 +75,22 @@ namespace ishak {
 		};
 
 	public:
+		TArray(uint32_t capacity, AllocatorT const& allocator) 
+			: m_capacity{ capacity }
+			, m_allocator{ allocator }
+		{
+			
+		}
+
+		TArray(AllocatorT const& alloc)
+			: m_allocator{ alloc }
+		{
+			m_capacity = DEFAULT_CAPACITY;
+		}
 
 		TArray() 
 		{
 			m_capacity = DEFAULT_CAPACITY;
-			AllocateCapacity();
 		}
 
 		TArray(std::initializer_list<DataT>&& initList)
@@ -86,6 +98,7 @@ namespace ishak {
 			m_capacity = initList.size();
 			m_size = initList.size();
 			AllocateCapacity();
+			InitializeArrayElements();
 			
 			size_t idx = 0;
 			for(auto& element : initList)
@@ -97,10 +110,10 @@ namespace ishak {
 
 		~TArray() 
 		{
-			delete[] m_data;
+			m_allocator.Free(m_data);
 		}
 
-		TArray(const TArray<DataT>& other)
+		TArray(const TArray<DataT, AllocatorT>& other)
 		{
 			m_capacity = other.m_capacity;
 			m_size = other.m_size;
@@ -119,6 +132,16 @@ namespace ishak {
 
 			// Invalidates the other container once we have moved all the data.
 			other.Invalidate();
+		}
+
+		DataT* GetData()
+		{
+			return m_data;
+		}
+
+		DataT* GetData() const
+		{
+			return m_data;
 		}
 
 		//---- Iterator Functions ----
@@ -157,7 +180,7 @@ namespace ishak {
 
 #pragma region --Operators--
 		
-		DataT& operator[](int32 idx)
+		DataT& operator[](int32 idx) 
 		{
 			// TODO ASSERT Custom Assert
 			// Maybe Capacity is Ok, if not, then access violation.
@@ -173,16 +196,18 @@ namespace ishak {
 			return m_data[idx];
 		}
 
-		TArray<DataT>& operator = (const TArray<DataT>& other)
+		TArray<DataT, AllocatorT>& operator = (const TArray<DataT, AllocatorT>& other)
 		{
 			if(m_data)
 			{
-				delete[] m_data;
+				m_allocator.Free(m_data);
 			}
 
 			m_capacity = other.m_capacity;
 			m_size = other.m_size;
 			AllocateCapacity();
+			InitializeArrayElements();
+			// TODO Add Test;
 			for (uint32 idx = 0; idx < m_size; ++idx)
 			{
 				m_data[idx] = other.m_data[idx];
@@ -191,11 +216,11 @@ namespace ishak {
 			return *this;
 		}
 
-		TArray<DataT>& operator = (TArray<DataT>&& other)
+		TArray<DataT, AllocatorT>& operator = (TArray<DataT, AllocatorT>&& other)
 		{
 			if (m_data)
 			{
-				delete[] m_data;
+				m_allocator.Free(m_data);
 			}
 
 			m_capacity = other.m_capacity;
@@ -207,17 +232,53 @@ namespace ishak {
 			return *this;
 		}
 
-		friend bool operator == (TArray<DataT> const& lhs, TArray<DataT> const& rhs)
+		friend bool operator == (TArray<DataT, AllocatorT> const& lhs, TArray<DataT, AllocatorT> const& rhs)
 		{			
-			for(auto& element : lhs)
+			// Check sizes first
+			if(lhs.Size() != rhs.Size())
 			{
-				if(!rhs.Contains(element))
+				return false;
+			}
+
+			DataT* rhsData = rhs.GetData();
+			DataT* lhsData = lhs.GetData();
+
+			// Check contained data.		
+			for(int i = 0; i < lhs.Size(); ++i)
+			{
+				if(!(rhsData[i] == lhsData[i]))
 				{
 					return false;
 				}
 			}
 
+
 			return true;
+		}
+
+
+		friend bool operator != (TArray<DataT, AllocatorT> const& lhs, TArray<DataT, AllocatorT> const& rhs)
+		{
+			// Check sizes first
+			if (lhs.Size() != rhs.Size())
+			{
+				return true;
+			}
+
+			DataT* rhsData = rhs.GetData();
+			DataT* lhsData = lhs.GetData();
+
+			// Check contained data.		
+			for (int i = 0; i < lhs.Size(); ++i)
+			{
+				if (!(rhsData[i] == lhsData[i]))
+				{
+					return true;
+				}
+			}
+
+
+			return false;
 		}
 
 #pragma endregion --Operators--
@@ -254,38 +315,44 @@ namespace ishak {
 			m_size = 0;
 			m_capacity = DEFAULT_CAPACITY;
 
-			if(m_data)
+			if(m_data != nullptr)
 			{
-				delete[] m_data;
+				m_allocator.Free(m_data);
 			}
 
-			AllocateCapacity();
+			AllocateCapacity();		
 		}
 
 		/** Adds X amount of defaulted objects in the container. */
 		void AddDefaulted(uint32 count)
 		{
+			TryAllocateCapacity();
+
 			const uint32 oldSize{ m_size };
 			const uint32 newSize{ oldSize + count };
 			if(m_capacity < newSize)
 			{
 				// MEMORY Maybe adding more space to the allocation? 
-				m_capacity = newSize; 
+				m_capacity = newSize;
 				AllocateCapacityAndMoveData();
 			}
 
-			const size_t firstIdx{ oldSize > 0 ? oldSize : 0 };
-			for(size_t idx = firstIdx; idx < newSize; ++idx)
-			{
-				DataT defaultData{ };
-				m_data[idx] = defaultData;
-				++m_size;
-			}
+			m_size = newSize;
+
+			// have in mind that if the array grows, then we just init the passed size data, thus
+			// if the array was 4 size, and then once called this function we have 100 elemets and the buffer has capacity for 105, 
+			// there will be only 4 elements constructed in memory, so through this way, we are 
+			// initializing the new elements in memory that are new, in this case 96.
+			InitializeArrayElementsFromIdx(oldSize > 0
+				? newSize - oldSize - 1 
+				: oldSize);
 		}
 
 		/** Adds a new value to the Array(r-value, move operator). */
 		void Add(DataT&& dataToAdd)
 		{			
+			TryAllocateCapacity();
+
 			// Check if we have to reallocate memory
 			const bool bNeedsToReallocateMemory{ m_size == m_capacity };
 			if (bNeedsToReallocateMemory) 
@@ -295,12 +362,17 @@ namespace ishak {
 				AllocateCapacityAndMoveData();
 			}
 
+			// Internally Construct the Memory for copyng the new value to the Array.
+			new (m_data + m_size) DataT;
+
 			m_data[m_size++] = std::move(dataToAdd);
 		}
 
 		/** Adds a new value to the Array. */
 		void Add(const DataT& dataToAdd)
 		{
+			TryAllocateCapacity();
+
 			// Check if we have to reallocate memory
 			const bool bNeedsToReallocateMemory{ m_size == m_capacity };
 			if (bNeedsToReallocateMemory)
@@ -309,6 +381,9 @@ namespace ishak {
 
 				AllocateCapacityAndMoveData();
 			}
+
+			// Internally Construct the Memory for copyng the new value to the Array.
+			new (m_data + m_size) DataT;
 
 			m_data[m_size++] = dataToAdd;
 		}
@@ -428,7 +503,7 @@ namespace ishak {
 		}
 
 		/** Returns true if we can access to the passed idx. */
-		bool CheckSizeAt(std::uint32_t idx)
+		bool CheckSizeAt(std::uint32_t idx) const
 		{			
 			return idx < m_size;
 		}
@@ -444,9 +519,42 @@ namespace ishak {
 
 	private:
 
+		void TryAllocateCapacity()
+		{
+			if(m_data == nullptr)
+			{
+				AllocateCapacity();
+			}
+		}
+
+		void InitializeArrayElements()
+		{
+			for(int i = 0; i < m_size; ++i)
+			{
+				new (m_data + i) DataT;
+			}
+		}
+
+		void InitializeArrayElementsFromIdx(int idx)
+		{
+			for(int i = idx; i < m_size; ++i)
+			{
+				new (m_data + i) DataT;
+			}
+		}
+
+		void InitializeArrayElementsInBuffer(DataT* buffer, size_t size)
+		{
+			for(int i = 0; i < size; ++i)
+			{
+				new (buffer + i) DataT;
+			}
+		}
+
 		void AllocateCapacityAndMoveData()
 		{
-			DataT* newDataPtr{ new DataT[m_capacity] };
+			DataT* newDataPtr{ static_cast<DataT*>(m_allocator.Allocate(sizeof(DataT) * m_capacity))};
+			InitializeArrayElementsInBuffer(newDataPtr, m_size);
 
 			// copy all the data from the current dinamic ptr to the new one.
 			for (uint32 idx = 0; idx < m_size; ++idx)
@@ -454,7 +562,7 @@ namespace ishak {
 				newDataPtr[idx] = m_data[idx];
 			}
 
-			delete[] m_data;
+			m_allocator.Free(m_data);
 
 			m_data = newDataPtr;
 		}
@@ -464,7 +572,7 @@ namespace ishak {
 		{		
 			// Check if we have the Capacity OK! before allocating.
 			assert(m_capacity > 0);
-			m_data = new DataT[m_capacity];
+			m_data = (DataT*)(m_allocator.Allocate(sizeof(DataT) * m_capacity));
 		}
 
 		/** 
@@ -476,14 +584,15 @@ namespace ishak {
 		void Invalidate()
 		{
 			m_size = 0;
-			m_capacity = 0;
+			m_capacity = DEFAULT_CAPACITY;
 			m_data = nullptr;
 		}
 	
-	private:
+		public:
 		uint32 m_size{ 0 };
 		uint32 m_capacity{ 0 };
-		DataT* m_data;
+		DataT* m_data{ nullptr };
+		AllocatorT m_allocator;
 	};
 
 }// ishak

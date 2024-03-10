@@ -5,7 +5,7 @@
 -- Main Project Configuration --
 
 project "IshakEngine"
-    kind "SharedLib"
+    kind "StaticLib"
     language "C++"
     location "Intermediate/Engine"
 
@@ -20,16 +20,16 @@ filter { "platforms:Windows" }
     targetdir "Binaries"
     objdir "Intermediate/Engine/%{cfg.buildcfg}/%{cfg.platform}"
 
-    includedirs { "Engine/include" }
+    includedirs { "include" }
 
-   files { "Engine/include/**.h", "Engine/Source/**.cpp" }
+   files { "include/**.h", "Source/**.cpp" }
 
 
 
 libdirs{
  "Binaries" }
 
-    links { "Engine/Binaries/SDL2.lib", "Engine/Binaries/SDL2_image.lib", "Engine/Binaries/SDL2main.lib" }
+    links { "Binaries/SDL2.lib", "Binaries/SDL2_image.lib", "Binaries/SDL2main.lib" }
 
     filter "system:linux"
         print("Applying settings for Linux.")
@@ -42,7 +42,7 @@ libdirs{
 
     filter "system:windows"
         print("Applying settings for Windows.")
-        defines { "WINDOWS", "ENGINE_EXPORTS" }
+        defines { "WINDOWS" }
 	cppdialect "C++17"
         buildoptions {
             "/std:c++17", -- for MSVC compiler
@@ -59,6 +59,11 @@ libdirs{
         buildoptions { "-j$(nproc)" }
 
     -- CONFIGURATIONS --
+
+    filter {"configurations:DebugTests"}
+        defines { "DEBUG_ENGINE", "WITH_TESTS" }
+        symbols "On"
+	cppdialect "C++17"
 
     filter {"configurations:Debug", "system:windows"}
         defines { "DEBUG_ENGINE" }

@@ -1,9 +1,9 @@
 #include "doctest.h"
 
-#include "ComponentContainer.h"
-#include "ComponentManipulator.h"
-#include "Component.h"
-#include "EcsContext.h"
+#include "Ecs/ComponentContainer.h"
+#include "Ecs/ComponentManipulator.h"
+#include "Ecs/Component.h"
+#include "Ecs/EcsContext.h"
 
 namespace ishak {
 	namespace Ecs {

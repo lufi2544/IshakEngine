@@ -17,24 +17,27 @@ namespace ishak{
 	 *
 	 * */
 
-	template<typename T>
+	template<typename DataT, typename AllocatorT = memory::DefaultAllocator>
 	class CORE_API TList
 	{
 		struct CORE_API Node
 		{
-			Node(T&& dataParam)
+
+			Node() = default;
+
+			Node(DataT&& dataParam)
 				: data(std::move(dataParam))
 			{
 
 			}
 			
-			Node(T const& dataParam)
+			Node(DataT const& dataParam)
 				: data(dataParam)
 			{
 
 			}
 
-			T data;
+			DataT data;
 			Node* next{ nullptr };	
 		};
 
@@ -53,7 +56,7 @@ namespace ishak{
 				return *this;
 			}
 
-			T& operator*() const
+			DataT& operator*() const
 			{
 				return current->data;
 			}	
@@ -72,9 +75,9 @@ namespace ishak{
 			// if copied, we have to reallocate all the memory again
 			if(other.m_head)
 			{
-				m_head = new Node(other.m_head->data);
-
-			}else
+				m_head = CreateNode(other.m_head->data);
+			}
+			else
 			{
 				return;
 			}
@@ -86,7 +89,7 @@ namespace ishak{
 
 			while(otherCurrentNode != nullptr)
 			{
-				Node* addedNode = new Node(otherCurrentNode->data);
+				Node* addedNode = CreateNode(otherCurrentNode->data);
 				itNode->next = addedNode;
 				itNode = addedNode; 
 				
@@ -122,7 +125,7 @@ namespace ishak{
 			// if copied, we have to reallocate all the memory again
 			if(other.m_head)
 			{
-				m_head = new Node(other.m_head->data);
+				m_head = CreateNode(other.m_head->data);
 
 			}else
 			{
@@ -136,7 +139,7 @@ namespace ishak{
 
 			while(otherCurrentNode != nullptr)
 			{
-				Node* addedNode = new Node(otherCurrentNode->data);
+				Node* addedNode = CreateNode(otherCurrentNode->data);
 				itNode->next = addedNode;
 				itNode = addedNode; 
 				
@@ -198,13 +201,13 @@ namespace ishak{
 			return Iterator(nullptr);
 		}
 
-		void Add(const T& dataToAdd)
+		void Add(const DataT& dataToAdd)
 		{
 			// N(d, n) --- N(d, n) --- N(d,n)
 			
 			if(m_head == nullptr)
 			{
-				m_head = new Node(dataToAdd);
+				m_head = CreateNode(dataToAdd);
 				++m_size;
 				return;
 			}
@@ -217,18 +220,18 @@ namespace ishak{
 				lastNode = lastNode->next;
 			}
 
-			lastNode->next = new Node(dataToAdd);
+			lastNode->next = CreateNode(dataToAdd);
 			++m_size;
 		}
 
-		void Add(T&& dataToAdd)
+		void Add(DataT&& dataToAdd)
 		{
 			// N(d, n) --- N(d, n) --- N(d,n)
 		
 			if(m_head == nullptr)
 			{
 				// TODO ISHMEMORY
-				m_head = new Node(std::move(dataToAdd));
+				m_head = CreateNode(std::move(dataToAdd));
 				++m_size;
 				return;
 			}
@@ -243,7 +246,7 @@ namespace ishak{
 			}
 
 			// TODO ISHMEMORY
-			lastNode->next = new Node(std::move(dataToAdd));
+			lastNode->next = CreateNode(std::move(dataToAdd));
 
 			++m_size;
 		}
@@ -283,10 +286,10 @@ namespace ishak{
 
 		}
 
-		size_t Find(T const& toFind)
+		size_t Find(DataT const& toFind)
 		{
 			size_t idx = 0;
-			for(T& it : *this)
+			for(DataT& it : *this)
 			{
 				if(it  == toFind)
 				{
@@ -329,10 +332,28 @@ namespace ishak{
 			m_head = nullptr;
 		}
 
+		Node* CreateNode(const DataT& data)
+		{
+			Node* node{ (Node*)allocator.Allocate(sizeof(Node)) };
+			new (node) Node;
+			node->data = data;
+
+			return node;
+		}
+
+		Node* CreateNode(DataT&& data)
+		{
+			Node* node{ (Node*)allocator.Allocate(sizeof(Node)) };
+			new (node) Node;
+			node->data = std::move(data);			
+
+			return node;
+		}
 
 	private:			
 		size_t m_size{ 0 };
 		Node* m_head{ nullptr };
+		AllocatorT allocator;
 	};
 
 }// ishak

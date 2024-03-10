@@ -1,8 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "Core/Memory/Memory.h"
-
+#include "Core/CoreConfig.h"
 
 namespace ishak
 {

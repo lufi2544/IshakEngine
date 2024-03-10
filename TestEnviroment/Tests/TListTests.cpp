@@ -1,14 +1,14 @@
 #include <doctest.h>
 
-#include "DataContainers/List.h"
-#include "DataContainers/Array.h"
+#include "Core/DataContainers/List.h"
+#include "Core/DataContainers/Array.h"
 
 namespace ishak{ namespace Tests{
 
 
 	/** Returns the first element of th elist that is equal to the passed value. */
-	template<typename T>
-	bool ListContains(TList<T> const& list, T const& val)
+	template<typename T, typename Alloc>
+	bool ListContains(TList<T, Alloc> const& list, T const& val)
 	{
 		for(T& element : list)
 		{

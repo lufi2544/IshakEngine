@@ -93,7 +93,7 @@ namespace ishak {
 		// Init Memory Allocator
 		// We could retreive memory from the preallocated mememory here, so we would call malloc once and then get everything
 		// from there.
-		GAlloc = new FEngineMalloc();
+		GAlloc = new Memory::FEngineMalloc();
 		Memory::MemoryManager::Get().SetEngineAllocator(GAlloc);
 	}
 

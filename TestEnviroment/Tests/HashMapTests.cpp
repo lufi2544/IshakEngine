@@ -1,5 +1,5 @@
 #include "doctest.h"
-#include "DataContainers/HashMap.h"
+#include "Core/DataContainers/HashMap.h"
 
 #include <map>
 
@@ -97,6 +97,20 @@ namespace ishak{namespace Tests{
 		}
 
 		CHECK(iteratedTimes == 0);
+	}
+
+
+	TEST_CASE("Added stuff to map, size grows, OK") 
+	{
+		THMap map;
+
+		map.Add(MakePair<String, int>("1", 1));
+		map.Add(MakePair<String, int>("2", 2));
+		map.Add(MakePair<String, int>("3", 3));
+		map.Add(MakePair<String, int>("4", 4));
+		map.Add(MakePair<String, int>("5", 5));
+
+		CHECK(map.Size() == 5);
 	}
 
 

@@ -17,12 +17,12 @@ namespace ishak
 	 * We have to have in mind that when creating a hash map, we are allocating enough buckets that 
 	 * when hashing a new key to a value, then we can have enough space to position it at first.
 	 * */
-	template<typename K, typename V>
+	template<typename K, typename V, typename AllocatorT = memory::DefaultAllocator>
 	class CORE_API THashMap
 	{
 		typedef TPair<K, V> BucketElementT;
-		typedef TList<BucketElementT> BucketT;
-		typedef TArray<BucketT> BucketCollectionT;
+		typedef TList<BucketElementT, AllocatorT> BucketT;
+		typedef TArray<BucketT, AllocatorT> BucketCollectionT;
 
 	public:
 		static constexpr size_t INITIAL_BUCKETS = 10;
@@ -123,7 +123,6 @@ namespace ishak
 				size_t currentBucketCollectionIdx{ 0 };
 				size_t currentBucketElementIdx{ 0 };				
 		};
-
 
 		THashMap()			
 		{

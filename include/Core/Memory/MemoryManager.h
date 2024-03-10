@@ -18,6 +18,9 @@ struct AllocationInfo
 	class CORE_API MemoryManager
 	{
 	public:
+			/** Getter class. */
+			static MemoryManager& Get();
+
 			MemoryManager() = default;
 			MemoryManager(MemoryManager const& other) = delete;
 			MemoryManager(MemoryManager&& other) = delete;
@@ -29,15 +32,14 @@ struct AllocationInfo
 			FMalloc* GetEngineAllocator() { return m_engineAllocator; }
 			void SetEngineAllocator(FMalloc* allocator) { m_engineAllocator = allocator; }
 			size_t GetMemoryUsage() const { return m_allocatedMemory; }
-			EngineMemory const* GetMemory() const { return &m_engineMemory; }
+			EngineMemory* GetMemory() { return &m_engineMemory; }
 
-			/** Getter class. */
-			static MemoryManager& Get();
+
+			void AllocateInitialEngineMemory();
+			void FreeEngineMemory();
 
 			void* Allocate(size_t size);
 			void Free(void* ptr, size_t size);
-			void AllocateInitialMemory();
-			void FreeEngineMemory();
 
 
 	

@@ -1,13 +1,11 @@
 --- Main build script for the IshakEngine --
 
---local modulesDir = "../Modules/"
-
 -- Main Project Configuration --
 
 workspace "IshakEngine"
-    configurations { "Debug", "Release" }
+    configurations { "Debug", "DebugTests", "Release" }
     architecture "x86_64"
-    platforms { "Linux", "Windows" }
+    platforms { "Windows", "Linux" }
 
 project "IshakEngine"
     kind "ConsoleApp"
@@ -64,6 +62,11 @@ libdirs{
         buildoptions { "-j$(nproc)" }
 
     -- CONFIGURATIONS --
+
+    filter {"configurations:DebugTests"}
+        defines { "DEBUG_ENGINE", "WITH_TESTS" }
+        symbols "On"
+	cppdialect "C++17"
 
     filter {"configurations:Debug", "system:windows"}
         defines { "DEBUG_ENGINE" }
