@@ -29,7 +29,7 @@ filter { "platforms:Windows" }
 libdirs{
  "Binaries" }
 
-    links { "Binaries/SDL2.lib", "Binaries/SDL2_image.lib", "Binaries/SDL2main.lib" }
+    links { "SDL2.lib", "SDL2_image.lib", "SDL2main.lib" }
 
     filter "system:linux"
         print("Applying settings for Linux.")
@@ -66,7 +66,7 @@ libdirs{
 	cppdialect "C++17"
 
     filter {"configurations:Debug", "system:windows"}
-        defines { "DEBUG_ENGINE" }
+        defines { "DEBUG_ENGINE", "SDL_MAIN_HANDLED" }
         symbols "On"
 	cppdialect "C++17"
 

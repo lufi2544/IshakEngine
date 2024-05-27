@@ -17,7 +17,7 @@ namespace ishak{
 	 *
 	 * */
 
-	template<typename DataT, typename AllocatorT = memory::DefaultAllocator>
+	template<typename DataT, typename AllocatorT = Memory::DefaultAllocator>
 	class CORE_API TList
 	{
 		struct CORE_API Node

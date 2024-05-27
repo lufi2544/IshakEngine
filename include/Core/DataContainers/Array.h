@@ -17,7 +17,7 @@ namespace ishak {
 
 	// TODO ARRAY for now the array capacity grows with a coefficient of x2 every time an 
 	// addition fails due to capacity problems.
-	template<typename DataT, typename AllocatorT = memory::DefaultAllocator> 
+	template<typename DataT, typename AllocatorT = Memory::DefaultAllocator> 
 	class CORE_API TArray 
 	{	
 		static size_t constexpr DEFAULT_CAPACITY = 2;

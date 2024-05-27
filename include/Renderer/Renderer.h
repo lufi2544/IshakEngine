@@ -1,6 +1,7 @@
 #pragma once
 #include "RendererConfig.h"
 #include "Core/CoreMinimal.h"
+#define SDL_MAIN_HANDLED
 #include "ThirdParty/SDL/SDL.h"
 #include "RendererContext.h"
 

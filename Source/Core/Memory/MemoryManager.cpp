@@ -1,11 +1,11 @@
 #include "Core/Memory/MemoryManager.h"
 #if WINDOWS
-#include "Windows.h"
+	#include "Windows.h"
 	#include "memoryapi.h"
-#include "stdlib.h"
-#endif
+	#include "stdlib.h"
+#endif// WINDOWS
 
-namespace ishak { namespace Memory{
+namespace ishak { namespace Memory {
 
 	MemoryManager& MemoryManager::Get()
 	{
@@ -13,110 +13,85 @@ namespace ishak { namespace Memory{
 		return lazySingleton;
 	}
 
+	MemoryManager::MemoryManager(size_t memoryToAlloc)
+	{
+		InitMemory(memoryToAlloc);
+	}
+
 	MemoryManager::~MemoryManager()
 	{
-		FreeEngineMemory();
 
-		// Free Allocator
-
-		delete m_engineAllocator;
-		m_engineAllocator = nullptr;
+		// Free the Hirarchies
+		for (uint8 i = 0; i < (uint8)EMemoryHirarchy::NUM; ++i)
+		{
+			void* hirarchy{ hirarchies[i] };
+			assert(VirtualFree(hirarchy, 0, MEM_RELEASE) > 0);
+		}
 	}
 
-	void MemoryManager::FreeEngineMemory()
+	void MemoryManager::InitMemory(size_t memoryToAllocate)
 	{
-		VirtualFree(m_engineMemory.PermanentMemory, m_engineMemory.PermanentMemorySize, MEM_RELEASE);
-		VirtualFree(m_engineMemory.TransientMemory, m_engineMemory.TransientMemorySize, MEM_RELEASE);
-	}
-
-	void
-	MemoryManager::AllocateInitialEngineMemory()
-	{
-		size_t permanentMemoryToAllocate = 0;
-		size_t transientMemoryToAllocate = 0;
-
-#ifdef WITH_TESTS
-		permanentMemoryToAllocate = Megabytes(100);
-		transientMemoryToAllocate = Megabytes(100);
-#else
-		permanentMemoryToAllocate = Megabytes(64);
-		transientMemoryToAllocate = Gigabytes(4);
-#endif // WITH_TESTS
-
-#if WINDOWS
-
-		m_engineMemory.PermanentMemorySize = permanentMemoryToAllocate;
-		m_engineMemory.PermanentMemory = VirtualAlloc(
-			0,
-			m_engineMemory.PermanentMemorySize,
-			MEM_RESERVE|MEM_COMMIT,
-			PAGE_EXECUTE_READWRITE);
-
-		m_engineMemory.TransientMemorySize = transientMemoryToAllocate;
-		m_engineMemory.TransientMemory = VirtualAlloc(
-			0,
-			m_engineMemory.TransientMemorySize,
-			MEM_RESERVE|MEM_COMMIT,
-			PAGE_READWRITE);
-
-#elif LINUX
-
-#endif // PLATFORMS
-	}
-
-	void*
-	MemoryManager::Allocate(
-			size_t size)
-	{
-			
-		AllocationInfo* metadata = static_cast<AllocationInfo*>(malloc(size + sizeof(AllocationInfo)));
-		if(metadata == nullptr || size > SIZE_MAX - sizeof(AllocationInfo))
+		if (memoryToAllocate == 0)
 		{
-			// TODO MEMORY Exception
-
-			int a = 0;
-		}
-		m_allocatedMemory += size;
-		metadata->size = size;
-
-		if (metadata->size > 100000)
-		{
-			int a = 0;
+			memoryToAllocate = MemoryPages(kDefaultPagesToRequest);
 		}
 
-		// this could be static_cast<void*>(metadata + 1)
-		//void* ptr = static_cast<void*>(metadata);
-		//return static_cast<void*>(ptr + sizeof(AllocationInfo));
-		return static_cast<void*>(metadata + 1);
-	}
+		assert(memoryToAllocate > 1);
+		const int totalAllocatedPages = memoryToAllocate;
+		const int memoryPerHirarchy = totalAllocatedPages / (uint8)(EMemoryHirarchy::NUM);
+		const int memoryPerSandBox = memoryPerHirarchy / (uint8)(EMemorySandBoxType::NUM);
 
-	void
-	MemoryManager::Free(
-		void* ptr,
-		size_t size)
-	{
-		if(ptr == NULL)
+		for (uint8 i = 0; i < (uint8)EMemoryHirarchy::NUM; ++i)
 		{
-			return;
-		}
-		// Retreiving the size of the allocation, as we allocated the memory block 1 byte further, to allocate the metadata
-		// then we have to check in the memory address with 1 byte less.
-		// This could be static_cast<AllocationInfo*>(ptr) - 1. Which 1 means ptrMemAdrres - (sizeof(AllocationInfo) * 1), but 
-		// I like more the approach that we have right now, which is more readable;
-		
-		// This approach here for me is more readable but in windows it has compile errors due to the fact 
-		// that the compiler (MSVS) does not like using the ptr that has no type for operations.
-		//AllocationInfo* metadata = static_cast<AllocationInfo*>(ptr - sizeof(AllocationInfo)); 
-		AllocationInfo* metadata = static_cast<AllocationInfo*>(ptr) - 1;
-		m_allocatedMemory -= metadata->size;
+			void* requestedMemory = VirtualAlloc(
+				NULL,
+				memoryPerHirarchy,
+				MEM_RESERVE | MEM_COMMIT,
+				PAGE_READWRITE);
 
-		if(metadata->size > 100000)
-		{
-			int a = 0;
+			hirarchies[i] = requestedMemory;
+
+			// TODO Divide the sandBoxes
+			size_t associatedMemory = 0;
+			char* currentBufferPtr = (char*)(requestedMemory);
+			for (uint8 j = 0; j < (uint8)(EMemorySandBoxType::NUM); ++j)
+			{
+				size_t sandBoxSize = memoryPerSandBox;
+
+				// if we are creating the last sandBox
+				if (j == (uint8)(EMemorySandBoxType::NUM)-1)
+				{
+					int temp = associatedMemory + memoryPerSandBox;
+					if (int memoryModuleToEnd = totalAllocatedPages - temp; memoryModuleToEnd < memoryPerSandBox)
+					{
+						// If there is some space left when we create this SandBox and that space is less than an entire
+						// Sandbox, then we add it to the sandBox
+						sandBoxSize += memoryModuleToEnd;
+					}
+				}
+
+				sandboxes[i][j] = SandBox{ currentBufferPtr + associatedMemory, sandBoxSize };
+
+				SandBox& sandbox{ sandboxes[i][j] };
+				sandbox.type = (EMemorySandBoxType)(j);
+				sandbox.allocator = BestFitFreeAllocator{ FMemoryChunk{ sandbox.memory, sandbox.size } };
+
+				associatedMemory += memoryPerSandBox;
+			}
 		}
 
-		// freeing the metadata, as it is the memory address for the metadata and the ptr to free.
-		free(metadata);
+
+		/* We have the SandBoxes, so now the SandBoxes are going to have space Available for the different systems,
+		* so what I spect the final prupose of the SandBox is, is to deliver some memory Space that the systems can Take
+		* for creating Allocators, and this allocators are going to be passed to the Systems Arrays or ptrs creation.
+		*
+		* If we want to create a Turret System, we will have to reslove at compile time, the size of the requested space to the
+		* SandBox Allocator.
+		*/
+
+		// Every Sandbox will have a BestFitFreeAllocator for handling memory, once a system requests a memory block, this system
+		// can create an allocator with this memory.	
+
 	}
 
 }}// ishak::Memory

@@ -1,5 +1,6 @@
 #pragma once
 
+#define SDL_MAIN_HANDLED
 #include "ThirdParty/SDL/SDL.h"
 #include "Platform/PlatformConfig.h"
 #include "Core/CoreMinimal.h"

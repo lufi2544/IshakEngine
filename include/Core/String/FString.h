@@ -15,7 +15,7 @@ namespace ishak {
 
 	struct CORE_API String
 	{			
-		typedef memory::DefaultAllocator Alloc;
+		typedef Memory::DefaultAllocator Alloc;
 
 		static constexpr char nullChar = '\0';
 		String();

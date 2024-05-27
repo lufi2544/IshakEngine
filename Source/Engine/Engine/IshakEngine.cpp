@@ -1,4 +1,5 @@
 
+#define SDL_MAIN_HANDLED
 // ISHAK
 #include "Engine/Engine/IshakEngine.h"
 
@@ -93,8 +94,7 @@ namespace ishak {
 		// Init Memory Allocator
 		// We could retreive memory from the preallocated mememory here, so we would call malloc once and then get everything
 		// from there.
-		GAlloc = new Memory::FEngineMalloc();
-		Memory::MemoryManager::Get().SetEngineAllocator(GAlloc);
+		ishak::Memory::MemoryManager::Get().InitMemory();
 	}
 
 	void IshakEngine::HandleModules(Factory* factory)
@@ -221,7 +221,7 @@ namespace ishak {
 		UpdateCoreEngineEcs(deltaTime);
 		UpdateCustomEcs(deltaTime);
 
-		std::cout << "Engine Memory: " << ((float)Memory::MemoryManager::Get().GetMemoryUsage()) <<std::endl;
+		//std::cout << "Engine Memory: " << ((float)Memory::MemoryManager::Get().GetMemoryUsage()) <<std::endl;
 
 		// TODO Remove this
 		m_gameFramework.world->Update(deltaTime);

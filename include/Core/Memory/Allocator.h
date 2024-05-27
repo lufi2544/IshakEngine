@@ -9,7 +9,7 @@
 
 
 
-namespace ishak::memory{
+namespace ishak::Memory{
 
 	// General doc for implementing and testing different allocators.
 
@@ -364,7 +364,8 @@ namespace ishak::memory{
 	/** Linked list of free blocks of memory, in this case when a block is occupied, we delete it from the 
 	* list, so when it is freed again, is put at the top of the list, this is less cache friendlier than having 
 	* all the blocks linked together, but we exchange cache friendliness for iteration complexity, because 
-	* throguth this way, we only iterate through the free chunks.
+	* throguth this way, we only iterate through the free chunks. But is cache friendl if you request the last 
+	* freed block again.
 	* 
 	*/
 	class CORE_API BestFitFreeAllocator 
@@ -485,59 +486,7 @@ namespace ishak::memory{
 		return obj;
 	}
 
-	/**
-	* We are going to request some pages from the OS and then divide it into hirarchies.
-	*
-	* The memory will be divided into different hirachies, and sandboxes, each sandbox can be managed
-	* by different Allocators.
-	*/
-	class CORE_API MemoryManager
-	{
-		static constexpr uint8 kDefaultPagesToRequest = 1U;
 
-	public:
-		MemoryManager(size_t memoryToAllocate = 0);
-		~MemoryManager();
-
-		struct SandBox
-		{
-			SandBox() = default;
-
-			void* Allocate(size_t size)
-			{
-				return allocator.Allocate(size);
-			}
-
-			void Free(void* ptr)
-			{
-				allocator.Free(ptr);
-			}
-
-			char* memory{ nullptr };
-			size_t size{ 0 };
-			BestFitFreeAllocator allocator;
-			EMemorySandBoxType type;
-			uint8 _pad[7];
-		};
-
-
-		template<class T>
-		T* NewObject(size_t size, EMemoryHirarchy hirarchy, EMemorySandBoxType sandBoxType)
-		{
-			T* obj = (T*)(GetMemorySandBox(hirarchy, sandBoxType));
-			new (obj) T;
-
-			return obj;
-		}
-
-		SandBox* GetMemorySandBox(EMemoryHirarchy hirarchy, EMemorySandBoxType type)
-		{
-			return &sandboxes[(uint8)hirarchy][(uint8)type];
-		}
-
-		void* hirarchies[(uint8)EMemoryHirarchy::NUM];
-		SandBox sandboxes[(uint8)EMemoryHirarchy::NUM][(uint8)EMemorySandBoxType::NUM];
-	};
 
 	struct System
 	{
@@ -547,4 +496,4 @@ namespace ishak::memory{
 
 	};
 
-}// ishak::memory
+}// ishak::Memory

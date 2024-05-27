@@ -24,7 +24,7 @@ filter { "platforms:Windows" }
     objdir "../Intermediate/Tests/%{cfg.buildcfg}/%{cfg.platform}"
 
     includedirs { "dtest", "../include" }
-    files { "dtest/**.h", "Tests/**.cpp"}
+    files { "dtest/**.h", "Tests/**.cpp", "Tests/**.asm"}
 
     libdirs{ "../Binaries" }
     links { "IshakEngine.lib" }

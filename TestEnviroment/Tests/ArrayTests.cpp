@@ -113,7 +113,7 @@ namespace ishak {
 			int data{ 4 };
 		};
 
-		memory::DefaultAllocator alloc;
+		Memory::DefaultAllocator alloc;
 		auto ptr = (Element*)alloc.Allocate(sizeof(Element));
 
 

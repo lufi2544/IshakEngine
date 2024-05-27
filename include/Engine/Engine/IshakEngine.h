@@ -1,4 +1,6 @@
 #pragma once
+
+#define SDL_MAIN_HANDLED
 #include "Core/CoreMinimal.h"
 #include "Engine/EngineConfig.h"
 #include "Engine/GameFramework/World.h"

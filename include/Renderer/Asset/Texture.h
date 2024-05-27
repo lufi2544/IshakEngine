@@ -3,6 +3,7 @@
 #include "Core/Asset/Asset.h"
 #include "Renderer/RendererConfig.h"
 
+#define SDL_MAIN_HANDLED
 #include "ThirdParty/SDL/SDL.h"
 namespace ishak
 {

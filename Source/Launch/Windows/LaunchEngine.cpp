@@ -4,11 +4,13 @@
 #endif
 
 #include "Launch/EngineLoop.h"
+#include "ThirdParty/SDL/SDL_main.h"
 
-
-LAUNCH_API int main(int arg, char* argv[])
-{			
-	ishak::EngineLoop engineLoop;
-	engineLoop.Init();
-	return engineLoop.TickEngine();
+extern "C" {
+	LAUNCH_API int SDL_main(int arg, char* argv[])
+	{
+		ishak::EngineLoop engineLoop;
+		engineLoop.Init();
+		return engineLoop.TickEngine();
+	}
 }

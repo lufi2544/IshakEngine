@@ -7,6 +7,7 @@
 #include "IMGUI/imgui_impl_sdlrenderer2.h"
 
 #include "Core/Log/Logger.h"
+#define SDL_MAIN_HANDLED
 #include "ThirdParty/SDL/SDL.h"
 #include "ThirdParty/SDLIMAGE/SDL_image.h"
 
